@@ -5,9 +5,6 @@ Attributes
 ----------
 """
 
-# code version
-ver = '0.0.1'
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.path as path
@@ -289,7 +286,6 @@ class PolyMesh2D():
         --------
         >>> print(PolyMesh2D())
         vcfempy.meshgen.PolyMesh2D
-        Version = 0.0.1
         Number of Vertices = 0
         Number of Boundary Vertices = 0
         Number of Boundary Edges = 0
@@ -302,7 +298,6 @@ class PolyMesh2D():
         
         >>> print(PolyMesh2D([[0,0], [0,1], [1,1], [1,0]]))
         vcfempy.meshgen.PolyMesh2D
-        Version = 0.0.1
         Number of Vertices = 4
         Number of Boundary Vertices = 0
         Number of Boundary Edges = 0
@@ -317,7 +312,6 @@ class PolyMesh2D():
         >>> m.set_verbose_printing(True)
         >>> print(m)
         vcfempy.meshgen.PolyMesh2D
-        Version = 0.0.1
         Number of Vertices = 4
         Number of Boundary Vertices = 0
         Number of Boundary Edges = 0
@@ -338,7 +332,6 @@ class PolyMesh2D():
         
         # print header indicating type Mesh and basic information
         mesh_string = 'vcfempy.meshgen.PolyMesh2D\n'
-        mesh_string += 'Version = {!s}\n'.format(ver)
         mesh_string += 'Number of Vertices = {!s}\n'.format(self.num_vertices)
         mesh_string += 'Number of Boundary Vertices = {!s}\n'.format(self.num_boundary_vertices)
         mesh_string += 'Number of Boundary Edges = {!s}\n'.format(self.num_boundary_edges)
