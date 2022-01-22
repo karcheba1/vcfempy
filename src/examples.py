@@ -170,10 +170,89 @@ def tunnel_mesh():
     """
 
     print('*** Symmetric tunnel with concave boundary:\n')
+    
+    tunnel_mesh = vcm.PolyMesh2D()
+    
+    # add main corners
+    tunnel_mesh.add_vertices([[0,20.],[20,20],[20,0],[15,0]])
 
+    # create circular arc (concave)
+    theta = np.linspace(0, 0.5*np.pi, 20)
+    for t in theta:
+        tunnel_mesh.add_vertices(10.*np.array([np.cos(t), np.sin(t)]))
+
+    # add boundary vertices
+    tunnel_mesh.insert_boundary_vertices(0, [k for k in range(tunnel_mesh.num_vertices)])
+
+    # add material types and regions
+    rock = mtl.Material('xkcd:greenish')
+    tunnel_mesh.add_material_regions([k for k in range(tunnel_mesh.num_vertices)], rock)
+
+    # add mesh edges
+    nv = tunnel_mesh.num_vertices
+    tunnel_mesh.add_vertices([[2.5,17.5],[10.,12.5],[12.5,15.],[17.5,2.5]])
+    tunnel_mesh.add_mesh_edges([[nv,nv+1],[nv+3,nv+2]])
+
+    # generate mesh and show properties
+    tunnel_mesh.generate_mesh([50,50], 0.3)
+    print(tunnel_mesh)
+
+    # plot histogram of number of nodes per element
+    fig = plt.figure()
+    ax = plt.gca()
+    ax.hist(tunnel_mesh.num_nodes_per_element, bins=[3,4,5,6,7,8,9,10], align='left', rwidth=0.95, color='xkcd:gray')
+    ax.set_xlabel('# nodes in element', fontsize=12, fontweight='bold')
+    ax.set_ylabel('# elements', fontsize=12, fontweight='bold')
+    ax.set_title('Tunnel Mesh Histogram', fontsize=14, fontweight='bold')
+    for tick in ax.get_xticklabels() + ax.get_yticklabels():
+        tick.set_fontsize(12)
+    plt.savefig('tunnel_mesh_hist.png')
+
+    # plot mesh
+    fig = plt.figure()
+    fig.set_size_inches((10,10))
+    ax = tunnel_mesh.plot_mesh()
+    tunnel_mesh.plot_boundaries()
+    tunnel_mesh.plot_mesh_edges()
+    tunnel_mesh.plot_mesh_boundaries()
+    tunnel_mesh.plot_vertices()
+
+    ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')
+    ax.set_ylabel('y [m]', fontsize=12, fontweight='bold')
+    ax.set_title('Tunnel Mesh', fontsize=14, fontweight='bold')
+    for tick in ax.get_xticklabels() + ax.get_yticklabels():
+        tick.set_fontsize(12)
+    ax.axis('equal')
+
+    plt.savefig('tunnel_mesh.png')
+
+    # test quadrature
+    int_test = np.zeros(6)
+    int_exp = np.array([400. - 0.25*np.pi*10.0**2, 4000. - 1000./3, 4000. - 1000./3, \
+                        20.*8000./3 - np.pi*10.**4/16, 20.*8000./3 - np.pi*10.**4/16, \
+                        40000. - 0.125*10.**4])
+    for e in tunnel_mesh.elements:
+        xq = e.quad_points
+        wq = e.quad_weights
+        cent = e.centroid
+        area = e.area
+
+        int_test[0] += np.abs(area) * np.sum(wq)
+        for xq_k, wk in zip(xq, wq):
+            int_test[1] += np.abs(area) * wk * (xq_k[0] + cent[0])
+            int_test[2] += np.abs(area) * wk * (xq_k[1] + cent[1])
+            int_test[3] += np.abs(area) * wk * (xq_k[0] + cent[0])**2
+            int_test[4] += np.abs(area) * wk * (xq_k[1] + cent[1])**2
+            int_test[5] += np.abs(area) * wk * (xq_k[0] + cent[0])*(xq_k[1] + cent[1])
+
+    print('Tst Ints: ', int_test)
+    print('Exp Ints: ', int_exp)
+    print('Int Errs: {}%'.format( np.array2string(100*(int_test - int_exp)/int_exp, precision= 3) ))
+    print('\n')
+ 
 
 if __name__ == '__main__':
-    print('Running all examples:\n\n')
+    print('\nRunning all examples:\n')
 
     print('========================================')
     print('Mesh and quadrature generation:')
