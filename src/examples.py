@@ -94,7 +94,76 @@ def dam_mesh():
     """
 
     print('*** Dam with multiple material regions:\n')
+    
+    dam_mesh = vcm.PolyMesh2D()
 
+    dam_mesh.add_vertices([[0,0],[88.5,65],[92.5,65],[180,0]])
+    dam_mesh.add_vertices([92.5,0])
+    dam_mesh.add_vertices([45,0])
+    dam_mesh.add_vertices([55,30])
+
+    dam_mesh.insert_boundary_vertices(0, [0,6,1,2,3])
+
+    gravel = mtl.Material('xkcd:stone')
+    clay = mtl.Material('xkcd:clay')
+
+    # add material regions
+    # Note: here we test three different ways to pass input to add_material_regions
+    dam_mesh.add_material_regions([[0,6,1,5]],[gravel])
+    dam_mesh.add_material_regions([2,3,4], gravel)
+    clay_region = vcm.MaterialRegion2D(dam_mesh, [1,2,4,5], clay)
+    dam_mesh.add_material_regions(clay_region)
+
+    # add edges to be preserved in mesh generation
+    # Note: here we test two different ways to pass input to add_mesh_edges
+    dam_mesh.add_mesh_edges([[1,5]])
+    dam_mesh.add_mesh_edges([2,4])
+
+    dam_mesh.generate_mesh([44,16], 0.2)
+    print(dam_mesh)
+
+    # plot histogram of number of nodes per element
+    fig = plt.figure()
+    ax = plt.gca()
+    ax.hist(dam_mesh.num_nodes_per_element, bins=[3,4,5,6,7,8,9,10], align='left', rwidth=0.95, color='xkcd:gray')
+    ax.set_xlabel('# nodes in element', fontsize=12, fontweight='bold')
+    ax.set_ylabel('# elements', fontsize=12, fontweight='bold')
+    ax.set_title('Dam Mesh Histogram', fontsize=14, fontweight='bold')
+    for tick in ax.get_xticklabels() + ax.get_yticklabels():
+        tick.set_fontsize(12)
+    plt.savefig('dam_mesh_hist.png')
+
+    # plot mesh
+    fig = plt.figure()
+    fig.set_size_inches((10,10))
+    ax = dam_mesh.plot_mesh()
+    dam_mesh.plot_boundaries()
+    dam_mesh.plot_mesh_edges()
+    dam_mesh.plot_mesh_boundaries()
+
+    ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')
+    ax.set_ylabel('y [m]', fontsize=12, fontweight='bold')
+    ax.set_title('Dam Mesh', fontsize=14, fontweight='bold')
+    for tick in ax.get_xticklabels() + ax.get_yticklabels():
+        tick.set_fontsize(12)
+    ax.axis('equal')
+
+    plt.savefig('dam_mesh.png')
+
+    # test area
+    int_test = np.zeros(1)
+    int_exp = np.array([0.5*55*30 + 0.5*(88.5-55)*(30+65) + (92.5-88.5)*65 + 0.5*65*(180-92.5)])
+    for e in dam_mesh.elements:
+        wq = e.quad_weights
+        area = e.area
+
+        int_test[0] += np.abs(area) * np.sum(wq)
+
+    print('Tst Ints: ', int_test)
+    print('Exp Ints: ', int_exp)
+    print('Int Errs: ', (int_test - int_exp)/int_exp)
+    print('\n')
+ 
 
 def tunnel_mesh():
     """ An example with a mesh for a tunnel with a concave boundary.
