@@ -48,6 +48,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+# images
+*.png
+
 # temporary files
 *~
-
+*.swp
