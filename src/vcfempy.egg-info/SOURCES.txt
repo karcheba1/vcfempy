@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+src/vcfempy/__init__.py
+src/vcfempy/materials.py
+src/vcfempy/meshgen.py
+src/vcfempy.egg-info/PKG-INFO
+src/vcfempy.egg-info/SOURCES.txt
+src/vcfempy.egg-info/dependency_links.txt
+src/vcfempy.egg-info/top_level.txt
