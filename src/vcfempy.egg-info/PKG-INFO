@@ -6,7 +6,7 @@ Home-page: https://bitbucket.org/karcheba1/vcfempy
 Author: Brandon Karchewski
 Author-email: brandon.karchewski@ucalgary.ca
 License: UNKNOWN
-Project-URL: Bug Tracker, 
+Project-URL: Bug Tracker, https://bitbucket.org/karcheba1/vcfempy
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
