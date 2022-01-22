@@ -736,7 +736,7 @@ class PolyMesh2D():
                 # Note: this behaviour avoids overwriting
                 #       non-None materials if already assigned to mr
                 if m is not None:
-                    mr.set_material(m)
+                    mr.material = m
 
                 self.material_regions.append(mr)
 
@@ -1249,12 +1249,12 @@ class MaterialRegion2D():
 
     def __init__(self, mesh, vertices = None, material = None):
 
-        self.set_mesh(mesh)
+        self.mesh = mesh
 
         self._vertices = []
         self.insert_vertices(0, vertices)
 
-        self.set_material(material)
+        self.material = material
 
     @property
     def num_vertices(self):
@@ -1268,7 +1268,8 @@ class MaterialRegion2D():
     def mesh(self):
         return self._mesh
 
-    def set_mesh(self, mesh):
+    @mesh.setter
+    def mesh(self, mesh):
 
         if type(mesh) not in [type(None), PolyMesh2D]:
             raise TypeError('type(mesh) not in [NoneType, vcfempy.meshgen.PolyMesh2D]')
@@ -1279,12 +1280,17 @@ class MaterialRegion2D():
     def material(self):
         return self._material
 
-    def set_material(self, material):
+    @material.setter
+    def material(self, material):
 
         if type(material) not in [type(None), mtl.Material]:
             raise TypeError('type(material) not in [NoneType, vcfempy.materials.Material]')
 
+        # change the material type of the material region
+        # invalidate parent mesh since existing mesh would have
+        # incorrect material assigned to elements
         self._material = material
+        self.mesh.mesh_valid = False
     
     
     def insert_vertices(self, i, vertices):
