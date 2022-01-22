@@ -5,9 +5,6 @@ Attributes
 ----------
 """
 
-# code version
-ver = '0.0.1'
-
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mpl_col
