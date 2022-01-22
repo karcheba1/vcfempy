@@ -91,7 +91,7 @@ class PolyMesh2D():
         # Note: Although inserting boundary vertices sometimes does this
         #       this is still necessary in case boundary_vertices is None or an empty list
         self.generate_boundary_edges()
-        self.invalidate_mesh()
+        self.mesh_valid = False
         
         # initialize material regions
         self._material_regions = []
@@ -145,9 +145,14 @@ class PolyMesh2D():
         
     @property
     def num_element_edges(self):
-        """ Getter for number of element edges in PolyMesh2D. """
+        """ Getter for number of element edge vertex lists in PolyMesh2D. """
         return len(self.element_edges)
     
+    @property
+    def num_element_neighbors(self):
+        """ Getter for number of element neighbor lists in PolyMesh2D. """
+        return len(self.element_neighbors)
+                                    
     @property
     def num_nodes_per_element(self):
         """ Getter for number of nodes per element in PolyMesh2D. """
@@ -160,7 +165,7 @@ class PolyMesh2D():
             return 0
         else:
             return self._points.shape[0]
-                                    
+
     @property
     def vertices(self):
         """ Getter for vertices in PolyMesh2D. """
@@ -190,6 +195,58 @@ class PolyMesh2D():
     def mesh_valid(self):
         """ Getter for mesh valid flag for PolyMesh2D. """
         return self._mesh_valid
+
+    @mesh_valid.setter
+    def mesh_valid(self, val):
+        """ Setter for mesh valid flag for PolyMesh2D.
+            If setting to False, resets mesh properties.
+            If setting to True, performs basic checks of mesh validity before setting.
+        """
+        
+        # simple type check of val
+        if type(val) not in [bool, np.bool_]:
+            raise TypeError('cannot set PolyMesh2D.mesh_valid to non-bool')
+
+        # if invalidating mesh, 
+        # then reset mesh properties
+        if not val:
+            
+            self._mesh_valid = False
+            self._nodes = None
+            self._points = None
+            self._elements = []
+            self._element_neighbors = []
+            self._element_edges = []
+
+        # otherwise, trying to validate mesh
+        # check that mesh properties have been set
+        else:
+
+            if not self.num_nodes:
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but nodes is empty')
+
+            if not self.num_points:
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but points is empty')
+
+            if not self.num_elements:
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but elements is empty')
+
+            if not self.num_element_neighbors:
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but element_neighbors is empty')
+            
+            if not self.num_element_edges:
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but element_edges is empty')
+
+            if self.num_element_neighbors != self.num_element_edges:
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but num_element_neighbors != num_element_edges')
+                
+            if self.num_points != self.num_elements:
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but num_points != num_elements')
+
+            # if here, then all checks for mesh validity succeeded
+            # set the mesh valid flag
+            self._mesh_valid = True
+
     
     @property
     def nodes(self):
@@ -290,7 +347,6 @@ class PolyMesh2D():
         Number of Boundary Vertices = 0
         Number of Boundary Edges = 0
         Number of Nodes = 0
-        Number of Points = 0
         Number of Elements = 0
         Number of Element Edges = 0
         <BLANKLINE>
@@ -302,7 +358,6 @@ class PolyMesh2D():
         Number of Boundary Vertices = 0
         Number of Boundary Edges = 0
         Number of Nodes = 0
-        Number of Points = 0
         Number of Elements = 0
         Number of Element Edges = 0
         <BLANKLINE>
@@ -316,7 +371,6 @@ class PolyMesh2D():
         Number of Boundary Vertices = 0
         Number of Boundary Edges = 0
         Number of Nodes = 0
-        Number of Points = 0
         Number of Elements = 0
         Number of Element Edges = 0
         <BLANKLINE>
@@ -336,7 +390,6 @@ class PolyMesh2D():
         mesh_string += 'Number of Boundary Vertices = {!s}\n'.format(self.num_boundary_vertices)
         mesh_string += 'Number of Boundary Edges = {!s}\n'.format(self.num_boundary_edges)
         mesh_string += 'Number of Nodes = {!s}\n'.format(self.num_nodes)
-        mesh_string += 'Number of Points = {!s}\n'.format(self.num_points)
         mesh_string += 'Number of Elements = {!s}\n'.format(self.num_elements)
         mesh_string += 'Number of Element Edges = {!s}\n\n'.format(self.num_element_edges)
         
@@ -528,7 +581,7 @@ class PolyMesh2D():
             # since a valid vertex was added
             # generate boundary edges and reset the mesh
             self.generate_boundary_edges()
-            self.invalidate_mesh()
+            self.mesh_valid = False
             
         # if no boundary vertices given, do nothing
         # Note: if here, we know that boundary_vertices is either None or a list
@@ -561,7 +614,7 @@ class PolyMesh2D():
             # since valid boundary vertices were added
             # generate boundary edges and reset the mesh
             self.generate_boundary_edges()
-            self.invalidate_mesh()
+            self.mesh_valid = False
     
         
     def remove_boundary_vertices(self, remove_vertices):
@@ -572,13 +625,13 @@ class PolyMesh2D():
                 self.boundary_vertices.remove(v)
         else:
             raise TypeError('type(remove_vertices) not in [int, list]')
-        self.invalidate_mesh()
         self.generate_boundary_edges()
+        self.mesh_valid = False
         
     def pop_boundary_vertex(self, pop_index):
         ind = self.boundary_vertices.pop(pop_index)
-        self.invalidate_mesh()
         self.generate_boundary_edges()
+        self.mesh_valid = False
         return ind
     
     def generate_boundary_edges(self):
@@ -701,8 +754,7 @@ class PolyMesh2D():
             
         # new material regions were added
         # invalidate the mesh
-        self.invalidate_mesh()
-        
+        self.mesh_valid = False
             
     def add_mesh_edges(self, mesh_edges):
         """ Add mesh edges to PolyMesh2D.
@@ -766,7 +818,7 @@ class PolyMesh2D():
             
             # new mesh edge was added
             # invalidate the mesh
-            self.invalidate_mesh()
+            self.mesh_valid = False
             
         # mesh_edges is a list of list of ints
         else:
@@ -791,18 +843,8 @@ class PolyMesh2D():
                 
             # new mesh edges were added
             # invalidate the mesh
-            self.invalidate_mesh()
+            self.mesh_valid = False
         
-    
-    def invalidate_mesh(self):
-        
-        self._mesh_valid = False
-        self._nodes = None
-        self._points = None
-        self._elements = []
-        self._element_neighbors = []
-        self._element_edges = []
-    
 
     def generate_mesh(self, grid_size = [10, 10], alpha_rand = 0.0):
         """ Generate polygonal mesh. """
@@ -1107,7 +1149,8 @@ class PolyMesh2D():
             self.elements.append( PolyElement2D( self, e, m ) )
         
         # set mesh valid
-        self._mesh_valid = True
+        # Note: the setter will perform checks for mesh validity
+        self.mesh_valid = True
             
             
     def plot_boundaries(self, ax = None, line_type = '-k'):
@@ -1284,7 +1327,7 @@ class MaterialRegion2D():
             
         # since valid vertices were added
         # reset the mesh
-        self.mesh.invalidate_mesh()
+        self.mesh.mesh_valid = False
 
 
     def plot(self, ax = None, fill = True):
