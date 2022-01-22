@@ -37,8 +37,7 @@ def rectangular_mesh():
     # plot histogram of number of nodes per element
     fig = plt.figure()
     ax = plt.gca()
-    num_nodes_per_element = [e.num_nodes for e in rect_mesh.elements]
-    ax.hist(num_nodes_per_element, bins=[3,4,5,6,7,8,9,10], align='left', rwidth=0.95, color='xkcd:gray')
+    ax.hist(rect_mesh.num_nodes_per_element, bins=[3,4,5,6,7,8,9,10], align='left', rwidth=0.95, color='xkcd:gray')
     ax.set_xlabel('# nodes in element', fontsize=12, fontweight='bold')
     ax.set_ylabel('# elements', fontsize=12, fontweight='bold')
     ax.set_title('Rectangular Mesh Histogram', fontsize=14, fontweight='bold')
@@ -70,11 +69,10 @@ def rectangular_mesh():
     # test quadrature
     int_test = np.zeros(6)
     int_exp = np.array([400., 4000., 4000., 20.*8000./3, 20.*8000./3, 40000.])
-    for e in rect_mesh.elements:
-        xq = e.quad_points
-        wq = e.quad_weights
-        cent = e.centroid
-        area = e.area
+    for xq, wq, cent, area in zip(  rect_mesh.element_quad_points, \
+                                    rect_mesh.element_quad_weights, \
+                                    rect_mesh.element_centroids, \
+                                    rect_mesh.element_areas ):
 
         int_test[0] += np.abs(area) * np.sum(wq)
         for xq_k, wk in zip(xq, wq):

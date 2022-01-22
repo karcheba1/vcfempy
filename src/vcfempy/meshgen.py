@@ -151,7 +151,7 @@ class PolyMesh2D():
     @property
     def num_nodes_per_element(self):
         """ Getter for number of nodes per element in PolyMesh2D. """
-        return self._num_nodes_per_element
+        return [e.num_nodes for e in self.elements]
         
     @property
     def num_points(self):
@@ -219,27 +219,27 @@ class PolyMesh2D():
     @property
     def element_materials(self):
         """ Getter for list of element materials in PolyMesh2D. """
-        return self._element_materials
+        return [e.material for e in self.elements]
     
     @property
     def element_areas(self):
         """ Getter for list of element areas in PolyMesh2D. """
-        return self._element_areas
+        return [e.area for e in self.elements]
     
     @property
     def element_centroids(self):
         """ Getter for list of element centroids in PolyMesh2D. """
-        return self._element_centroids
+        return [e.centroid for e in self.elements]
     
     @property
     def element_quad_points(self):
         """ Getter for list of element quadrature points in PolyMesh2D. """
-        return self._element_quad_points
+        return [e.quad_points for e in self.elements]
     
     @property
     def element_quad_weights(self):
         """ Getter for list of element quadrature weights in PolyMesh2D. """
-        return self._element_quad_weights
+        return [e.quad_weights for e in self.elements]
     
     @property
     def high_order_quadrature(self):
