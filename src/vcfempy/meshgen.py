@@ -76,8 +76,8 @@ class PolyMesh2D():
         # initialize flags for 
         #      verbose printing
         #      high order quadrature in all elements
-        self.set_verbose_printing(False)
-        self.set_high_order_quadrature(False)
+        self._verbose_printing = False
+        self._high_order_quadrature = False
         
         # initialize vertices
         self._vertices = None
@@ -303,24 +303,32 @@ class PolyMesh2D():
         """ Getter for high order quadrature flag. """
         return self._high_order_quadrature
     
-    def set_high_order_quadrature(self, flag = True):
+    @high_order_quadrature.setter
+    def high_order_quadrature(self, flag):
         """ Setter for high order quadrature flag. """
-        if type(flag) in [bool, np.bool_]:
+        
+        if type(flag) not in [bool, np.bool_]:
+            raise TypeError('cannot set PolyMesh2D.high_order_quadrature to non-bool')
+        
+        # check if value changed, if so set the value and reset element quadrature
+        if flag != self.high_order_quadrature:
             self._high_order_quadrature = bool(flag)
-        else:
-            raise TypeError('type(flag) not in [bool, numpy.bool_]')
+            for e in self.elements:
+                e.invalidate_properties()
     
     @property
     def verbose_printing(self):
         """ Getter for verbose printing flag. """
         return self._verbose_printing
     
-    def set_verbose_printing(self, flag = True):
+    @verbose_printing.setter
+    def verbose_printing(self, flag):
         """ Setter for verbose printing flag. """
-        if type(flag) in [bool, np.bool_]:
-            self._verbose_printing = bool(flag)
-        else:
-            raise TypeError('type(flag) not in [bool, numpy.bool_]')
+        
+        if type(flag) not in [bool, np.bool_]:
+            raise TypeError('cannot set PolyMesh2D.verbose_printing to non-bool')
+        
+        self._verbose_printing = bool(flag)
         
         
     def __str__(self):
