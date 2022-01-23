@@ -371,9 +371,9 @@ class PolyMesh2D():
         <BLANKLINE>
         <BLANKLINE>
         
-        >>> m = PolyMesh2D([[0,0], [0,1], [1,1], [1,0]])
-        >>> m.set_verbose_printing(True)
-        >>> print(m)
+        >>> m = PolyMesh2D([[0,0], [0,1], [1,1], [1,0]]); \
+            m.verbose_printing = True; \
+            print(m)
         vcfempy.meshgen.PolyMesh2D
         Number of Vertices = 4
         Number of Boundary Vertices = 0

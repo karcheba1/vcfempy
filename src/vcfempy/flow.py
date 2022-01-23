@@ -11,15 +11,15 @@ class PolyFlow2D():
     
     def __init__(self, mesh = None):
 
-        self._mesh = None
-        self.set_mesh(mesh)
+        self.mesh = mesh
 
 
     @property
     def mesh(self):
         return self._mesh
 
-    def set_mesh(self, mesh):
+    @mesh.setter
+    def mesh(self, mesh):
 
         if type(mesh) not in [type(None), vcm.PolyMesh2D]:
             raise TypeError('type(mesh) not in [NoneType, vcfempy.meshgen.PolyMesh2D]')
