@@ -1357,14 +1357,14 @@ class PolyElement2D():
     def __init__(self, mesh, nodes = None, material = None):
 
         # initialize parent mesh
-        self.set_mesh(mesh)
+        self.mesh = mesh
 
         # initialize nodes
         self._nodes = []
         self.insert_nodes(0, nodes)
 
         # initialize material
-        self.set_material(material)
+        self.material = material
 
         # initialize geometry and quadrature attributes
         self.invalidate_properties()
@@ -1382,7 +1382,8 @@ class PolyElement2D():
     def mesh(self):
         return self._mesh
 
-    def set_mesh(self, mesh):
+    @mesh.setter
+    def mesh(self, mesh):
 
         if type(mesh) not in [type(None), PolyMesh2D]:
             raise TypeError('type(mesh) not in [NoneType, vcfempy.meshgen.PolyMesh2D]')
@@ -1393,7 +1394,8 @@ class PolyElement2D():
     def material(self):
         return self._material
 
-    def set_material(self, material):
+    @material.setter
+    def material(self, material):
 
         if type(material) not in [type(None), mtl.Material]:
             raise TypeError('type(material) not in [NoneType, vcfempy.materials.Material]')
