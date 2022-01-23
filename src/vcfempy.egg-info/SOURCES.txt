@@ -3,6 +3,7 @@ README.md
 pyproject.toml
 setup.cfg
 src/vcfempy/__init__.py
+src/vcfempy/flow.py
 src/vcfempy/materials.py
 src/vcfempy/meshgen.py
 src/vcfempy.egg-info/PKG-INFO

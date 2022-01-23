@@ -1,12 +1,12 @@
 Metadata-Version: 2.1
 Name: vcfempy
-Version: 0.0.2
+Version: 0.0.3
 Summary: A package for the Voronoi Cell Finite Element Method
 Home-page: https://bitbucket.org/karcheba1/vcfempy
 Author: Brandon Karchewski
 Author-email: brandon.karchewski@ucalgary.ca
 License: UNKNOWN
-Project-URL: Bug Tracker, https://bitbucket.org/karcheba1/vcfempy
+Project-URL: Bug Tracker, https://karcheba.atlassian.net/jira/software/projects/VCFEM/boards/1
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
