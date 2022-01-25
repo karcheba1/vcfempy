@@ -1,8 +1,31 @@
 """A module containing attributes, functions, classes and methods 
 for meshes in the Voronoi Cell Finite Element Method (VCFEM).
 
-Attributes
+Uses
+----
+numpy
+matplotlib.pyplot
+matplotlib.path
+scipy.spatial.Voronoi
+vcfempy.materials
+
+Constants
 ----------
+None
+
+Functions
+---------
+None
+
+Classes
+-------
+PolyMesh2D
+    A class for 2D polygonal mesh generation
+MaterialRegion2D
+    A class for 2D material region geometry
+PolyElement2D
+    A class for polygonal element geometry and quadrature generation
+
 """
 
 import numpy as np
@@ -1361,8 +1384,122 @@ class MaterialRegion2D():
     
 
 class PolyElement2D():
-    
+    """
+    A class for polygonal element geometry and quadrature generation
+
+    Properties
+    ----------
+    num_nodes : int
+        The number of nodes in the element
+    nodes : list of ints
+        The node indices, in CW or CCW order
+    mesh : PolyMesh2D
+        The parent mesh
+        Can be set, but recommended to allow this to be set by PolyMesh2D.generate_mesh()
+    material : vcfempy.materials.Material
+        The material type assigned to the element
+    area : float, signed
+        The element area
+        Positive if nodes in CCW order, negative if nodes in CW order
+    centroid : numpy.array, size = (2,)
+        The element centroid coordinates
+    quad_points : numpy.array, size = (*,2)
+        The element quadrature point coordinates
+    quad_weights : numpy.array, size = (*,)
+        The element quadrature point weights
+        Sums to 1.0
+    quad_integrals : numpy.array, size = (*,)
+        The element quadrature basis function integrals
+        For testing quadrature accuracy
+
+    Private Attributes
+    ------------------
+    _nodes : list of ints
+        The node indices, in CW or CCW order
+    _mesh : PolyMesh2D
+        The parent mesh
+    _material : vcfempy.materials.Material
+        The material type assigned to the element
+    _area : None | float, signed
+        The element area
+        Positive if nodes in CCW order, negative if nodes in CW order
+        Set to None by invalidate_properties()
+    _centroid : None | numpy.array, size = (2,)
+        The element centroid coordinates
+        Set to None by invalidate_properties()
+    _quad_points : None | numpy.array, size = (*,2)
+        The element quadrature point coordinates
+        Set to None by invalidate_properties()
+    _quad_weights : None | numpy.array, size = (*,)
+        The element quadrature point weights
+        Set to None by invalidate_properties()
+    _quad_integrals : None | numpy.array, size = (*,)
+        The element quadrature basis function integrals
+        Set to None by invalidate_properties()
+
+    Methods
+    -------
+    __init__(mesh, nodes = None, material = None) -> None
+        Initializes element
+        Must provide parent mesh, optionally can provide initial 
+        list of nodes and material type
+    insert_nodes(i, nodes) -> None
+        Insert one or more nodes at index i
+        nodes can be int or list of ints
+    invalidate_properties() -> None
+        Resets computed element properties (area, centroid, quad_*)
+        Should be called whenever nodes is changed
+    generate_quadrature() -> None
+        Computes element properties quad_*
+        Determines correct _quadcon*() method to call depending on
+        num_nodes and mesh.high_order_quadrature
+    plot(ax = None, line_type = ':k', fill = True, borders = False) -> matplotlib.pyplot.axis
+        Plots the element
+        Can provide a matplotlib.pyplot.axis or if None will use matplotlib.pyplot.gca()
+        If fill, will fill the area with material.color
+        If borders, will plot element borders with line_type
+    plot_quadrature_points(ax = None, line_type = '+k', markersize = 1.5) -> matplotlib.pyplot.axis
+        Plots element quadrature points
+        Can provide a matplotlib.pyplot.axis or if None will use matplotlib.pyplot.gca()
+
+    Private Methods
+    ---------------
+    _quadcon3() -> None
+        Sets _quad_* attributes for elements with 3 nodes
+    _quadcon5()
+        Sets _quad_* attributes for elements with up to 5 nodes
+    _quadcon7()
+        Sets _quad_* attributes for elements with up to 7 nodes
+    _quadcon10()
+        Sets _quad_* attributes for elements with up to 10 nodes
+        or when mesh.high_order_quadrature == True
+
+    Examples
+    --------
+    """
+
     def __init__(self, mesh, nodes = None, material = None):
+        """ Initialize a PolyElement2D object.
+
+        Parameters
+        ----------
+        mesh : PolyMesh2D
+            The parent mesh
+        nodes : None | list of ints, optional
+            The list of node indices from the parent mesh
+            Can be in CW or CCW order
+        material : None | vcfempy.materials.Material
+            The material type assigned to the element
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        None
+
+        """
 
         # initialize parent mesh
         self.mesh = mesh
@@ -1380,39 +1517,122 @@ class PolyElement2D():
 
     @property
     def num_nodes(self):
+        """ Getter for number of nodes in the element
+
+        Returns
+        -------
+        int
+            The number of nodes in the element
+
+        Examples
+        --------
+        """
         return len(self.nodes)
 
     @property
     def nodes(self):
+        """ Getter for list of element nodes
+
+        Returns
+        -------
+        list of ints
+            The list of node indices in the element
+
+        Examples
+        --------
+        """
         return self._nodes
 
     @property
     def mesh(self):
+        """ Getter for parent mesh
+
+        Returns
+        -------
+        None | PolyMesh2D
+            The parent mesh assigned to the element
+
+        Examples
+        --------
+        """
         return self._mesh
 
     @mesh.setter
     def mesh(self, mesh):
+        """ Setter for parent mesh
 
+        Parameters
+        ----------
+        mesh : None | PolyMesh2D
+            The parent mesh to assign to the element
+
+        Raises
+        ------
+        TypeError
+            type(mesh) not in [NoneType, PolyMesh2D]
+
+        """
+
+        # basic type check of mesh
         if type(mesh) not in [type(None), PolyMesh2D]:
             raise TypeError('type(mesh) not in [NoneType, vcfempy.meshgen.PolyMesh2D]')
 
+        # assign mesh
         self._mesh = mesh
 
     @property
     def material(self):
+        """ Getter for element material
+
+        Returns
+        -------
+        None | vcfempy.materials.Material
+            The material assigned to the element
+
+        Examples
+        --------
+        """
         return self._material
 
     @material.setter
     def material(self, material):
+        """ Setter for element material
 
+        Parameters
+        ----------
+        material : None | vcfempy.materials.Material
+            The material to assign to the element
+
+        Raises
+        ------
+        TypeError
+            type(material) not in [NoneType, vcfempy.materials.Material]
+
+        """
+
+        # basic type check of material
         if type(material) not in [type(None), mtl.Material]:
             raise TypeError('type(material) not in [NoneType, vcfempy.materials.Material]')
 
+        # assign material
         self._material = material
     
     @property
     def area(self):
+        """ Getter for element area
 
+        Returns
+        -------
+        float
+            The element area
+            Positive if nodes in CCW order, negative if nodes in CW order
+
+        Examples
+        --------
+        """
+
+        # check if area has not been calculated
+        # if not, calculate it
         if self._area is None:
             self._area = polygon_area(self.mesh.nodes[self.nodes])
 
@@ -1420,7 +1640,19 @@ class PolyElement2D():
 
     @property
     def centroid(self):
+        """ Getter for element centroid coordinates
 
+        Returns
+        -------
+        numpy.array, size = (2,)
+            The coordinates of the element centroid
+
+        Examples
+        --------
+        """
+
+        # check if centroid has not been calculated
+        # if not, calculate it
         if self._centroid is None:
             self._centroid, _ = polygon_centroid(self.mesh.nodes[self.nodes], self.area)
 
@@ -1428,7 +1660,19 @@ class PolyElement2D():
 
     @property
     def quad_points(self):
+        """ Getter for element quadrature point coordinates
 
+        Returns
+        -------
+        numpy.array, size = (*,2)
+            The coordinates of the element quadrature points
+
+        Examples
+        --------
+        """
+
+        # check if quadrature has not been generated
+        # if not, generate it
         if self._quad_points is None:
             self.generate_quadrature()
 
@@ -1436,7 +1680,20 @@ class PolyElement2D():
     
     @property
     def quad_weights(self):
+        """ Getter for element quadrature point weights
 
+        Returns
+        -------
+        numpy.array, size = (*,)
+            The weights of the element quadrature points
+            Should sum to 1.0
+
+        Examples
+        --------
+        """
+
+        # check if quadrature has not been generated
+        # if not, generate it
         if self._quad_weights is None:
             self.generate_quadrature()
 
@@ -1444,7 +1701,25 @@ class PolyElement2D():
 
     @property
     def quad_integrals(self):
+        """ Getter for element quadrature basis function integrals
 
+        Returns
+        -------
+        numpy.array, size = (*,)
+            The values of the element quadrature basis function integrals
+            Computed in local coordinates with origin at centroid
+            Basis functions depends on number of nodes and mesh.high_order_quadrature
+            3 nodes: 1
+            up to 5 nodes: ..., x**2, x*y, y**2
+            up to 7 nodes: ..., x**4, x**3 * y, ... y**4
+            mesh.high_order_quadrature or up to 10 nodes: ..., x**6, x**5 * y, ... y**6
+
+        Examples
+        --------
+        """
+
+        # check if quadrature has not been generated
+        # if not, generate it
         if self._quad_integrals is None:
             self.generate_quadrature()
 
