@@ -1,6 +1,27 @@
 """ 
 A module containing scripts that run demonstrative examples of the 
-Voronoi Cell Finite Element Method package (vcfempy). 
+Voronoi Cell Finite Element Method package (vcfempy). This can be
+run as a standalone script since it has the __name__ == '__main__' idiom.
+
+Uses
+----
+numpy
+matplotlib.pyplot
+vcfempy.materials
+vcfempy.meshgen
+
+Functions
+---------
+rectangular_mesh()
+    An example demonstrating mesh generation for a simple rectangular domain with a single material
+dam_mesh()
+    An example demonstrating mesh generation for a polygonal domain with multiple materials
+    and mesh edges between the materials. Demonstrates "soft" (no mesh_edge) vs. "hard" edges
+    (using a mesh_edge).
+tunnel_mesh()
+    An example demonstrating mesh generation for a symmetric analysis of a tunnel, which has a
+    concave domain boundary. Also demonstrates mesh_edges within a material.
+
 """
 
 import numpy as np
@@ -10,27 +31,31 @@ import vcfempy.materials as mtl
 import vcfempy.meshgen as vcm
 
 def rectangular_mesh():
-    """ An example with a simple rectangular mesh.
+    """ 
+    An example demonstrating mesh generation for a simple rectangular domain with a single material
     """
 
     print('*** Simple rectangular domain:\n')
     
+    # initialize the mesh object
     rect_mesh = vcm.PolyMesh2D()
 
     # add main corner vertices
     rect_mesh.add_vertices([[0,0],[0,20.],[20,20],[20,0]])
 
     # insert boundary vertices
+    # here, use a list comprehension to add all vertices in clockwise order
     rect_mesh.insert_boundary_vertices(0, [k for k in range(rect_mesh.num_vertices)])
 
     # add material types and regions
-    # Note: here we test creating a MaterialRegion2D object
-    #       and then adding it to the mesh
+    # Note: here we create a MaterialRegion2D object and then add it to the mesh
     rock = mtl.Material('xkcd:stone')
     rock_region = vcm.MaterialRegion2D(rect_mesh, [k for k in rect_mesh.boundary_vertices], rock)
     rect_mesh.add_material_regions(rock_region)
 
     # generate mesh and print properties
+    # Note: here [16,16] is the grid size for mesh seed points 
+    # and 0.2 is the degree of random shifting
     rect_mesh.generate_mesh([16,16], 0.2)
     print(rect_mesh)
 
@@ -67,6 +92,7 @@ def rectangular_mesh():
 
 
     # test quadrature
+    # Note: Here we test integration of constant, linear, and quadratic functions
     int_test = np.zeros(6)
     int_exp = np.array([400., 4000., 4000., 20.*8000./3, 20.*8000./3, 40000.])
     for xq, wq, cent, area in zip(  rect_mesh.element_quad_points, \
@@ -90,35 +116,50 @@ def rectangular_mesh():
 
 
 def dam_mesh():
-    """ An example with a mesh for a dam with multiple materials.
+    """ 
+    An example demonstrating mesh generation for a polygonal domain with multiple materials
+    and mesh edges between the materials. Demonstrates "soft" (no mesh_edge) vs. "hard" edges
+    (using a mesh_edge).
     """
 
     print('*** Dam with multiple material regions:\n')
     
+    # initialize the mesh object
     dam_mesh = vcm.PolyMesh2D()
 
+    # add boundary vertices
+    # Note: here we show that vertices can be passed as single coordinate pairs
+    #       or as lists of coordinate pairs
+    #       numpy arrays can also be used
     dam_mesh.add_vertices([[0,0],[88.5,65],[92.5,65],[180,0]])
     dam_mesh.add_vertices([92.5,0])
     dam_mesh.add_vertices([45,0])
     dam_mesh.add_vertices([55,30])
 
+    # add outer boundary vertices
     dam_mesh.insert_boundary_vertices(0, [0,6,1,2,3])
 
+    # create two different material types
+    # they are initialized with colors given as valid matplotlib color strings
     gravel = mtl.Material('xkcd:stone')
     clay = mtl.Material('xkcd:clay')
 
     # add material regions
     # Note: here we test three different ways to pass input to add_material_regions
+    #       list of lists of vertices and list of material types
+    #       list of vertices and single material type
+    #       MaterialRegion2D object
     dam_mesh.add_material_regions([[0,6,1,5]],[gravel])
     dam_mesh.add_material_regions([2,3,4], gravel)
     clay_region = vcm.MaterialRegion2D(dam_mesh, [1,2,4,5], clay)
     dam_mesh.add_material_regions(clay_region)
 
     # add edges to be preserved in mesh generation
-    # Note: here we test two different ways to pass input to add_mesh_edges
-    dam_mesh.add_mesh_edges([[1,5]])
+    # Note: the left edge of the clay region will be a "soft" edge
+    #       and the right edge will be a "hard" edge
     dam_mesh.add_mesh_edges([2,4])
 
+    # generate the mesh and print basic mesh properties
     dam_mesh.generate_mesh([44,16], 0.2)
     print(dam_mesh)
 
@@ -150,7 +191,7 @@ def dam_mesh():
 
     plt.savefig('dam_mesh.png')
 
-    # test area
+    # test area using generated quadrature
     int_test = np.zeros(1)
     int_exp = np.array([0.5*55*30 + 0.5*(88.5-55)*(30+65) + (92.5-88.5)*65 + 0.5*65*(180-92.5)])
     for e in dam_mesh.elements:
@@ -166,14 +207,19 @@ def dam_mesh():
  
 
 def tunnel_mesh():
-    """ An example with a mesh for a tunnel with a concave boundary.
+    """ 
+    An example demonstrating mesh generation for a symmetric analysis of a tunnel, which has a
+    concave domain boundary. Also demonstrates mesh_edges within a material.
     """
 
     print('*** Symmetric tunnel with concave boundary:\n')
     
+    # initialize the mesh object
     tunnel_mesh = vcm.PolyMesh2D()
     
     # add main corners
+    # Note: we also insert a vertex in the middle of a straight section of boundary
+    #       these can be added to aid in adding boundary conditions
     tunnel_mesh.add_vertices([[0,20.],[20,20],[20,0],[15,0]])
 
     # create circular arc (concave)
@@ -181,7 +227,7 @@ def tunnel_mesh():
     for t in theta:
         tunnel_mesh.add_vertices(10.*np.array([np.cos(t), np.sin(t)]))
 
-    # add boundary vertices
+    # add boundary vertices in clockwise order
     tunnel_mesh.insert_boundary_vertices(0, [k for k in range(tunnel_mesh.num_vertices)])
 
     # add material types and regions
@@ -189,6 +235,9 @@ def tunnel_mesh():
     tunnel_mesh.add_material_regions([k for k in range(tunnel_mesh.num_vertices)], rock)
 
     # add mesh edges
+    # Note: mesh edges need not be at material region boundaries
+    #       they can also be used to force element edge alignment
+    #       (e.g. with joints in rock or existing planes of failure)
     nv = tunnel_mesh.num_vertices
     tunnel_mesh.add_vertices([[2.5,17.5],[10.,12.5],[12.5,15.],[17.5,2.5]])
     tunnel_mesh.add_mesh_edges([[nv,nv+1],[nv+3,nv+2]])
@@ -227,6 +276,7 @@ def tunnel_mesh():
     plt.savefig('tunnel_mesh.png')
 
     # test quadrature
+    # Note: here we test integration of constant, linear, and quadratic functions
     int_test = np.zeros(6)
     int_exp = np.array([400. - 0.25*np.pi*10.0**2, 4000. - 1000./3, 4000. - 1000./3, \
                         20.*8000./3 - np.pi*10.**4/16, 20.*8000./3 - np.pi*10.**4/16, \
@@ -252,6 +302,8 @@ def tunnel_mesh():
  
 
 if __name__ == '__main__':
+    """ If called as a standalone script, run all examples. """
+
     print('\nRunning all examples:\n')
 
     print('========================================')
