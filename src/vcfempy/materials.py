@@ -1,17 +1,25 @@
-"""A module containing attributes, functions, classes and methods 
-for materials in the Voronoi Cell Finite Element Method (VCFEM).
-
-Attributes
-----------
-None
-
-Functions
-----------
-None
+"""A module for materials in the Voronoi Cell Finite Element Method (VCFEM).
 
 Classes
-----------
+-------
 Material
+    A class for materials and their properties in the VCFEM
+
+See Also
+--------
+vcfempy.meshgen.py
+    A module for generating meshes for the VCFEM
+vcfempy.flow.py
+    A module for seepage/flow analysis using the VCFEM
+/src/examples.py
+    A script with demonstrative examples of ``vcfempy`` usage
+
+Notes
+-----
+This module is part of the ``vcfempy`` package. Internally, it is commonly
+imported as
+``import vcfempy.materials as mtl``
+and is a base level module imported by other modules in ``vcfempy``.
 
 """
 
@@ -20,16 +28,17 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mpl_col
 
 class Material():
-    """A class for Materials in the VCFEM.
+    """A class for materials and their properties in the VCFEM.
     
-    Properties
+    Parameters
     ----------
-    color : tuple | str
+    color : color_like, optional
         The material color for plotting, a valid matplotlib color value
-        
-    Private Attributes
-    ------------------
-    _color : tuple | str
+        If not provided or None, self.color initialized to random RGBA with A=0.3
+
+    Attributes
+    ----------
+    color : color_like
         The material color for plotting, a valid matplotlib color value
         
     Examples
@@ -49,23 +58,7 @@ class Material():
     """
     
     def __init__(self, color = None):
-        """ Initialization method for vcfempy.Material
-
-        Parameters
-        ----------
-        color : tuple RGB, len == 3 | tuple RGBA, len == 4 | str, optional
-            The material color for plotting, a valid matplotlib color value
-            If not provided or None, self.color initialized to random RGBA with A=0.3
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        None
-
-        """
+        """ Initialization method for vcfempy.Material """
         
         # check if color not provided
         if color is None:
@@ -81,12 +74,18 @@ class Material():
 
         Parameters
         ----------
-        None
+        c : color_like
+            New material color, a valid matplotlib color value
 
         Returns
         -------
-        tuple RGB, len == 3 | tuple RGBA, len == 4 | str
-            A matplotlib color-like value
+        color_like
+            A matplotlib color value
+
+        Raises
+        ------
+        ValueError
+            `c` is not a valid matplotlib color
 
         Examples
         --------
@@ -119,23 +118,7 @@ class Material():
     
     @color.setter
     def color(self, c):
-        """ Setter for Material color
-
-        Parameters
-        ----------
-        c : tuple RGB, len == 3 | tuple RGBA, len == 4 | str
-            New material color, a valid matplotlib color value
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        ValueError
-            New color is not a valid matplotlib color
-
-        """
+        """ Setter for Material color """
         if not mpl_col.is_color_like(c):
             raise ValueError('{} is not a valid matplotlib.colors color'.format(c))
         self._color = c
