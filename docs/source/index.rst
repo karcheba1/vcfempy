@@ -7,10 +7,9 @@ Welcome to VcFemPy's documentation!
 ===================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 8
    :caption: Contents:
 
-   api
    modules
 
 
@@ -18,7 +17,6 @@ Indices and tables
 ==================
 
 * :ref:`search`
-
-.. * :ref:`genindex`
-   * :ref:`modindex`
+* :ref:`genindex`
+* :ref:`modindex`
 
