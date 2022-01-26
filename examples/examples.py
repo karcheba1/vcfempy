@@ -41,7 +41,7 @@ def rectangular_mesh():
     rect_mesh = msh.PolyMesh2D()
 
     # add main corner vertices
-    rect_mesh.add_vertices([[0,0],[0,20.],[20,20],[20,0]])
+    rect_mesh.add_vertices([[0,0],[0,20],[0,40.],[20,40],[20,20],[20,0]])
 
     # insert boundary vertices
     # here, use a list comprehension to add all vertices in clockwise order
@@ -54,9 +54,9 @@ def rectangular_mesh():
     rect_mesh.add_material_regions(rock_region)
 
     # generate mesh and print properties
-    # Note: here [16,16] is the grid size for mesh seed points 
+    # Note: here [16,32] is the grid size for mesh seed points 
     # and 0.2 is the degree of random shifting
-    rect_mesh.generate_mesh([16,16], 0.2)
+    rect_mesh.generate_mesh([8,16], 0.2)
     print(rect_mesh)
 
     # plot histogram of number of nodes per element
@@ -94,7 +94,7 @@ def rectangular_mesh():
     # test quadrature
     # Note: Here we test integration of constant, linear, and quadratic functions
     int_test = np.zeros(6)
-    int_exp = np.array([400., 4000., 4000., 20.*8000./3, 20.*8000./3, 40000.])
+    int_exp = np.array([800., 8_000., 16_000., 320_000./3, 1_280_000./3, 160_000.])
     for xq, wq, cent, area in zip(  rect_mesh.element_quad_points, \
                                     rect_mesh.element_quad_weights, \
                                     rect_mesh.element_centroids, \
@@ -243,7 +243,7 @@ def tunnel_mesh():
     tunnel_mesh.add_mesh_edges([[nv,nv+1],[nv+3,nv+2]])
 
     # generate mesh and show properties
-    tunnel_mesh.generate_mesh([50,50], 0.3)
+    tunnel_mesh.generate_mesh([20,20], 0.3)
     print(tunnel_mesh)
 
     # plot histogram of number of nodes per element

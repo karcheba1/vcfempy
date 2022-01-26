@@ -973,7 +973,7 @@ class PolyMesh2D():
         # add points to ensure boundary vertices are
         # captured in the mesh
         # Note: the added points differ depending on
-        #       whether the vertex is convex or concave
+        #       whether the vertex is convex, concave, or straight
         for k, edge in enumerate(self.boundary_edges):
             
             # get previous edge
@@ -994,19 +994,45 @@ class PolyMesh2D():
             
             # get unit vectors in direction normal to
             # perpendicular bisector of the vertex
-            # Note: at convex vertex, pp_hat is inward pointing
+            # Note: at convex or straight vertex, pp_hat is inward pointing
             #       at concave vertex, pp_hat is outward pointing
             pp_hat = bbf+bbr
-            if np.linalg.norm(pp_hat) > 1.e-8 * d_scale:
+
+            # check length of pp_hat, if non-zero normalize
+            if np.linalg.norm(pp_hat) > 1.e-8:
                 pp_hat = pp_hat / np.linalg.norm(pp_hat)
+
+            # if length of pp_hat is zero, edge is straight
+            # make pp_hat inward pointing normal
             else:
-                pp_hat = bp1-bm1
-                pp_hat = np.array([pp_hat[1], -pp_hat[0]])
-                pp_hat = pp_hat / np.linalg.norm(pp_hat)
+                pp_hat = np.array([bbf[1], -bbf[0]])
+                
+            # get tangential unit vector, normal to pp_hat
             vv_hat = np.array([pp_hat[1],-pp_hat[0]])
 
+            # check for straight edge
+            bbr_bbf_crs = np.cross(bbr, bbf)
+            if np.abs(bbr_bbf_crs) < 1.e-8:
+
+                # get local scale, in case adjacent edges are short
+                d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
+                
+                # delete points near vertex b0
+                keep_points = np.bool_(np.ones(self.num_points))
+                for j, p in enumerate(self.points):
+                    if np.linalg.norm(p-b0) < 0.5*d_scale_loc:
+                        keep_points[j] = False
+                self._points = self.points[keep_points]
+                
+                # create two new points near concave vertex
+                new_points = [  b0 + d_scale_loc*(0.2*pp_hat + 0.4*vv_hat), \
+                                b0 + d_scale_loc*(0.2*pp_hat - 0.4*vv_hat)]
+                
+                # add new points near vertex
+                self._points = np.vstack([self.points, new_points])
+
             # check for concave vertex
-            if np.cross(bbr, bbf) < 0:
+            elif bbr_bbf_crs < 0:
                 
                 d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
                 
@@ -1036,7 +1062,7 @@ class PolyMesh2D():
                         keep_points[j] = False
                 self._points = self.points[keep_points]
                 
-                # create three new points near convex vertex
+                # create new point near convex vertex
                 # adjacent to a short boundary edge
                 new_points = [b0 + 0.4*d_scale_loc*pp_hat]
                 
