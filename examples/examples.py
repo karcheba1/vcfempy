@@ -28,7 +28,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import vcfempy.materials as mtl
-import vcfempy.meshgen as vcm
+import vcfempy.meshgen as msh
 
 def rectangular_mesh():
     """ 
@@ -38,7 +38,7 @@ def rectangular_mesh():
     print('*** Simple rectangular domain:\n')
     
     # initialize the mesh object
-    rect_mesh = vcm.PolyMesh2D()
+    rect_mesh = msh.PolyMesh2D()
 
     # add main corner vertices
     rect_mesh.add_vertices([[0,0],[0,20.],[20,20],[20,0]])
@@ -50,7 +50,7 @@ def rectangular_mesh():
     # add material types and regions
     # Note: here we create a MaterialRegion2D object and then add it to the mesh
     rock = mtl.Material('xkcd:stone')
-    rock_region = vcm.MaterialRegion2D(rect_mesh, [k for k in rect_mesh.boundary_vertices], rock)
+    rock_region = msh.MaterialRegion2D(rect_mesh, [k for k in rect_mesh.boundary_vertices], rock)
     rect_mesh.add_material_regions(rock_region)
 
     # generate mesh and print properties
@@ -125,7 +125,7 @@ def dam_mesh():
     print('*** Dam with multiple material regions:\n')
     
     # initialize the mesh object
-    dam_mesh = vcm.PolyMesh2D()
+    dam_mesh = msh.PolyMesh2D()
 
     # add boundary vertices
     # Note: here we show that vertices can be passed as single coordinate pairs
@@ -151,7 +151,7 @@ def dam_mesh():
     #       MaterialRegion2D object
     dam_mesh.add_material_regions([[0,6,1,5]],[gravel])
     dam_mesh.add_material_regions([2,3,4], gravel)
-    clay_region = vcm.MaterialRegion2D(dam_mesh, [1,2,4,5], clay)
+    clay_region = msh.MaterialRegion2D(dam_mesh, [1,2,4,5], clay)
     dam_mesh.add_material_regions(clay_region)
 
     # add edges to be preserved in mesh generation
@@ -215,7 +215,7 @@ def tunnel_mesh():
     print('*** Symmetric tunnel with concave boundary:\n')
     
     # initialize the mesh object
-    tunnel_mesh = vcm.PolyMesh2D()
+    tunnel_mesh = msh.PolyMesh2D()
     
     # add main corners
     # Note: we also insert a vertex in the middle of a straight section of boundary
