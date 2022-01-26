@@ -10,7 +10,8 @@ Welcome to VcFemPy's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   vcfempy
+   api
+   modules
 
 
 Indices and tables
