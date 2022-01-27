@@ -3,16 +3,16 @@
 Classes
 -------
 Material
-    A class for materials and their properties in the VCFEM
+    A class for materials and their properties in the VCFEM.
 
 See Also
 --------
 vcfempy.meshgen.py
-    A module for generating meshes for the VCFEM
+    A module for generating meshes for the VCFEM.
 vcfempy.flow.py
-    A module for seepage/flow analysis using the VCFEM
-/src/examples.py
-    A script with demonstrative examples of ``vcfempy`` usage
+    A module for seepage/flow analysis using the VCFEM.
+examples.py
+    A script with demonstrative examples of ``vcfempy`` usage.
 
 Notes
 -----
@@ -24,23 +24,23 @@ and is a base level module imported by other modules in ``vcfempy``.
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.colors as mpl_col
+
 
 class Material():
     """A class for materials and their properties in the VCFEM.
-    
+
     Parameters
     ----------
     color : color_like, optional
-        The material color for plotting, a valid matplotlib color value
-        If not provided or None, self.color initialized to random RGBA with A=0.3
+        The material color for plotting, a matplotlib color_like value
+        If not provided or None, `self.color` initialized to random RGB
 
     Attributes
     ----------
     color : color_like
-        The material color for plotting, a valid matplotlib color value
-        
+        The material color for plotting, a matplotlib color_like value
+
     Examples
     --------
     >>> m = Material((0.1, 0.5, 0.7)); print(m.color)
@@ -54,38 +54,37 @@ class Material():
 
     >>> import numpy as np; np.random.seed(0); \
         m = Material(); print(m.color)
-    (0.5488135039273248, 0.7151893663724195, 0.6027633760716439, 0.3)
+    (0.5488135039273248, 0.7151893663724195, 0.6027633760716439)
     """
-    
-    def __init__(self, color = None):
-        """ Initialization method for vcfempy.Material """
-        
-        # check if color not provided
+
+    def __init__(self, color=None):
+        """Initialization method for `vcfempy.materials.Material` object."""
+        # if color not provided
+        # set to random RGB
         if color is None:
-            color = (np.random.random(), np.random.random(), np.random.random(), 0.3)
-            
-        # initialize color value
+            color = (np.random.random(),
+                     np.random.random(),
+                     np.random.random())
         self.color = color
-    
-    
+
     @property
     def color(self):
-        """ Getter for Material color 
+        """The plotting color of the Material
 
         Parameters
         ----------
-        c : color_like
-            New material color, a valid matplotlib color value
+        color : color_like
+            New material color, a matplotlib color_like value
 
         Returns
         -------
         color_like
-            A matplotlib color value
+            A matplotlib color_like value
 
         Raises
         ------
         ValueError
-            `c` is not a valid matplotlib color
+            `color` is not a valid matplotlib color_like
 
         Examples
         --------
@@ -101,26 +100,23 @@ class Material():
         >>> m = Material(); m.color = (1.2, 0.2, 0.3); print(m.color)
         Traceback (most recent call last):
         ...
-        ValueError: (1.2, 0.2, 0.3) is not a valid matplotlib.colors color
+        ValueError: (1.2, 0.2, 0.3) is not a matplotlib color_like value
 
         >>> m = Material(); m.color = 'xkcd:blech'; print(m.color)
         Traceback (most recent call last):
         ...
-        ValueError: xkcd:blech is not a valid matplotlib.colors color
+        ValueError: xkcd:blech is not a matplotlib color_like value
 
         >>> m = Material(); m.color = None; print(m.color)
         Traceback (most recent call last):
         ...
-        ValueError: None is not a valid matplotlib.colors color
+        ValueError: None is not a matplotlib color_like value
 
         """
         return self._color
-    
+
     @color.setter
-    def color(self, c):
-        """ Setter for Material color """
-        if not mpl_col.is_color_like(c):
-            raise ValueError('{} is not a valid matplotlib.colors color'.format(c))
-        self._color = c
-        
-            
+    def color(self, color):
+        if not mpl_col.is_color_like(color):
+            raise ValueError(f'{color} is not a matplotlib color_like value')
+        self._color = color
