@@ -1,5 +1,5 @@
-"""A module containing attributes, functions, classes and methods 
-for meshes in the Voronoi Cell Finite Element Method (VCFEM).
+"""A module containing attributes, functions, classes and methods for
+meshes in the Voronoi Cell Finite Element Method (VCFEM).
 
 Uses
 ----
@@ -9,22 +9,16 @@ matplotlib.path
 scipy.spatial.Voronoi
 vcfempy.materials
 
-Constants
-----------
-None
-
 Functions
 ---------
-None
+polygon_area
+polygon_centroid
 
 Classes
 -------
 PolyMesh2D
-    A class for 2D polygonal mesh generation
 MaterialRegion2D
-    A class for 2D material region geometry
 PolyElement2D
-    A class for polygonal element geometry and quadrature generation
 
 """
 
@@ -35,9 +29,10 @@ from scipy.spatial import Voronoi as Voronoi
 
 import vcfempy.materials as mtl
 
+
 class PolyMesh2D():
     """A class for 2D polygonal mesh generation.
-    
+
     Properties
     ----------
     vertices : ndarray, immutable, shape (nvertices, 2)
@@ -46,7 +41,7 @@ class PolyMesh2D():
         The clockwise list of vertices defining the analysis boundary polygon
     boundary_edges : list of list of ints, immutable, shape (nboundaryedges, 2)
         The list of edges defining the vertices in each boundary edge
-        
+
     Private Attributes
     ------------------
     _vertices : ndarray, shape (nvertices, 2)
@@ -55,76 +50,78 @@ class PolyMesh2D():
         The clockwise list of vertices defining the analysis boundary polygon
     _boundary_edges : list of list of ints, shape (nboundaryedges, 2)
         The list of edges defining the vertices in each boundary edge
-        
+
     Examples
     --------
+
     """
-    
-    def __init__(self, \
-                 vertices = None, boundary_vertices = None, \
-                 material_regions = None, materials = None, \
-                 mesh_edges = None):
+
+    def __init__(self,
+                 vertices=None, boundary_vertices=None,
+                 material_regions=None, materials=None,
+                 mesh_edges=None):
         """Create a new PolyMesh2D object.
-        
+
         Parameters
         ----------
-        vertices : list of lists of (ints or floats) | ndarray of (ints or floats), optional, shape (nvertices, 2)
+        vertices : list[list[int or float]] | array_like[int or float],
+                    optional, shape (nvertices, 2)
             Initial vertices to be added to the PolyMesh2D
-        boundary_vertices : int | list of ints, optional
+        boundary_vertices : int | list[int], optional
             Initial list of boundary vertices to be added
-        material_regions : list of ints | list of list of ints, optional
+        material_regions : list[int] | list[list[int]], optional
             Initial list(s) of material region vertices to be added
-        materials : list of vcfempy.materials.Material
-            Initial list of material types, optional, len(materials) == len(material_regions)
-        mesh_edges : list of ints | list of list of ints, optional
-            Initial list(s) defining non-boundary edges to be preserved in the mesh generation
-        
+        materials : list[vcfempy.materials.Material], optional
+            Initial list of material types
+        mesh_edges : list[int] | list[list[int]], optional
+            Initial list(s) defining non-boundary edges to be preserved in
+            the mesh generation
+
         Returns
         -------
         PolyMesh2D
             A PolyMesh2D object
-        
+
         Raises
         ------
         None
-        
+
         Examples
         --------
         >>> PolyMesh2D(boundary_vertices = 0)
         Traceback (most recent call last):
         ...
         ValueError: boundary_vertices values must all be less than number of vertices
-        """ 
-        
-        # initialize flags for 
+        """
+        # initialize flags for
         #      verbose printing
         #      high order quadrature in all elements
         self._verbose_printing = False
         self._high_order_quadrature = False
-        
+
         # initialize vertices
         self._vertices = None
         self.add_vertices(vertices)
-        
+
         # initialize boundary vertices and edges
         self._boundary_vertices = []
         self.insert_boundary_vertices(0, boundary_vertices)
-            
+
         # initialize boundary edges and mesh properties
         # Note: Although inserting boundary vertices sometimes does this
-        #       this is still necessary in case boundary_vertices is None or an empty list
+        #       this is still necessary in case boundary_vertices is None or an
+        #       empty list
         self.generate_boundary_edges()
         self.mesh_valid = False
-        
+
         # initialize material regions
         self._material_regions = []
         self.add_material_regions(material_regions, materials)
-        
+
         # initialize mesh edges
         self._mesh_edges = []
         self.add_mesh_edges(mesh_edges)
-        
-                
+
     @property
     def num_vertices(self):
         """ Getter for number of vertices in PolyMesh2D. """
@@ -132,27 +129,27 @@ class PolyMesh2D():
             return 0
         else:
             return self._vertices.shape[0]
-        
+
     @property
     def num_boundary_vertices(self):
         """ Getter for number of boundary vertices in PolyMesh2D. """
         return len(self.boundary_vertices)
-        
+
     @property
     def num_boundary_edges(self):
         """ Getter for number of boundary edges in PolyMesh2D. """
         return len(self.boundary_edges)
-        
+
     @property
     def num_material_regions(self):
         """ Getter for number of material regions in PolyMesh2D. """
         return len(self.material_regions)
-    
+
     @property
     def num_mesh_edges(self):
         """ Getter for number of mesh edges in PolyMesh2D. """
         return len(self.mesh_edges)
-        
+
     @property
     def num_nodes(self):
         """ Getter for number of nodes in PolyMesh2D. """
@@ -160,27 +157,27 @@ class PolyMesh2D():
             return 0
         else:
             return self._nodes.shape[0]
-        
+
     @property
     def num_elements(self):
         """ Getter for number of elements in PolyMesh2D. """
         return len(self.elements)
-        
+
     @property
     def num_element_edges(self):
         """ Getter for number of element edge vertex lists in PolyMesh2D. """
         return len(self.element_edges)
-    
+
     @property
     def num_element_neighbors(self):
         """ Getter for number of element neighbor lists in PolyMesh2D. """
         return len(self.element_neighbors)
-                                    
+
     @property
     def num_nodes_per_element(self):
         """ Getter for number of nodes per element in PolyMesh2D. """
         return [e.num_nodes for e in self.elements]
-        
+
     @property
     def num_points(self):
         """ Getter for number of element seed points in PolyMesh2D. """
@@ -193,27 +190,27 @@ class PolyMesh2D():
     def vertices(self):
         """ Getter for vertices in PolyMesh2D. """
         return self._vertices
-    
+
     @property
     def boundary_vertices(self):
         """ Getter for list of boundary_vertices in PolyMesh2D. """
         return self._boundary_vertices
-    
+
     @property
     def boundary_edges(self):
         """ Getter for list of boundary_edges in PolyMesh2D. """
         return self._boundary_edges
-    
+
     @property
     def material_regions(self):
         """ Getter for list of material_regions in PolyMesh2D. """
         return self._material_regions
-    
+
     @property
     def mesh_edges(self):
         """ Getter for list of mesh edges in PolyMesh2D. """
         return self._mesh_edges
-    
+
     @property
     def mesh_valid(self):
         """ Getter for mesh valid flag for PolyMesh2D. """
@@ -223,153 +220,139 @@ class PolyMesh2D():
     def mesh_valid(self, val):
         """ Setter for mesh valid flag for PolyMesh2D.
             If setting to False, resets mesh properties.
-            If setting to True, performs basic checks of mesh validity before setting.
+            If setting to True, performs basic checks of mesh validity before
+            setting.
         """
-        
         # simple type check of val
         if type(val) not in [bool, np.bool_]:
             raise TypeError('cannot set PolyMesh2D.mesh_valid to non-bool')
-
-        # if invalidating mesh, 
+        # if invalidating mesh,
         # then reset mesh properties
         if not val:
-            
             self._mesh_valid = False
             self._nodes = None
             self._points = None
             self._elements = []
             self._element_neighbors = []
             self._element_edges = []
-
         # otherwise, trying to validate mesh
         # check that mesh properties have been set
         else:
-
             if not self.num_nodes:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but nodes is empty')
-
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True,'
+                                 + ' but nodes is empty')
             if not self.num_points:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but points is empty')
-
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True,'
+                                 + ' but points is empty')
             if not self.num_elements:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but elements is empty')
-
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True,'
+                                 + ' but elements is empty')
             if not self.num_element_neighbors:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but element_neighbors is empty')
-            
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True,'
+                                 + ' but element_neighbors is empty')
             if not self.num_element_edges:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but element_edges is empty')
-
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True,'
+                                 + ' but element_edges is empty')
             if self.num_element_neighbors != self.num_element_edges:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but num_element_neighbors != num_element_edges')
-                
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True,'
+                                 + ' but num_element_neighbors '
+                                 + '!= num_element_edges')
             if self.num_points != self.num_elements:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid = True, but num_points != num_elements')
-
+                raise ValueError('trying to set PolyMesh2D.mesh_valid = True,'
+                                 + ' but num_points != num_elements')
             # if here, then all checks for mesh validity succeeded
             # set the mesh valid flag
             self._mesh_valid = True
 
-    
     @property
     def nodes(self):
         """ Getter for nodes in PolyMesh2D. """
         return self._nodes
-    
+
     @property
     def points(self):
         """ Getter for element seed points in PolyMesh2D. """
         return self._points
-    
+
     @property
     def elements(self):
         """ Getter for elements in PolyMesh2D. """
         return self._elements
-    
+
     @property
     def element_neighbors(self):
         """ Getter for list of element neighbors in PolyMesh2D. """
         return self._element_neighbors
-    
+
     @property
     def element_edges(self):
         """ Getter for list of element edges in PolyMesh2D. """
         return self._element_edges
-    
+
     @property
     def element_materials(self):
         """ Getter for list of element materials in PolyMesh2D. """
         return [e.material for e in self.elements]
-    
+
     @property
     def element_areas(self):
         """ Getter for list of element areas in PolyMesh2D. """
         return [e.area for e in self.elements]
-    
+
     @property
     def element_centroids(self):
         """ Getter for list of element centroids in PolyMesh2D. """
         return [e.centroid for e in self.elements]
-    
+
     @property
     def element_quad_points(self):
         """ Getter for list of element quadrature points in PolyMesh2D. """
         return [e.quad_points for e in self.elements]
-    
+
     @property
     def element_quad_weights(self):
         """ Getter for list of element quadrature weights in PolyMesh2D. """
         return [e.quad_weights for e in self.elements]
-    
+
     @property
     def high_order_quadrature(self):
         """ Getter for high order quadrature flag. """
         return self._high_order_quadrature
-    
+
     @high_order_quadrature.setter
     def high_order_quadrature(self, flag):
         """ Setter for high order quadrature flag. """
-        
         if type(flag) not in [bool, np.bool_]:
-            raise TypeError('cannot set PolyMesh2D.high_order_quadrature to non-bool')
-        
-        # check if value changed, if so set the value and reset element quadrature
+            raise TypeError('cannot set PolyMesh2D.high_order_quadrature '
+                            + 'to non-bool')
+        # check if value changed,
+        # if so set the value and reset element quadrature
         if flag != self.high_order_quadrature:
             self._high_order_quadrature = bool(flag)
             for e in self.elements:
                 e.invalidate_properties()
-    
+
     @property
     def verbose_printing(self):
         """ Getter for verbose printing flag. """
         return self._verbose_printing
-    
+
     @verbose_printing.setter
     def verbose_printing(self, flag):
         """ Setter for verbose printing flag. """
-        
         if type(flag) not in [bool, np.bool_]:
-            raise TypeError('cannot set PolyMesh2D.verbose_printing to non-bool')
-        
+            raise TypeError('cannot set PolyMesh2D.verbose_printing '
+                            + 'to non-bool')
         self._verbose_printing = bool(flag)
-        
-        
+
     def __str__(self):
         """Print out detailed information about the PolyMesh2D.
-        
-        Parameters
-        ----------
-        None
-        
+
         Returns
         -------
         str
             A string representation of the PolyMesh2D.
-        
-        Raises
-        ------
-        None
-        
+
         Examples
         --------
         >>> print(PolyMesh2D())
@@ -382,7 +365,7 @@ class PolyMesh2D():
         Number of Element Edges = 0
         <BLANKLINE>
         <BLANKLINE>
-        
+
         >>> print(PolyMesh2D([[0,0], [0,1], [1,1], [1,0]]))
         vcfempy.meshgen.PolyMesh2D
         Number of Vertices = 4
@@ -393,7 +376,7 @@ class PolyMesh2D():
         Number of Element Edges = 0
         <BLANKLINE>
         <BLANKLINE>
-        
+
         >>> m = PolyMesh2D([[0,0], [0,1], [1,1], [1,0]]); \
             m.verbose_printing = True; \
             print(m)
@@ -412,9 +395,7 @@ class PolyMesh2D():
          [1 0]]
         <BLANKLINE>
         <BLANKLINE>
-        
         """
-        
         # print header indicating type Mesh and basic information
         mesh_string = 'vcfempy.meshgen.PolyMesh2D\n'
         mesh_string += 'Number of Vertices = {!s}\n'.format(self.num_vertices)
@@ -423,69 +404,64 @@ class PolyMesh2D():
         mesh_string += 'Number of Nodes = {!s}\n'.format(self.num_nodes)
         mesh_string += 'Number of Elements = {!s}\n'.format(self.num_elements)
         mesh_string += 'Number of Element Edges = {!s}\n\n'.format(self.num_element_edges)
-        
+
         if not self.verbose_printing:
             return mesh_string
-        
+
         # print vertices
         if self.num_vertices:
             mesh_string += 'vertices\n'
             mesh_string += '{!s}\n\n'.format(self.vertices)
-        
         # print boundary_vertices
         if len(self.boundary_vertices):
             mesh_string += 'boundary_vertices\n'
             mesh_string += '{!s}\n\n'.format(self.boundary_vertices)
-        
         # print boundary_edges
         if len(self.boundary_edges):
             mesh_string += 'boundary_edges\n'
             mesh_string += '{!s}\n\n'.format(self.boundary_edges)
-            
         # print nodes
         if self.num_nodes:
             mesh_string += 'nodes\n'
             mesh_string += '{!s}\n\n'.format(self.nodes)
-            
         # print points
         if self.num_points:
             mesh_string += 'points\n'
             mesh_string += '{!s}\n\n'.format(self.points)
-            
         # print elements
         if self.num_elements:
             mesh_string += 'elements\n'
             mesh_string += '{!s}\n\n'.format(self.elements)
-            
         # print element edges
         if self.num_elements:
             mesh_string += 'element edges\n'
             mesh_string += '{!s}\n\n'.format(self.element_edges)
-        
         return mesh_string
-    
-    
+
     def add_vertices(self, vertices):
         """Add vertices to PolyMesh2D.
-        
+
         Parameters
         ----------
-        vertices : list of (int | float) | list of lists of (int | float) | numpy.ndarray, shape = (*,2)
-        
+        vertices : list[int or float] | list[list[int or float]]
+                   | array_like, shape = (*,2)
+
         Returns
         -------
         None
-        
+
         Raises
         ------
         TypeError
-            type(vertices) not in [NoneType, list, numpy.ndarray]
+            if type(vertices) not in [NoneType, list, numpy.ndarray]
             if type(vertices[0]) in [int, float, numpy.int32, numpy.float64]:
-                type(vertices[k]) not in [int, float, numpy.int32, numpy.float64]
+                type(vertices[k]) not in [int, float, numpy.int32,
+                                          numpy.float64]
             if type(vertices[0]) in [list, numpy.ndarray]:
                 type(vertices[k]) not in [list, numpy.ndarray]
             if type(vertices[k]) in [list, numpy.ndarray]:
-                type(vertices[k][j]) not in [int, float, numpy.int32, numpy.float64]
+                type(vertices[k][j]) not in [int, float, numpy.int32,
+                                             numpy.float64]
         ValueError
             if type(vertices[0]) in [int, float, numpy.int32, numpy.float64]:
                 len(vertices) != 2
@@ -493,96 +469,91 @@ class PolyMesh2D():
                 len(vertices[k]) != 2
             if type(vertices) is numpy.ndarray:
                 len(vertices.shape) != 2
-                
-        
+
         Examples
         --------
-        
+
         """
-        
         # basic type check of vertices
         if type(vertices) not in [type(None), list, np.ndarray]:
-            raise TypeError('type(vertices) not in [NoneType, list, numpy.ndarray]')
-                
+            raise TypeError('type(vertices) not in [NoneType, list,'
+                            + ' numpy.ndarray]')
         # catch case no vertices given
         # either as None or empty list or empty numpy.ndarray
         # in all cases, do nothing
-        if vertices is None \
-            or (type(vertices) is list and len(vertices) == 0) \
-            or (type(vertices) is np.ndarray and vertices.size == 0):
-                
+        if (vertices is None
+           or (type(vertices) is list and len(vertices) == 0)
+           or (type(vertices) is np.ndarray and vertices.size == 0)):
             return
-            
         # vertices given as a list
         # Note: if here, we know that len(vertices) > 0
         elif type(vertices) is list:
-            
             # catch case of single vertex given as list of numerics
             if type(vertices[0]) in [int, float, np.int32, np.float64]:
-                
                 # check for correct dimensions
                 if len(vertices) != 2:
-                    raise ValueError('type(vertices) is list of numeric, but len(vertices) != 2')
-                    
+                    raise ValueError('type(vertices) is list of numeric, but'
+                                     + ' len(vertices) != 2')
                 # check that all values are numeric
                 for v in vertices:
                     if type(v) not in [int, float, np.int32, np.float64]:
-                        err_str = 'type(vertices) is list with len == 2, vertices[0] is numeric, '
-                        err_str += 'but type of other values in vertices not in [int, float, numpy.int32, numpy.float64]'
+                        err_str = 'type(vertices) is list with len == 2, '
+                        err_str += 'vertices[0] is numeric, '
+                        err_str += 'but type of other values in vertices '
+                        err_str += 'not in [int, float, numpy.int32, '
+                        err_str += 'numpy.float64]'
                         raise TypeError(err_str)
-                        
                 # if here, we know that we have a valid single vertex to add
                 if self.vertices is None:
                     self._vertices = np.array([vertices])
                 else:
                     self._vertices = np.vstack([self.vertices, vertices])
-            
-            # otherwise, vertices should be list of list (or list of numpy.ndarray) of numeric 
-            # where each sub-list or sub-array has len == 2
+            # otherwise, vertices should be list of list (or list of
+            # numpy.ndarray) of numeric where each sub-list or sub-array
+            # has len == 2
             else:
-            
                 # check that all vertex lists have the right type and size
                 for v in vertices:
-                    
                     # check type of vertex
                     if type(v) not in [list, np.ndarray]:
-                        raise TypeError('vertices given as list of lists, but type of all contents not in [list, numpy.ndarray]')
-
+                        raise TypeError('vertices given as list of lists, but '
+                                        + 'type of all contents not in [list, '
+                                        + 'numpy.ndarray]')
                     # check that each vertex contains two components
                     if len(v) != 2:
-                        raise ValueError('vertices given as list of lists, but not all vertices have shape (*, 2)')
-
+                        raise ValueError('vertices given as list of lists, '
+                                         + 'but not all vertices have '
+                                         + 'shape (*, 2)')
                     # check that the values in the vertex list are numeric
                     for x in v:
                         if type(x) not in [int, float, np.int32, np.float64]:
-                            err_str = 'vertices given as list of lists with, but type of contents '
-                            err_str += 'not in [int, float, numpy.int32, numpy.float64]'
+                            err_str = 'vertices given as list of lists with, '
+                            err_str += 'but type of contents not in [int, '
+                            err_str += 'float, numpy.int32, numpy.float64]'
                             raise TypeError(err_str)
-
                 # if here, we know that we have a valid list of vertices to add
                 if self.vertices is None:
                     self._vertices = np.array(vertices)
                 else:
                     self._vertices = np.vstack([self.vertices, vertices])
-        
         # vertices given as a numpy.ndarray
         # Note 1: we know this because of the earlier type check of vertices
         # Note 2: if here, we know that len(vertices) > 0
         else:
-            
             # check shape of vertices
             # should have one or two dimensions
-            if len(vertices.shape) > 2 \
-                or (len(vertices.shape) == 1 and vertices.shape[0] != 2) \
-                or (len(vertices.shape) == 2 and vertices.shape[1] != 2):
-                raise ValueError('vertices given as numpy.ndarray, but shape is not (*, 2)')
-                
+            if (len(vertices.shape) > 2
+               or (len(vertices.shape) == 1 and vertices.shape[0] != 2)
+               or (len(vertices.shape) == 2 and vertices.shape[1] != 2)):
+                raise ValueError('vertices given as numpy.ndarray, '
+                                 + 'but shape is not (*, 2)')
             # check type of vertices array contents
-            # Note: can just check vertices[0,0] since we know type(vertices) is numpy.ndarray
-            #       which has uniform type
+            # Note: can just check vertices[0,0] since we know type(vertices)
+            #       is numpy.ndarray which has uniform type
             if type(vertices.flatten()[0]) not in [np.int32, np.float64]:
-                raise TypeError('vertices given as numpy.ndarray, but type of contents not in [numpy.int32, numpy.float64]')
-            
+                raise TypeError('vertices given as numpy.ndarray, but type '
+                                + 'of contents not in [numpy.int32, '
+                                + 'numpy.float64]')
             # if here, we know we have a valid numpy.ndarray of vertices to add
             if self.vertices is None:
                 if len(vertices.shape) == 1:
@@ -591,64 +562,58 @@ class PolyMesh2D():
                     self._vertices = np.array(vertices)
             else:
                 self._vertices = np.vstack([self.vertices, vertices])
-                
-        
+
     def insert_boundary_vertices(self, i, boundary_vertices):
-        
+        """Insert one or more boundary vertex indices."""
         # basic type check of boundary_vertices
         if type(boundary_vertices) not in [type(None), int, np.int32, list]:
-            raise TypeError('type(boundary_vertices) not in [NoneType, int, numpy.int32, list]')
-            
+            raise TypeError('type(boundary_vertices) not in '
+                            + '[NoneType, int, numpy.int32, list]')
         # catch case of single boundary vertex
         if type(boundary_vertices) in [int, np.int32]:
-            
             # check value of vertex is less than number of vertices
             if boundary_vertices >= self.num_vertices:
-                raise ValueError('boundary_vertices values must all be less than number of vertices')
-                
+                raise ValueError('boundary_vertices values must all be less '
+                                 + 'than number of vertices')
             # add the vertex
             self.boundary_vertices.insert(i, int(boundary_vertices))
-            
             # since a valid vertex was added
             # generate boundary edges and reset the mesh
             self.generate_boundary_edges()
             self.mesh_valid = False
-            
         # if no boundary vertices given, do nothing
-        # Note: if here, we know that boundary_vertices is either None or a list
-        #       (i.e. not int) because of earlier type check and first if block
+        # Note: if here, we know that boundary_vertices is either None
+        #       or a list (i.e. not int) because of earlier type check
+        #       and first if block
         # in this case, we can also skip re-processing boundary edges and
         # the mesh, if present, is still valid
         elif boundary_vertices is None or len(boundary_vertices) == 0:
             pass
-            
         # boundary_vertices is a non-empty list
         # Note: we know this because of earlier type check on boundary_vertices
         else:
-            
             # check contents of boundary_vertices
             for v in boundary_vertices:
-                
                 # check type is integer
                 if type(v) not in [int, np.int32]:
-                    raise TypeError('type of boundary_vertices contents not in [int, numpy.int32]')
-                    
+                    raise TypeError('type of boundary_vertices contents not '
+                                    + 'in [int, numpy.int32]')
                 # check value of vertex is less than number of vertices
                 if v >= self.num_vertices:
-                    raise ValueError('boundary_vertices values must all be less than number of vertices')
-                    
+                    raise ValueError('boundary_vertices values must all be '
+                                     + 'less than number of vertices')
             # insert boundary vertices
-            # Note: if here, we know that boundary_vertices is a valid list of ints
+            # Note: if here, we know that boundary_vertices is a
+            #       valid list[int]
             for k in range(-1, -len(boundary_vertices)-1, -1):
                 self.boundary_vertices.insert(i, int(boundary_vertices[k]))
-                
             # since valid boundary vertices were added
             # generate boundary edges and reset the mesh
             self.generate_boundary_edges()
             self.mesh_valid = False
-    
-        
+
     def remove_boundary_vertices(self, remove_vertices):
+        """Remove one or more boundary vertex indices."""
         if type(remove_vertices) is int:
             self.boundary_vertices.remove(remove_vertices)
         elif type(remove_vertices) is list:
@@ -658,39 +623,45 @@ class PolyMesh2D():
             raise TypeError('type(remove_vertices) not in [int, list]')
         self.generate_boundary_edges()
         self.mesh_valid = False
-        
+
     def pop_boundary_vertex(self, pop_index):
+        """Pop a boundary vertex index at a specified index in the list."""
         ind = self.boundary_vertices.pop(pop_index)
         self.generate_boundary_edges()
         self.mesh_valid = False
         return ind
-    
+
     def generate_boundary_edges(self):
-        self._boundary_edges = [[self.boundary_vertices[k], self.boundary_vertices[(k+1) % self.num_boundary_vertices]] \
-                                        for k in range(self.num_boundary_vertices)]
-        
-    def add_material_regions(self, material_regions, materials = None):
+        """Generate boundary edge pairs from boundary vertex list."""
+        self._boundary_edges = [[self.boundary_vertices[k],
+                                 self.boundary_vertices[(k+1)
+                                 % self.num_boundary_vertices]]
+                                for k in range(self.num_boundary_vertices)]
+
+    def add_material_regions(self, material_regions, materials=None):
         """ Add material regions to PolyMesh2D.
-        
+
         Parameters
         ----------
-        material_regions : list of int | list of lists of int | list of MaterialRegion2D
-            Lists of vertex indices defining clockwise boundary path of each new material region
-            or list of object references to defined MaterialRegion2D
+        material_regions : list[int] | list[list[int]]
+                           | list[vcfempy.meshgen.MaterialRegion2D]
+            Lists of vertex indices defining clockwise boundary path of
+            each new material region or list of object references to
+            defined MaterialRegion2D
         materials : Material | list of Materials
             Materials corresponding to each material region to be added
-        
+
         Returns
         -------
         None
-        
+
         Raises
         ------
         TypeError
-            type(material_regions) not in [NoneType, list]
-            type(material_regions[k]) not in [int, numpy.int32, list]
-            if material_regions is list of ints:
-                type(materials) is not vcfempy_material.Material
+            if type(material_regions) not in [NoneType, list]
+            if type(material_regions[k]) not in [int, numpy.int32, list]
+            if type(material_regions) is list[int]:
+                type(materials) is not vcfempy.material.Material
             if material_regions is list of lists of ints:
                 type(materials) is not list
             if type(materials) is list (and valid):
@@ -701,104 +672,99 @@ class PolyMesh2D():
             if material_regions is list of list of ints:
                 material_regions[k][j] >= self.num_vertices
                 len(materials) != len(material_regions)
-        
+
         Examples
         --------
-        
+
         """
-        
         # basic type check of material_regions
         if type(material_regions) not in [type(None), list, MaterialRegion2D]:
-            raise TypeError('type(material_regions) not in [NoneType, list, vcfempy.meshgen.MaterialRegion2D]')
-
+            raise TypeError('type(material_regions) not in [NoneType, list, '
+                            + 'vcfempy.meshgen.MaterialRegion2D]')
         # basic type check of materials
         if type(materials) not in [type(None), list, mtl.Material]:
-            raise TypeError('type(materials) not in [NoneType, list, vcfempy.materials.Material]')
-            
+            raise TypeError('type(materials) not in [NoneType, list, '
+                            + 'vcfempy.materials.Material]')
         # catch null case where there is nothing to add
         # ignore materials in this case
         # and return early, doing nothing
-        if material_regions is None or (type(material_regions) is list and len(material_regions) == 0):
+        if (material_regions is None
+           or (type(material_regions) is list and len(material_regions) == 0)):
             return
-
         # catch case that a single MaterialRegion2D is given
         # if so, make material_regions a list of MaterialRegion2D
         elif type(material_regions) is MaterialRegion2D:
             material_regions = [material_regions]
-        
         # material_regions is a list of int
         # Note: if here, we know that material_regions is a non-empty list
         # in this case, try to create a MaterialRegion2D and then
         # redefine material_regions as a list of MaterialRegion2D
         elif type(material_regions[0]) in [int, np.int32]:
-            
             # check that materials has the right type
             if type(materials) not in [type(None), mtl.Material]:
-                raise TypeError('material_regions given as list of ints, but type(materials) not in [NoneType, vcfempy.materials.Material]')
-
-            # try to create list of new MaterialRegion2D from provided information
-            # Note: here self is passed to MaterialRegion2D to set a reference to this
-            #       PolyMesh2D as the parent mesh of the new MaterialRegion2D
-            material_regions = [MaterialRegion2D(self, material_regions, materials)]
+                raise TypeError('material_regions given as list[int], '
+                                + 'but type(materials) not in [NoneType, '
+                                + 'vcfempy.materials.Material]')
+            # try to create list of new MaterialRegion2D from provided
+            # information
+            # Note: here self is passed to MaterialRegion2D to set a
+            #       reference to this PolyMesh2D as the parent mesh
+            #       of the new MaterialRegion2D
+            material_regions = [MaterialRegion2D(self, material_regions,
+                                                 materials)]
 
         # if here, we know that type(material_regions) is list
         # either because it was provided as such, or it was constructed
         # by previous if-elif block
 
         # if only a single material is given,
-        # redefine materials as a list of vcfempy.materials.Material
+        # redefine materials as a list[vcfempy.materials.Material]
         # with the same length as material_regions
         if type(materials) in [type(None), mtl.Material]:
             materials = [materials]*len(material_regions)
-
         # now we know that type(materials) is list
         # double check that both lists have the same length
         if len(material_regions) != len(materials):
-            raise ValueError('material_regions and materials must have same length')
-
+            raise ValueError('material_regions and materials '
+                             + 'must have same length')
         # loop over material_regions, adding them to the mesh
         for mr, m in zip(material_regions, materials):
-
             # if current material region is a MaterialRegion2D
             # append it directly to the list of material regions
             if type(mr) is MaterialRegion2D:
-
                 # assign m to mr, if m is not None
                 # Note: this behaviour avoids overwriting
                 #       non-None materials if already assigned to mr
                 if m is not None:
                     mr.material = m
-
                 self.material_regions.append(mr)
-
             # if current material region is a list
             # try to create a new MaterialRegion2D
             # and then append it to the list of material regions
             elif type(mr) is list:
-
                 self.material_regions.append(MaterialRegion2D(self, mr, m))
-
             # otherwise, mr has invalid type
             else:
-                raise TypeError('material_regions given as list of list of ints or list of MaterialRegion2D, but type of some material_regions invalid')
-
-            
+                raise TypeError('material_regions given as list[list[int]] '
+                                + 'or list[vcfempy.meshgen.MaterialRegion2D], '
+                                + 'but type of some material_regions invalid')
         # new material regions were added
         # invalidate the mesh
         self.mesh_valid = False
-            
+
     def add_mesh_edges(self, mesh_edges):
         """ Add mesh edges to PolyMesh2D.
-        
+
         Parameters
         ----------
-        mesh_edges : list of int | list of lists of int
-            Lists of vertex indices defining edges to be maintained in mesh generation
-        
+        mesh_edges : list[int] | list[list[int]]
+            Lists of vertex indices defining edges to be maintained
+            in mesh generation
+
         Returns
         -------
         None
-        
+
         Raises
         ------
         TypeError
@@ -813,73 +779,68 @@ class PolyMesh2D():
             if mesh_edges is list of list of ints:
                 len(mesh_edges[k]) != 2
                 mesh_edges[k][j] >= self.num_vertices
-        
+
         Examples
         --------
-        
+
         """
-        
         # basic type check of mesh_edges
         if type(mesh_edges) not in [type(None), list]:
             raise TypeError('type(mesh_edges) not in [NoneType, list]')
-            
         # catch null case where mesh_edges is None or an empty list
         if mesh_edges is None or len(mesh_edges) == 0:
             pass
-        
-        # mesh_edges is a list of int
+        # mesh_edges is a list[int]
         # Note: if here, we know that mesh_edges is a non-empty list
         elif type(mesh_edges[0]) in [int, np.int32]:
-            
             # check that mesh_edges has the right length
             if len(mesh_edges) != 2:
-                raise ValueError('mesh_edges given as list of ints, but len(mesh_edges) != 2')
-            
+                raise ValueError('mesh_edges given as list[int], '
+                                 + 'but len(mesh_edges) != 2')
             # check that all items in mesh_edges are ints
             # and values are < self.num_vertices
             for v in mesh_edges:
                 if type(v) not in [int, np.int32]:
-                    raise TypeError('mesh_edges given as list of ints, but type of contents not all in [int, numpy.int32]')
+                    raise TypeError('mesh_edges given as list[int], '
+                                    + 'but type of contents not all '
+                                    + 'in [int, numpy.int32]')
                 if v >= self.num_vertices:
-                    raise ValueError('mesh_edges given as list of ints, but contains values >= num_vertices')
-                    
-            # if here, mesh_edges is a valid list of ints
+                    raise ValueError('mesh_edges given as list[int], '
+                                     + 'but contains values >= num_vertices')
+            # if here, mesh_edges is a valid list[int]
             # append it to the list of mesh edges
+            # and invalidate the mesh
             self.mesh_edges.append([int(k) for k in mesh_edges])
-            
-            # new mesh edge was added
-            # invalidate the mesh
             self.mesh_valid = False
-            
-        # mesh_edges is a list of list of ints
+        # mesh_edges is a list[list[int]]
         else:
-            
             # check that all mesh edges are lists of len == 2
             # and contain ints < self.num_vertices
             for edge in mesh_edges:
                 if type(edge) is not list:
-                    raise TypeError('mesh_edges given as list of lists of ints, but type of some contents is not list')
+                    raise TypeError('mesh_edges given as list[list[int]], '
+                                    + 'but type of some contents is not list')
                 if len(edge) != 2:
-                    raise ValueError('mesh_edges given as list of lists of ints, but some edges have len != 2')
+                    raise ValueError('mesh_edges given as list[list[int]], '
+                                     + 'but some edges have len != 2')
                 for v in edge:
                     if type(v) not in [int, np.int32]:
-                        raise TypeError('mesh_edges given as list of lists of ints, but type of some vertices not in [int, numpy.int32]')
+                        raise TypeError('mesh_edges given as list[list[int]], '
+                                        + 'but type of some vertices not in '
+                                        + '[int, numpy.int32]')
                     if v >= self.num_vertices:
-                        raise ValueError('mesh_edges given as list of lists of ints, but some vertices >= num_vertices')
-                        
+                        raise ValueError('mesh_edges given as list[list[int]],'
+                                         + ' but some vertices '
+                                         + '>= num_vertices')
             # if here, mesh_edges is a valid list of list of ints
             # append each list to the list of material regions
+            # and invalidate the mesh
             for edge in mesh_edges:
                 self.mesh_edges.append([int(k) for k in edge])
-                
-            # new mesh edges were added
-            # invalidate the mesh
             self.mesh_valid = False
-        
 
-    def generate_mesh(self, grid_size = [10, 10], alpha_rand = 0.0):
+    def generate_mesh(self, grid_size=[10, 10], alpha_rand=0.0):
         """ Generate polygonal mesh. """
-        
         # generate seed points within boundary
 
         # set size of grid and degree of randomness
@@ -888,94 +849,88 @@ class PolyMesh2D():
         ny = grid_size[1]
 
         # get size parameters for grid
-        Lx = max(self.vertices[self.boundary_vertices,0]) \
-                    - min(self.vertices[self.boundary_vertices,0])
-        Ly = max(self._vertices[self.boundary_vertices,1]) \
-                    - min(self.vertices[self.boundary_vertices,1])
+        Lx = np.max(self.vertices[self.boundary_vertices, 0]) \
+            - np.min(self.vertices[self.boundary_vertices, 0])
+        Ly = np.max(self._vertices[self.boundary_vertices, 1]) \
+            - np.min(self.vertices[self.boundary_vertices, 1])
         dx = Lx/nx
         dy = Ly/ny
-        d_scale = np.linalg.norm([dx,dy])
+        d_scale = np.linalg.norm([dx, dy])
 
         # generate regular grid
-        xc = np.linspace(min(self.vertices[self.boundary_vertices,0])+dx/2, \
-                         max(self.vertices[self.boundary_vertices,0])-dx/2, \
-                         nx)
-        yc = np.linspace(min(self.vertices[self.boundary_vertices,1])+dy/2, \
-                         max(self.vertices[self.boundary_vertices,1])-dy/2, \
-                         ny)
-        xc, yc = np.meshgrid(xc,yc)
+        xc = np.linspace(np.min(self.vertices[self.boundary_vertices, 0])
+                         + dx/2,
+                         np.max(self.vertices[self.boundary_vertices, 0])
+                         - dx/2, nx)
+        yc = np.linspace(np.min(self.vertices[self.boundary_vertices, 1])
+                         + dy/2,
+                         np.max(self.vertices[self.boundary_vertices, 1])
+                         - dy/2, ny)
+        xc, yc = np.meshgrid(xc, yc)
 
         # shift points for hexagonal grid
         for k in range(xc.shape[0]):
             if k % 2:
-                xc[k,:] += 0.25*dx
+                xc[k, :] += 0.25*dx
             else:
-                xc[k,:] -= 0.25*dx
+                xc[k, :] -= 0.25*dx
 
         # reshape grid into list of points
         self._points = np.vstack([xc.ravel(), yc.ravel()]).T
 
         # randomly shift seed points
-        xc_shift = alpha_rand*dx*(2*np.random.random([xc.size,1]) - 1)
-        yc_shift = alpha_rand*dy*(2*np.random.random([yc.size,1]) - 1)
-        self.points[:,0] += xc_shift[:,0]
-        self.points[:,1] += yc_shift[:,0]
-        
+        xc_shift = alpha_rand*dx*(2*np.random.random([xc.size, 1]) - 1)
+        yc_shift = alpha_rand*dy*(2*np.random.random([yc.size, 1]) - 1)
+        self.points[:, 0] += xc_shift[:, 0]
+        self.points[:, 1] += yc_shift[:, 0]
+
         # remove existing points near mesh edges
         # and add reflected points along mesh edges to capture them
         # in the mesh
         for edge in self.mesh_edges:
-            
             # get vertices
             e0 = self.vertices[edge[0]]
             e1 = self.vertices[edge[1]]
-            
+
             # find points near the edge for deletion
             keep_points = np.bool_(np.ones(self.num_points))
             for j, p in enumerate(self.points):
-                
                 # find projection of the point onto the edge
                 ee = e1-e0
                 ep = p-e0
-                pp = e0 + (np.dot(ep,ee) / np.dot(ee,ee)) * ee
-                
+                pp = e0 + (np.dot(ep, ee) / np.dot(ee, ee)) * ee
                 # check if point is close to the edge
                 # and within the length of the edge
                 d = np.linalg.norm(p-pp)
                 de = np.linalg.norm(pp-e0)/np.linalg.norm(ee)
-                if d < 0.2*d_scale and np.dot(pp-e0,ee) >= 0.0 and de <= 1.0:
+                if d < 0.2*d_scale and np.dot(pp-e0, ee) >= 0.0 and de <= 1.0:
                     keep_points[j] = False
-                    
             # delete points near the edge
             self._points = self.points[keep_points]
-            
+
             # get unit vector in direction of edge
             # and point step size
             ee_len = np.linalg.norm(ee)
             ee_hat = ee / ee_len
-            nn_hat = np.array([ee_hat[1],-ee_hat[0]])
+            nn_hat = np.array([ee_hat[1], -ee_hat[0]])
             num_points = int(np.round(ee_len / (0.5*d_scale)))
             de = ee_len / num_points
-            
+
             # make list of points to add along edge
             # and add them to the overall point list
             new_points = []
             dp_list = np.linspace(0.5*de, ee_len-0.5*de, num_points)
             for dp in dp_list:
-                
                 # add points on both sides of the edge
                 new_points.append(e0 + dp*ee_hat + 0.1*d_scale*nn_hat)
                 new_points.append(e0 + dp*ee_hat - 0.1*d_scale*nn_hat)
-                
             self._points = np.vstack([self.points, new_points])
-        
 
         # add points to ensure boundary vertices are
         # captured in the mesh
         # Note: the added points differ depending on
         #       whether the vertex is convex, concave, or straight
         for k, edge in enumerate(self.boundary_edges):
-            
             # get previous edge
             prv_edge = self.boundary_edges[k-1]
 
@@ -991,7 +946,7 @@ class PolyMesh2D():
             d_bbr = np.linalg.norm(bbr)
             bbf = bbf / d_bbf
             bbr = bbr / d_bbr
-            
+
             # get unit vectors in direction normal to
             # perpendicular bisector of the vertex
             # Note: at convex or straight vertex, pp_hat is inward pointing
@@ -1001,41 +956,36 @@ class PolyMesh2D():
             # check length of pp_hat, if non-zero normalize
             if np.linalg.norm(pp_hat) > 1.e-8:
                 pp_hat = pp_hat / np.linalg.norm(pp_hat)
-
             # if length of pp_hat is zero, edge is straight
             # make pp_hat inward pointing normal
             else:
                 pp_hat = np.array([bbf[1], -bbf[0]])
-                
             # get tangential unit vector, normal to pp_hat
-            vv_hat = np.array([pp_hat[1],-pp_hat[0]])
+            vv_hat = np.array([pp_hat[1], -pp_hat[0]])
 
             # check for straight edge
             bbr_bbf_crs = np.cross(bbr, bbf)
             if np.abs(bbr_bbf_crs) < 1.e-8:
-
                 # get local scale, in case adjacent edges are short
                 d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
-                
+
                 # delete points near vertex b0
                 keep_points = np.bool_(np.ones(self.num_points))
                 for j, p in enumerate(self.points):
                     if np.linalg.norm(p-b0) < 0.5*d_scale_loc:
                         keep_points[j] = False
                 self._points = self.points[keep_points]
-                
+
                 # create two new points near concave vertex
-                new_points = [  b0 + d_scale_loc*(0.2*pp_hat + 0.4*vv_hat), \
-                                b0 + d_scale_loc*(0.2*pp_hat - 0.4*vv_hat)]
-                
-                # add new points near vertex
+                new_points = [b0 + d_scale_loc*(0.2*pp_hat + 0.4*vv_hat),
+                              b0 + d_scale_loc*(0.2*pp_hat - 0.4*vv_hat)]
                 self._points = np.vstack([self.points, new_points])
 
             # check for concave vertex
             elif bbr_bbf_crs < 0:
-                
+                # get local scale, in case adjacent edges are short
                 d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
-                
+
                 # delete points near vertex b0
                 keep_points = np.bool_(np.ones(self.num_points))
                 for j, p in enumerate(self.points):
@@ -1044,45 +994,39 @@ class PolyMesh2D():
                 self._points = self.points[keep_points]
 
                 # create two new points near concave vertex
-                new_points = [b0 + 0.4*d_scale_loc*vv_hat, b0 - 0.4*d_scale_loc*vv_hat]
-                
-                # add new points near vertex
+                new_points = [b0 + 0.4*d_scale_loc*vv_hat,
+                              b0 - 0.4*d_scale_loc*vv_hat]
                 self._points = np.vstack([self.points, new_points])
-                
+
             # otherwise, it is a convex vertex
             # check if adjacent edges are short
             elif d_bbf < d_scale or d_bbr < d_scale:
-                
+                # get local scale, in case adjacent edges are short
                 d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
-                
+
                 # delete points near vertex b0
                 keep_points = np.bool_(np.ones(self.num_points))
                 for j, p in enumerate(self.points):
                     if np.linalg.norm(p-b0) < 0.5*d_scale_loc:
                         keep_points[j] = False
                 self._points = self.points[keep_points]
-                
+
                 # create new point near convex vertex
                 # adjacent to a short boundary edge
                 new_points = [b0 + 0.4*d_scale_loc*pp_hat]
-                
-                # add new points near vertex
                 self._points = np.vstack([self.points, new_points])
-                
 
         # eliminate points that are outside the boundaries
         bpath = path.Path(self.vertices[self.boundary_vertices])
         in_bnd = bpath.contains_points(self.points)
         self._points = self.points[in_bnd]
-                
-        
+
         # reflect seed points about boundaries
         # this ensures a voronoi diagram with ridges along each boundary
-        dmax = min([1.5*d_scale, Lx, Ly])
+        dmax = np.min([1.5*d_scale, Lx, Ly])
         reflected_points = []
         for p in self.points:
             for k, edge in enumerate(self.boundary_edges):
-            
                 # get previous and next edges
                 prv_edge = self.boundary_edges[k-1]
                 nxt_edge = self.boundary_edges[(k+1) % self.num_boundary_edges]
@@ -1092,7 +1036,7 @@ class PolyMesh2D():
                 b0 = self.vertices[edge[0]]
                 b1 = self.vertices[edge[1]]
                 b2 = self.vertices[nxt_edge[1]]
-                
+
                 # set flags for convex vertices
                 bbr0 = (bm1-b0) / np.linalg.norm(bm1-b0)
                 bbf0 = (b1-b0) / np.linalg.norm(b1-b0)
@@ -1111,40 +1055,40 @@ class PolyMesh2D():
                 # b.b = |b||b|
                 bb = b1-b0
                 bp = p-b0
-                pp = b0 + (np.dot(bp,bb) / np.dot(bb,bb)) * bb
+                pp = b0 + (np.dot(bp, bb) / np.dot(bb, bb)) * bb
                 dp = pp-p
                 d = np.linalg.norm(dp)
-                
+
                 # get outward normal of current edge
                 nhat = np.array([-bb[1], bb[0]]) / np.linalg.norm(bb)
 
                 # check distance to boundary, and direction of dp
                 # only reflect points within dmax of boundary segment
                 # and where dp points outward
-                if d < dmax and np.dot(dp,nhat) > 0:
-                    
+                if d < dmax and np.dot(dp, nhat) > 0:
                     # check whether vertices are convex
                     # Note: always reflect if vertices are convex
                     #       but at concave vertices only reflect if
                     #       the projected point pp is within the segment
                     db = pp-b0
-                    db = np.sign(np.dot(db,bb)) * np.linalg.norm(db) / np.linalg.norm(bb)
+                    db = np.sign(np.dot(db, bb)) * np.linalg.norm(db) \
+                        / np.linalg.norm(bb)
                     if (is_cvx0 or db >= 0.0) and (is_cvx1 or db <= 1.0):
                         reflected_points.append(p + 2*dp)
-                        
-
+        # convert reflected points list to array
         reflected_points = np.array(reflected_points)
-        
+
         # create Voronoi diagram of seed points
         all_points = np.vstack([self.points, reflected_points])
         vor = Voronoi(all_points)
-        
+
         # get list of Voronoi regions inside the boundary
         npoint = len(self.points)
         point_region = vor.point_region[:npoint]
 
         # compile list of elements to keep
-        # Note: this is a temporary variable, element objects will be created later
+        # Note: this is a temporary variable,
+        #       element objects will be created later
         element_nodes = []
         for k in point_region:
             element_nodes.append(vor.regions[k])
@@ -1173,14 +1117,17 @@ class PolyMesh2D():
             if rp[0] < npoint or rp[1] < npoint:
 
                 # save the ridge
-                # if either ridge point was outside the boundary, change it to -1
-                self.element_neighbors.append([rp[0] if rp[0] < npoint else -1, rp[1] if rp[1] < npoint else -1])
-
+                # if either ridge point was outside the boundary,
+                # change it to -1
+                self.element_neighbors.append([rp[0]
+                                               if rp[0] < npoint else -1,
+                                               rp[1]
+                                               if rp[1] < npoint else -1])
                 # save the ridge vertices
                 self.element_edges.append(rv)
 
         # convert node indices to reduced set of those kept in/on boundary
-        node_dict = {n : k for k, n in enumerate(nodes_to_keep)}
+        node_dict = {n: k for k, n in enumerate(nodes_to_keep)}
         for k, e in enumerate(element_nodes):
             for j, v in enumerate(element_nodes[k]):
                 element_nodes[k][j] = node_dict[element_nodes[k][j]]
