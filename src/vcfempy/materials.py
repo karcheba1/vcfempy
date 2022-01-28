@@ -32,23 +32,27 @@ class Material():
 
     Parameters
     ----------
+    name
+        A descriptive name for the material
+        Will be cast to str regardless of type
     **kwargs
         Any of the Attributes (e.g. `color`, `bulk_modulus`) can be
         passed as keyword arguments when creating a `Material` object
 
     Attributes
     ----------
-    color : color_like
-    hydraulic_conductivity : float
-    specific_storage : float
-    thermal_conductivity : float
-    specific_heat : float
-    electrical_conductivity : float
-    bulk_modulus : float
-    shear_modulus : float
-    saturated_density : float
-    porosity : float
-        The porosity of the material. Between 0.0 and 1.0.
+    name : str
+    color : color_like, optional
+        If not provided in initialization, will be set to random RGB
+    hydraulic_conductivity : float, optional
+    specific_storage : float, optional
+    thermal_conductivity : float, optional
+    specific_heat : float, optional
+    electrical_conductivity : float, optional
+    bulk_modulus : float, optional
+    shear_modulus : float, optional
+    saturated_density : float, optional
+    porosity : float, optional
 
     Other Parameters
     ----------------
@@ -56,6 +60,11 @@ class Material():
     young_modulus : float
     poisson_ratio : float
     void_ratio : float
+
+    Raises
+    ------
+    TypeError
+        If `name` is not provided
 
     Notes
     -----
@@ -71,34 +80,53 @@ class Material():
 
     # initializing a blank Material (color will be random)
     >>> np.random.seed(0) # optional, for unit testing
-    >>> m = vcfempy.materials.Material()
+    >>> m = vcfempy.materials.Material('random color material')
+    >>> print(m.name)
+    random color material
     >>> print(m.color)
     (0.5488135039273248, 0.7151893663724195, 0.6027633760716439)
-    >>> print(m.hydraulic_conductivity)
+    >>> print(m.hydraulic_conductivity) # attribute not initialized
     None
 
     # initializing a Material with an RGB color provided
-    >>> m = vcfempy.materials.Material(color=(0.1, 0.5, 0.7))
+    >>> m = vcfempy.materials.Material('RGB color material',\
+                                       color=(0.1, 0.5, 0.7))
+    >>> print(m.name)
+    RGB color material
     >>> print(m.color)
     (0.1, 0.5, 0.7)
 
     # initializing a Material with a color_like str provided
-    >>> m = vcfempy.materials.Material(color='xkcd:sand')
+    >>> m = vcfempy.materials.Material('xkcd str color material',\
+                                       color='xkcd:sand')
+    >>> print(m.name)
+    xkcd str color material
     >>> print(m.color)
     xkcd:sand
 
     # initializing a Material with a material property provided
     # color will be random
     >>> np.random.seed(0) # optional, for unit testing
-    >>> m = vcfempy.materials.Material(hydraulic_conductivity=5.e-5)
+    >>> m = vcfempy.materials.Material('flow property material',\
+                                       hydraulic_conductivity=5.e-5)
+    >>> print(m.name)
+    flow property material
     >>> print(m.color)
     (0.5488135039273248, 0.7151893663724195, 0.6027633760716439)
     >>> print(m.hydraulic_conductivity)
     5e-05
+
+    # trying to initialize a material without a name
+    >>> m = vcfempy.materials.Material()
+    Traceback (most recent call last):
+    ...
+    TypeError: __init__() missing 1 required positional argument: 'name'
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, name, **kwargs):
         """Initialization method for `vcfempy.materials.Material` object."""
+        self.name = name
+
         # if color is None, set to random RGB
         color = kwargs.get('color', None)
         if color is None:
@@ -122,6 +150,51 @@ class Material():
         self.porosity = kwargs.get('porosity', None)
 
     @property
+    def name(self):
+        """A descriptive name for the Material
+
+        Parameters
+        ----------
+        name
+            New material name, will be cast to str
+
+        Returns
+        -------
+        str
+            The name of the Material
+
+        Raises
+        ------
+        None
+
+        Examples
+        --------
+        >>> import vcfempy.materials
+        >>> m = vcfempy.materials.Material('sand')
+        >>> print(m.name)
+        sand
+
+        >>> m.name = 'clay'
+        >>> print(m.name)
+        clay
+
+        >>> m.name = 1
+        >>> print(m.name)
+        1
+
+        >>> material_count = 8
+        >>> material_count += 1
+        >>> m.name = f'Material {material_count}'
+        >>> print(m.name)
+        Material 9
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = str(name)
+
+    @property
     def color(self):
         """The plotting color of the Material
 
@@ -143,7 +216,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> m.color = (0.1, 0.2, 0.3)
         >>> print(m.color)
         (0.1, 0.2, 0.3)
@@ -201,7 +274,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> m.hydraulic_conductivity = 1.e-5
         >>> print(m.hydraulic_conductivity)
         1e-05
@@ -251,7 +324,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.specific_storage)
         None
         >>> m.specific_storage = 0.00014
@@ -295,7 +368,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.thermal_conductivity)
         None
         >>> m.thermal_conductivity = 1.e-5
@@ -343,7 +416,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.specific_heat)
         None
         >>> m.specific_heat = 5000
@@ -387,7 +460,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.electrical_conductivity)
         None
         >>> m.electrical_conductivity = 420
@@ -431,7 +504,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.bulk_modulus)
         None
         >>> m.bulk_modulus = 25000
@@ -475,7 +548,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.shear_modulus)
         None
         >>> m.shear_modulus = 69000
@@ -515,7 +588,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> m.bulk_modulus = 4.2e5
         >>> m.shear_modulus = 6.9e4
         >>> print(m.lame_parameter)
@@ -542,7 +615,7 @@ class Material():
         --------
         >>> import numpy as np
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> m.bulk_modulus = 4.2e5
         >>> m.shear_modulus = 6.9e4
         >>> print(np.around(m.young_modulus, 1))
@@ -570,7 +643,7 @@ class Material():
         --------
         >>> import numpy as np
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> m.bulk_modulus = 4.2e5
         >>> m.shear_modulus = 6.9e4
         >>> print(np.around(m.poisson_ratio, 4))
@@ -601,7 +674,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.saturated_density)
         None
         >>> m.saturated_density = 1950
@@ -646,7 +719,7 @@ class Material():
         Examples
         --------
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> print(m.porosity)
         None
         >>> m.porosity = 0.42
@@ -704,7 +777,7 @@ class Material():
         --------
         >>> import numpy as np
         >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material()
+        >>> m = vcfempy.materials.Material('m')
         >>> m.porosity = 0.42
         >>> print(np.around(m.void_ratio, 4))
         0.7241
