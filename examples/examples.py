@@ -49,7 +49,7 @@ def rectangular_mesh():
 
     # add material types and regions
     # Note: here we create a MaterialRegion2D object and then add it to the mesh
-    rock = mtl.Material('xkcd:stone')
+    rock = mtl.Material(color='xkcd:stone')
     rock_region = msh.MaterialRegion2D(rect_mesh, [k for k in rect_mesh.boundary_vertices], rock)
     rect_mesh.add_material_regions(rock_region)
 
@@ -141,8 +141,8 @@ def dam_mesh():
 
     # create two different material types
     # they are initialized with colors given as valid matplotlib color strings
-    gravel = mtl.Material('xkcd:stone')
-    clay = mtl.Material('xkcd:clay')
+    gravel = mtl.Material(color='xkcd:stone')
+    clay = mtl.Material(color='xkcd:clay')
 
     # add material regions
     # Note: here we test three different ways to pass input to add_material_regions
@@ -231,7 +231,7 @@ def tunnel_mesh():
     tunnel_mesh.insert_boundary_vertices(0, [k for k in range(tunnel_mesh.num_vertices)])
 
     # add material types and regions
-    rock = mtl.Material('xkcd:greenish')
+    rock = mtl.Material(color='xkcd:greenish')
     tunnel_mesh.add_material_regions([k for k in range(tunnel_mesh.num_vertices)], rock)
 
     # add mesh edges
