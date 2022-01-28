@@ -116,6 +116,22 @@ class Material():
     >>> print(m.hydraulic_conductivity)
     5e-05
 
+    # initializing a Material with a material property and a color
+    # querying a dependent property with incomplete information
+    >>> m = vcfempy.materials.Material('elastic material',\
+                                       color='xkcd:stone',\
+                                       bulk_modulus=6.9e5)
+    >>> print(m.name)
+    elastic material
+    >>> print(m.color)
+    xkcd:stone
+    >>> print(m.bulk_modulus)
+    690000.0
+    >>> print(m.shear_modulus) # value not initialized
+    None
+    >>> print(m.poisson_ratio) # depends on bulk and shear moduli
+    None
+
     # trying to initialize a material without a name
     >>> m = vcfempy.materials.Material()
     Traceback (most recent call last):
@@ -135,7 +151,8 @@ class Material():
                      np.random.random())
         self.color = color
 
-        # initialize other material properties
+        # initialize other material property attributes
+        # Note: this will also initialize dependent private attribute caches
         self.hydraulic_conductivity = kwargs.get('hydraulic_conductivity',
                                                  None)
         self.specific_storage = kwargs.get('specific_storage', None)
@@ -503,6 +520,7 @@ class Material():
 
         Examples
         --------
+        >>> import numpy as np
         >>> import vcfempy.materials
         >>> m = vcfempy.materials.Material('m')
         >>> print(m.bulk_modulus)
@@ -511,9 +529,44 @@ class Material():
         >>> print(m.bulk_modulus)
         25000.0
 
+        # dependent attributes with incomplete information
+        # (i.e. missing `shear_modulus` still return None
+        >>> print(m.lame_parameter)
+        None
+        >>> print(m.young_modulus)
+        None
+        >>> print(m.poisson_ratio)
+        None
+
         >>> m.bulk_modulus = '6.9e5'
         >>> print(m.bulk_modulus)
         690000.0
+
+        # with both `bulk_modulus` and `shear_modulus` set,
+        # dependent attributes can be computed
+        >>> m.shear_modulus = 4.2e4
+        >>> print(m.shear_modulus)
+        42000.0
+        >>> print(np.around(m.lame_parameter, 1))
+        662000.0
+        >>> print(np.around(m.young_modulus, 1))
+        123494.3
+        >>> print(np.around(m.poisson_ratio, 4))
+        0.4702
+
+        # setting `bulk_modulus` to None also resets
+        # dependent attributes, although `shear_modulus` is unaffected
+        >>> m.bulk_modulus = None
+        >>> print(m.bulk_modulus)
+        None
+        >>> print(m.shear_modulus)
+        42000.0
+        >>> print(m.lame_parameter)
+        None
+        >>> print(m.young_modulus)
+        None
+        >>> print(m.poisson_ratio)
+        None
 
         >>> m.bulk_modulus = 'forty two'
         Traceback (most recent call last):
@@ -524,6 +577,12 @@ class Material():
 
     @bulk_modulus.setter
     def bulk_modulus(self, blk_mod):
+        # reset dependent computed attribute cached values
+        self._lam_prm = None
+        self._yng_mod = None
+        self._pois_rat = None
+        # try to set new value
+        # (raises ValueError if float() cast does not work)
         self._blk_mod = float(blk_mod) if blk_mod is not None else None
 
     @property
@@ -547,6 +606,7 @@ class Material():
 
         Examples
         --------
+        >>> import numpy as np
         >>> import vcfempy.materials
         >>> m = vcfempy.materials.Material('m')
         >>> print(m.shear_modulus)
@@ -555,9 +615,44 @@ class Material():
         >>> print(m.shear_modulus)
         69000.0
 
-        >>> m.shear_modulus = '4.2e5'
+        # dependent attributes with incomplete information
+        # (i.e. missing `bulk_modulus` still return None
+        >>> print(m.lame_parameter)
+        None
+        >>> print(m.young_modulus)
+        None
+        >>> print(m.poisson_ratio)
+        None
+
+        >>> m.shear_modulus = '4.2e4'
         >>> print(m.shear_modulus)
-        420000.0
+        42000.0
+
+        # with both `bulk_modulus` and `shear_modulus` set,
+        # dependent attributes can be computed
+        >>> m.bulk_modulus = 6.9e5
+        >>> print(m.bulk_modulus)
+        690000.0
+        >>> print(np.around(m.lame_parameter, 1))
+        662000.0
+        >>> print(np.around(m.young_modulus, 1))
+        123494.3
+        >>> print(np.around(m.poisson_ratio, 4))
+        0.4702
+
+        # setting `shear_modulus` to None also resets
+        # dependent attributes, although `bulk_modulus` is unaffected
+        >>> m.shear_modulus = None
+        >>> print(m.bulk_modulus)
+        690000.0
+        >>> print(m.shear_modulus)
+        None
+        >>> print(m.lame_parameter)
+        None
+        >>> print(m.young_modulus)
+        None
+        >>> print(m.poisson_ratio)
+        None
 
         >>> m.shear_modulus = 'forty two'
         Traceback (most recent call last):
@@ -568,6 +663,12 @@ class Material():
 
     @shear_modulus.setter
     def shear_modulus(self, shr_mod):
+        # reset dependent computed attribute cached values
+        self._lam_prm = None
+        self._yng_mod = None
+        self._pois_rat = None
+        # try to set new value
+        # (raises ValueError if float() cast does not work)
         self._shr_mod = float(shr_mod) if shr_mod is not None else None
 
     @property
@@ -589,12 +690,25 @@ class Material():
         --------
         >>> import vcfempy.materials
         >>> m = vcfempy.materials.Material('m')
+        >>> print(m.lame_parameter) # bulk_modulus and shear_modulus not set
+        None
         >>> m.bulk_modulus = 4.2e5
+        >>> print(m.lame_parameter) # shear_modulus still not set
+        None
         >>> m.shear_modulus = 6.9e4
         >>> print(m.lame_parameter)
         374000.0
+        >>> m.shear_modulus = None
+        >>> print(m.lame_parameter) # reset because shear_modulus was reset
+        None
+        >>> m.shear_modulus = 6.9e4
+        >>> print(m.lame_parameter) # value recomputed
+        374000.0
         """
-        return self.bulk_modulus - 2*self.shear_modulus/3
+        if self._lam_prm is None and not (self.bulk_modulus is None
+                                          or self.shear_modulus is None):
+            self._lam_prm = self.bulk_modulus - 2*self.shear_modulus/3
+        return self._lam_prm
 
     @property
     def young_modulus(self):
@@ -616,13 +730,26 @@ class Material():
         >>> import numpy as np
         >>> import vcfempy.materials
         >>> m = vcfempy.materials.Material('m')
-        >>> m.bulk_modulus = 4.2e5
+        >>> print(m.young_modulus) # shear_modulus and bulk_modulus not set
+        None
         >>> m.shear_modulus = 6.9e4
+        >>> print(m.young_modulus) # bulk_modulus still not set
+        None
+        >>> m.bulk_modulus = 4.2e5
         >>> print(np.around(m.young_modulus, 1))
         196252.8
+        >>> m.bulk_modulus = None
+        >>> print(m.young_modulus) # reset because bulk_modulus reset
+        None
+        >>> m.bulk_modulus = 4.2e5
+        >>> print(np.around(m.young_modulus, 1)) # recomputed
+        196252.8
         """
-        return (9*self.bulk_modulus*self.shear_modulus
-                / (3*self.bulk_modulus + self.shear_modulus))
+        if self._yng_mod is None and not (self.bulk_modulus is None
+                                          or self.shear_modulus is None):
+            self._yng_mod = (9*self.bulk_modulus*self.shear_modulus
+                             / (3*self.bulk_modulus + self.shear_modulus))
+        return self._yng_mod
 
     @property
     def poisson_ratio(self):
@@ -644,13 +771,26 @@ class Material():
         >>> import numpy as np
         >>> import vcfempy.materials
         >>> m = vcfempy.materials.Material('m')
+        >>> print(m.poisson_ratio) # depends on bulk_modulus and shear_modulus
+        None
         >>> m.bulk_modulus = 4.2e5
+        >>> print(m.poisson_ratio) # shear_modulus still not set
+        None
         >>> m.shear_modulus = 6.9e4
         >>> print(np.around(m.poisson_ratio, 4))
         0.4221
+        >>> m.bulk_modulus = None
+        >>> print(m.poisson_ratio) # reset because bulk_modulus reset
+        None
+        >>> m.bulk_modulus = 4.2e5
+        >>> print(np.around(m.poisson_ratio, 4)) # recomputed
+        0.4221
         """
-        return 0.5*((3*self.bulk_modulus - 2*self.shear_modulus)
-                    / (3*self.bulk_modulus + self.shear_modulus))
+        if self._pois_rat is None and not (self.bulk_modulus is None
+                                           or self.shear_modulus is None):
+            self._pois_rat = 0.5*((3*self.bulk_modulus - 2*self.shear_modulus)
+                                  / (3*self.bulk_modulus + self.shear_modulus))
+        return self._pois_rat
 
     @property
     def saturated_density(self):
@@ -718,17 +858,28 @@ class Material():
 
         Examples
         --------
+        >>> import numpy as np
         >>> import vcfempy.materials
         >>> m = vcfempy.materials.Material('m')
         >>> print(m.porosity)
         None
+        >>> print(m.void_ratio) # depends on porosity
+        None
         >>> m.porosity = 0.42
         >>> print(m.porosity)
         0.42
+        >>> print(np.around(m.void_ratio, 4))
+        0.7241
 
         >>> m.porosity = '6.9e-1'
         >>> print(m.porosity)
         0.69
+
+        >>> m.porosity = None
+        >>> print(m.poisson_ratio)
+        None
+        >>> print(m.void_ratio) # also reset
+        None
 
         >>> m.porosity = 'forty two'
         Traceback (most recent call last):
@@ -749,10 +900,15 @@ class Material():
 
     @porosity.setter
     def porosity(self, por):
+        # reset dependent computed parameter cached value
+        self._void_rat = None
+        # try to set new value
         if por is None:
             self._por = None
         else:
+            # raises ValueError if float() cast does not work
             por = float(por)
+            # check for valid numerical range of porosity
             if por < 0.0 or por >= 1.0:
                 raise ValueError(f'porosity of {por} is not valid, '
                                  + '0.0 <= porosity < 1.0')
@@ -778,8 +934,18 @@ class Material():
         >>> import numpy as np
         >>> import vcfempy.materials
         >>> m = vcfempy.materials.Material('m')
+        >>> print(m.void_ratio) # not set because porosity is not set
+        None
         >>> m.porosity = 0.42
         >>> print(np.around(m.void_ratio, 4))
         0.7241
+        >>> m.porosity = None
+        >>> print(m.void_ratio) # reset because porosity reset
+        None
+        >>> m.porosity = 0.42
+        >>> print(np.around(m.void_ratio, 4)) # recomputed
+        0.7241
         """
-        return self.porosity / (1 - self.porosity)
+        if self._void_rat is None and self.porosity is not None:
+            self._void_rat = self.porosity / (1 - self.porosity)
+        return self._void_rat
