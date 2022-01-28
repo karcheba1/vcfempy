@@ -1136,7 +1136,7 @@ class PolyMesh2D():
                 self.element_edges[k][j] = node_dict[self.element_edges[k][j]]
                 
         # determine material type of each element
-        m0 = mtl.Material()
+        m0 = mtl.Material('NULL')
         element_materials = np.array([m0 for k, _ in enumerate(element_nodes)])
         for mr in self.material_regions:
             bpath = path.Path(self.vertices[mr.vertices,:])
