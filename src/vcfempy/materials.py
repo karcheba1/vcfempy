@@ -46,6 +46,23 @@ class Material():
     electrical_conductivity : float
     bulk_modulus : float
     shear_modulus : float
+    saturated_density : float
+    porosity : float
+        The porosity of the material. Between 0.0 and 1.0.
+
+    Other Parameters
+    ----------------
+    lame_parameter : float
+    young_modulus : float
+    poisson_ratio : float
+    void_ratio : float
+
+    Notes
+    -----
+    The attributes listed under Other Parameters cannot be set.
+    They are calculated based on the values of other Attributes.
+    See the Notes in the docstring for each Other Parameter for
+    specific calculation method.
 
     Examples
     --------
@@ -101,6 +118,8 @@ class Material():
                                                   None)
         self.bulk_modulus = kwargs.get('bulk_modulus', None)
         self.shear_modulus = kwargs.get('shear_modulus', None)
+        self.saturated_density = kwargs.get('saturated_density', None)
+        self.porosity = kwargs.get('porosity', None)
 
     @property
     def color(self):
@@ -176,7 +195,7 @@ class Material():
 
         Raises
         ------
-        TypeError
+        ValueError
             If `hyd_cond` cannot be cast to ``float``
 
         Examples
@@ -226,7 +245,7 @@ class Material():
 
         Raises
         ------
-        TypeError
+        ValueError
             If `spc_str` cannot be cast to ``float``
 
         Examples
@@ -270,7 +289,7 @@ class Material():
 
         Raises
         ------
-        TypeError
+        ValueError
             If `thm_cond` cannot be cast to ``float``
 
         Examples
@@ -318,7 +337,7 @@ class Material():
 
         Raises
         ------
-        TypeError
+        ValueError
             If `spc_heat` cannot be cast to ``float``
 
         Examples
@@ -362,7 +381,7 @@ class Material():
 
         Raises
         ------
-        TypeError
+        ValueError
             If `elc_cond` cannot be cast to ``float``
 
         Examples
@@ -406,7 +425,7 @@ class Material():
 
         Raises
         ------
-        TypeError
+        ValueError
             If `blk_mod` cannot be cast to ``float``
 
         Examples
@@ -450,7 +469,7 @@ class Material():
 
         Raises
         ------
-        TypeError
+        ValueError
             If `shr_mod` cannot be cast to ``float``
 
         Examples
@@ -477,3 +496,217 @@ class Material():
     @shear_modulus.setter
     def shear_modulus(self, shr_mod):
         self._shr_mod = float(shr_mod) if shr_mod is not None else None
+
+    @property
+    def lame_parameter(self):
+        """The first Lamé parameter of the material.
+
+        Returns
+        -------
+        float
+            The first Lamé parameter of the material
+
+        Notes
+        ------
+        This attribute cannot be set. It is calculated from the values of
+        `bulk_modulus`, *K*, and `shear_modulus`, *G*.
+        .. math:: \lambda = K - 2G/3
+
+        Examples
+        --------
+        >>> import vcfempy.materials
+        >>> m = vcfempy.materials.Material()
+        >>> m.bulk_modulus = 4.2e5
+        >>> m.shear_modulus = 6.9e4
+        >>> print(m.lame_parameter)
+        374000.0
+        """
+        return self.bulk_modulus - 2*self.shear_modulus/3
+
+    @property
+    def young_modulus(self):
+        """The Young's modulus of the material.
+
+        Returns
+        -------
+        float
+            The Young's modulus of the material
+
+        Notes
+        ------
+        This attribute cannot be set. It is calculated from the values of
+        `bulk_modulus`, *K*, and `shear_modulus`, *G*.
+        .. math:: E = 9KG / (3K + G)
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> import vcfempy.materials
+        >>> m = vcfempy.materials.Material()
+        >>> m.bulk_modulus = 4.2e5
+        >>> m.shear_modulus = 6.9e4
+        >>> print(np.around(m.young_modulus, 1))
+        196252.8
+        """
+        return (9*self.bulk_modulus*self.shear_modulus
+                / (3*self.bulk_modulus + self.shear_modulus))
+
+    @property
+    def poisson_ratio(self):
+        """The Poisson's ratio of the material.
+
+        Returns
+        -------
+        float
+            The Poisson's ratio of the material
+
+        Notes
+        ------
+        This attribute cannot be set. It is calculated from the values of
+        `bulk_modulus`, *K*, and `shear_modulus`, *G*.
+        .. math:: \nu = (3K - 2G) / (2(3K + G))
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> import vcfempy.materials
+        >>> m = vcfempy.materials.Material()
+        >>> m.bulk_modulus = 4.2e5
+        >>> m.shear_modulus = 6.9e4
+        >>> print(np.around(m.poisson_ratio, 4))
+        0.4221
+        """
+        return 0.5*((3*self.bulk_modulus - 2*self.shear_modulus)
+                    / (3*self.bulk_modulus + self.shear_modulus))
+
+    @property
+    def saturated_density(self):
+        """The saturated density of the material.
+
+        Parameters
+        ----------
+        sat_dns : float
+            The value of the saturated density
+
+        Returns
+        -------
+        float
+            The saturated density of the material
+
+        Raises
+        ------
+        ValueError
+            If `sat_dns` cannot be cast to ``float``
+
+        Examples
+        --------
+        >>> import vcfempy.materials
+        >>> m = vcfempy.materials.Material()
+        >>> print(m.saturated_density)
+        None
+        >>> m.saturated_density = 1950
+        >>> print(m.saturated_density)
+        1950.0
+
+        >>> m.saturated_density = '1.95e3'
+        >>> print(m.saturated_density)
+        1950.0
+
+        >>> m.saturated_density = 'forty two'
+        Traceback (most recent call last):
+        ...
+        ValueError: could not convert string to float: 'forty two'
+        """
+        return self._sat_dns
+
+    @saturated_density.setter
+    def saturated_density(self, sat_dns):
+        self._sat_dns = float(sat_dns) if sat_dns is not None else None
+
+    @property
+    def porosity(self):
+        """The porosity of the material.
+
+        Parameters
+        ----------
+        por : float
+            The value of the porosity
+
+        Returns
+        -------
+        float
+            The porosity of the material
+
+        Raises
+        ------
+        ValueError
+            If `por` cannot be cast to ``float``
+            If `por` < 0.0 or `por` >= 1.0
+
+        Examples
+        --------
+        >>> import vcfempy.materials
+        >>> m = vcfempy.materials.Material()
+        >>> print(m.porosity)
+        None
+        >>> m.porosity = 0.42
+        >>> print(m.porosity)
+        0.42
+
+        >>> m.porosity = '6.9e-1'
+        >>> print(m.porosity)
+        0.69
+
+        >>> m.porosity = 'forty two'
+        Traceback (most recent call last):
+        ...
+        ValueError: could not convert string to float: 'forty two'
+
+        >>> m.porosity = 1.2
+        Traceback (most recent call last):
+        ...
+        ValueError: porosity of 1.2 is not valid, 0.0 <= porosity < 1.0
+
+        >>> m.porosity = -0.1
+        Traceback (most recent call last):
+        ...
+        ValueError: porosity of -0.1 is not valid, 0.0 <= porosity < 1.0
+        """
+        return self._por
+
+    @porosity.setter
+    def porosity(self, por):
+        if por is None:
+            self._por = None
+        else:
+            por = float(por)
+            if por < 0.0 or por >= 1.0:
+                raise ValueError(f'porosity of {por} is not valid, '
+                                 + '0.0 <= porosity < 1.0')
+            self._por = por
+
+    @property
+    def void_ratio(self):
+        """The void ratio the material.
+
+        Returns
+        -------
+        float
+            The void ratio of the material
+
+        Notes
+        ------
+        This attribute cannot be set. It is calculated from the value of
+        `porosity`.
+        .. math:: e = n / (1 - n)
+
+        Examples
+        --------
+        >>> import numpy as np
+        >>> import vcfempy.materials
+        >>> m = vcfempy.materials.Material()
+        >>> m.porosity = 0.42
+        >>> print(np.around(m.void_ratio, 4))
+        0.7241
+        """
+        return self.porosity / (1 - self.porosity)
