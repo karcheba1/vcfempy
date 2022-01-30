@@ -1,21 +1,16 @@
 """ Module for flow / seepage analysis in the Voronoi Cell Finite Element Method (VCFEM). 
 
-Classes
--------
-PolyFlow2D
-    A class for 2D flow analysis in the VCFEM
-
 See Also
 --------
-vcfempy.materials.py
+vcfempy.materials
     A module for materials and their properties in the VCFEM
-vcfempy.meshgen.py
+vcfempy.meshgen
     A module for generating meshes for the VCFEM
 
 Notes
 -----
-This module is part of the ``vcfempy`` package and is commonly imported internally as
-``import vcfempy.flow as flw``
+This module is part of the `vcfempy` package and is commonly imported internally as
+`import vcfempy.flow as flw`
 
 """
 

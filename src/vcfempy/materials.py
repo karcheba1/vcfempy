@@ -1,18 +1,9 @@
 """A module for materials in the Voronoi Cell Finite Element Method (VCFEM).
 
-Classes
--------
-Material
-    A class for materials and their properties in the VCFEM.
-
 See Also
 --------
-vcfempy.meshgen.py
-    A module for generating meshes for the VCFEM.
-vcfempy.flow.py
-    A module for seepage/flow analysis using the VCFEM.
-examples.py
-    A script with demonstrative examples of ``vcfempy`` usage.
+vcfempy.meshgen
+vcfempy.flow: A module for seepage/flow analysis using the VCFEM.
 
 Notes
 -----
@@ -78,7 +69,7 @@ class Material():
     >>> import numpy as np
     >>> import vcfempy.materials
 
-    # initializing a blank Material (color will be random)
+    ### initializing a blank Material (color will be random)
     >>> np.random.seed(0) # optional, for unit testing
     >>> m = vcfempy.materials.Material('random color material')
     >>> print(m.name)
@@ -88,7 +79,7 @@ class Material():
     >>> print(m.hydraulic_conductivity) # attribute not initialized
     None
 
-    # initializing a Material with an RGB color provided
+    ### initializing a Material with an RGB color provided
     >>> m = vcfempy.materials.Material('RGB color material',\
                                        color=(0.1, 0.5, 0.7))
     >>> print(m.name)
@@ -96,7 +87,7 @@ class Material():
     >>> print(m.color)
     (0.1, 0.5, 0.7)
 
-    # initializing a Material with a color_like str provided
+    ## initializing a Material with a color_like str provided
     >>> m = vcfempy.materials.Material('xkcd str color material',\
                                        color='xkcd:sand')
     >>> print(m.name)

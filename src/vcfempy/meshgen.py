@@ -9,17 +9,6 @@ matplotlib.path
 scipy.spatial.Voronoi
 vcfempy.materials
 
-Functions
----------
-polygon_area
-polygon_centroid
-
-Classes
--------
-PolyMesh2D
-MaterialRegion2D
-PolyElement2D
-
 """
 
 import numpy as np
