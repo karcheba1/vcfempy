@@ -6,8 +6,9 @@ src/tests.py
 node_modules/
 dist/
 
-# Sphinx docs built files
+# docs built files
 docs/build/*
+src/html/*
 
 # Compiled Java class files
 *.class
