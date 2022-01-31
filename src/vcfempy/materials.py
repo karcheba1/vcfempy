@@ -1,16 +1,5 @@
 """A module for materials in the Voronoi Cell Finite Element Method (VCFEM).
-
-See Also
---------
-vcfempy.meshgen
-vcfempy.flow: A module for seepage/flow analysis using the VCFEM.
-
-Notes
------
-This module is part of the ``vcfempy`` package. Internally, it is commonly
-imported as
-``import vcfempy.materials as mtl``
-and is a base level module imported by other modules in ``vcfempy``.
+Part of the `vcfempy` package.
 
 """
 
@@ -23,45 +12,20 @@ class Material():
 
     Parameters
     ----------
-    name
+    name : str
         A descriptive name for the material
         Will be cast to str regardless of type
-    **kwargs
+    **kwargs : dict, optional
         Any of the Attributes (e.g. `color`, `bulk_modulus`) can be
         passed as keyword arguments when creating a `Material` object
-
-    Properties
-    ----------
-    name
-    color
-    hydraulic_conductivity
-    specific_storage
-    thermal_conductivity
-    specific_heat
-    electrical_conductivity
-    bulk_modulus
-    shear_modulus
-    saturated_density
-    porosity
-
-    Other Parameters
-    ----------------
-    lame_parameter
-    young_modulus
-    poisson_ratio
-    void_ratio
+        and __init__ will try to initialize them by passing them on
+        to the corresponding setter, supposing the provided value is
+        allowed
 
     Raises
     ------
     TypeError
         If `name` is not provided
-
-    Notes
-    -----
-    The attributes listed under Other Parameters cannot be set.
-    They are calculated based on the values of other Attributes.
-    See the Notes in the docstring for each Other Parameter for
-    specific calculation method.
 
     Examples
     --------
@@ -130,10 +94,12 @@ class Material():
     """
 
     def __init__(self, name, **kwargs):
-        """Initialization method for `vcfempy.materials.Material` object."""
+        # set name of Material
         self.name = name
 
+        # check for color initialization from kwargs, default=None
         # if color is None, set to random RGB
+        # initialize color value
         color = kwargs.get('color', None)
         if color is None:
             color = (np.random.random(),
@@ -141,8 +107,9 @@ class Material():
                      np.random.random())
         self.color = color
 
-        # initialize other material property attributes
-        # Note: this will also initialize dependent private attribute caches
+        # check kwargs for other attribute initializations
+        # initialize other material property attributes, default=None
+        # this will also initialize dependent private attribute caches
         self.hydraulic_conductivity = kwargs.get('hydraulic_conductivity',
                                                  None)
         self.specific_storage = kwargs.get('specific_storage', None)
@@ -176,19 +143,27 @@ class Material():
 
         Examples
         --------
+        >>> #importing the materials module
         >>> import vcfempy.materials
+        >>> # initializing a material with a str name
         >>> m = vcfempy.materials.Material('sand')
         >>> print(m.name)
         sand
 
+        >>> # changing the name property
         >>> m.name = 'clay'
         >>> print(m.name)
         clay
 
+        >>> # changing the name property to non-str
+        >>> # will be cast to str
         >>> m.name = 1
         >>> print(m.name)
         1
+        >>> print(type(m.name).__name__)
+        str
 
+        >>> # setting name property with an f-string
         >>> material_count = 8
         >>> material_count += 1
         >>> m.name = f'Material {material_count}'
@@ -222,31 +197,44 @@ class Material():
 
         Examples
         --------
+        >>> # importing the materials module
         >>> import vcfempy.materials
+        >>> # initialzing a material, then setting color to RGB value
         >>> m = vcfempy.materials.Material('m')
         >>> m.color = (0.1, 0.2, 0.3)
         >>> print(m.color)
         (0.1, 0.2, 0.3)
 
+        >>> # initializing a material with an RGB color value
+        >>> m = vcfempy.materials.Material('m', color=(0.2, 0.4, 0.6))
+        >>> print(m.color)
+        >>> (0.2, 0.4, 0.6)
+
+        >>> # setting the color property to an RGBA value
         >>> m.color = (0.1, 0.2, 0.3, 0.9)
         >>> print(m.color)
         (0.1, 0.2, 0.3, 0.9)
 
+        >>> # setting the color property to a matplotlib color_like str
         >>> m.color = 'xkcd:sand'
         >>> print(m.color)
         xkcd:sand
 
-        >>> m.color = (1.2, 0.2, 0.3) # invalid matplotlib RGB value 1.2
+        >>> # trying to set an invalid matplotlib RGB value
+        >>> m.color = (1.2, 0.2, 0.3)
         Traceback (most recent call last):
         ...
         ValueError: (1.2, 0.2, 0.3) is not a matplotlib color_like value
 
-        >>> m.color = 'xkcd:blech' # invalid matplotlib color_like str
+        >>> # trying to set an invalid matplotlib color_like str
+        >>> m.color = 'xkcd:blech'
         Traceback (most recent call last):
         ...
         ValueError: xkcd:blech is not a matplotlib color_like value
 
-        >>> m.color = None # invalid matplotlib color_like None
+        >>> # trying to set color property to None, which is not a valid
+        >>> # matplotlib color_like value
+        >>> m.color = None
         Traceback (most recent call last):
         ...
         ValueError: None is not a matplotlib color_like value
@@ -261,12 +249,14 @@ class Material():
 
     @property
     def hydraulic_conductivity(self):
-        """The hydraulic conductivity of the material.
+        """The hydraulic conductivity of the material
 
         Parameters
         ----------
-        hyd_cond : float
+        hyd_cond
             The value of the hydraulic conductivity
+            Can be set to ``None`` to clear the value, any other value will
+            be cast to ``float``
 
         Returns
         -------
