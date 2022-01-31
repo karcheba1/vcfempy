@@ -30,27 +30,26 @@ class Material():
         Any of the Attributes (e.g. `color`, `bulk_modulus`) can be
         passed as keyword arguments when creating a `Material` object
 
-    Attributes
+    Properties
     ----------
-    name : str
-    color : color_like, optional
-        If not provided in initialization, will be set to random RGB
-    hydraulic_conductivity : float, optional
-    specific_storage : float, optional
-    thermal_conductivity : float, optional
-    specific_heat : float, optional
-    electrical_conductivity : float, optional
-    bulk_modulus : float, optional
-    shear_modulus : float, optional
-    saturated_density : float, optional
-    porosity : float, optional
+    name
+    color
+    hydraulic_conductivity
+    specific_storage
+    thermal_conductivity
+    specific_heat
+    electrical_conductivity
+    bulk_modulus
+    shear_modulus
+    saturated_density
+    porosity
 
     Other Parameters
     ----------------
-    lame_parameter : float
-    young_modulus : float
-    poisson_ratio : float
-    void_ratio : float
+    lame_parameter
+    young_modulus
+    poisson_ratio
+    void_ratio
 
     Raises
     ------
@@ -69,7 +68,7 @@ class Material():
     >>> import numpy as np
     >>> import vcfempy.materials
 
-    ### initializing a blank Material (color will be random)
+    >>> # initializing a blank Material (color will be random)
     >>> np.random.seed(0) # optional, for unit testing
     >>> m = vcfempy.materials.Material('random color material')
     >>> print(m.name)
@@ -79,7 +78,7 @@ class Material():
     >>> print(m.hydraulic_conductivity) # attribute not initialized
     None
 
-    ### initializing a Material with an RGB color provided
+    >>> # initializing a Material with an RGB color provided
     >>> m = vcfempy.materials.Material('RGB color material',\
                                        color=(0.1, 0.5, 0.7))
     >>> print(m.name)
@@ -87,7 +86,7 @@ class Material():
     >>> print(m.color)
     (0.1, 0.5, 0.7)
 
-    ## initializing a Material with a color_like str provided
+    >>> # initializing a Material with a color_like str provided
     >>> m = vcfempy.materials.Material('xkcd str color material',\
                                        color='xkcd:sand')
     >>> print(m.name)
@@ -95,8 +94,8 @@ class Material():
     >>> print(m.color)
     xkcd:sand
 
-    # initializing a Material with a material property provided
-    # color will be random
+    >>> # initializing a Material with a material property provided
+    >>> # color will be random
     >>> np.random.seed(0) # optional, for unit testing
     >>> m = vcfempy.materials.Material('flow property material',\
                                        hydraulic_conductivity=5.e-5)
@@ -107,8 +106,8 @@ class Material():
     >>> print(m.hydraulic_conductivity)
     5e-05
 
-    # initializing a Material with a material property and a color
-    # querying a dependent property with incomplete information
+    >>> # initializing a Material with a material property and a color
+    >>> # querying a dependent property with incomplete information
     >>> m = vcfempy.materials.Material('elastic material',\
                                        color='xkcd:stone',\
                                        bulk_modulus=6.9e5)
@@ -123,7 +122,7 @@ class Material():
     >>> print(m.poisson_ratio) # depends on bulk and shear moduli
     None
 
-    # trying to initialize a material without a name
+    >>> # trying to initialize a material without a name
     >>> m = vcfempy.materials.Material()
     Traceback (most recent call last):
     ...
@@ -755,7 +754,7 @@ class Material():
         ------
         This attribute cannot be set. It is calculated from the values of
         `bulk_modulus`, *K*, and `shear_modulus`, *G*.
-        .. math:: \nu = (3K - 2G) / (2(3K + G))
+        .. math:: nu = (3K - 2G) / (2(3K + G))
 
         Examples
         --------

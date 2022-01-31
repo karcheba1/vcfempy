@@ -1,7 +1,7 @@
 """A module containing attributes, functions, classes and methods for
 meshes in the Voronoi Cell Finite Element Method (VCFEM).
 
-Uses
+See Also
 ----
 numpy
 matplotlib.pyplot
@@ -22,66 +22,35 @@ import vcfempy.materials as mtl
 class PolyMesh2D():
     """A class for 2D polygonal mesh generation.
 
-    Properties
+    Parameters
     ----------
-    vertices : ndarray, immutable, shape (nvertices, 2)
-        The list of (x,y) coordinates of vertices defining the mesh
-    boundary_vertices : list of ints, immutable
-        The clockwise list of vertices defining the analysis boundary polygon
-    boundary_edges : list of list of ints, immutable, shape (nboundaryedges, 2)
-        The list of edges defining the vertices in each boundary edge
+    vertices : list[list[int or float]] | array_like[int or float],
+                optional, shape (nvertices, 2)
+        Initial vertices to be added to the PolyMesh2D
+    boundary_vertices : int | list[int], optional
+        Initial list of boundary vertices to be added
+    material_regions : list[int] | list[list[int]], optional
+        Initial list(s) of material region vertices to be added
+    materials : list[vcfempy.materials.Material], optional
+        Initial list of material types
+    mesh_edges : list[int] | list[list[int]], optional
+        Initial list(s) defining non-boundary edges to be preserved in
+        the mesh generation
 
-    Private Attributes
-    ------------------
-    _vertices : ndarray, shape (nvertices, 2)
-        The list of (x,y) coordinates of vertices defining the mesh
-    _boundary_vertices : list of ints
-        The clockwise list of vertices defining the analysis boundary polygon
-    _boundary_edges : list of list of ints, shape (nboundaryedges, 2)
-        The list of edges defining the vertices in each boundary edge
+    Attributes
+    ----------
+    vertices
+    boundary_vertices
+    boundary_edges
 
     Examples
     --------
-
     """
 
     def __init__(self,
                  vertices=None, boundary_vertices=None,
                  material_regions=None, materials=None,
                  mesh_edges=None):
-        """Create a new PolyMesh2D object.
-
-        Parameters
-        ----------
-        vertices : list[list[int or float]] | array_like[int or float],
-                    optional, shape (nvertices, 2)
-            Initial vertices to be added to the PolyMesh2D
-        boundary_vertices : int | list[int], optional
-            Initial list of boundary vertices to be added
-        material_regions : list[int] | list[list[int]], optional
-            Initial list(s) of material region vertices to be added
-        materials : list[vcfempy.materials.Material], optional
-            Initial list of material types
-        mesh_edges : list[int] | list[list[int]], optional
-            Initial list(s) defining non-boundary edges to be preserved in
-            the mesh generation
-
-        Returns
-        -------
-        PolyMesh2D
-            A PolyMesh2D object
-
-        Raises
-        ------
-        None
-
-        Examples
-        --------
-        >>> PolyMesh2D(boundary_vertices = 0)
-        Traceback (most recent call last):
-        ...
-        ValueError: boundary_vertices values must all be less than number of vertices
-        """
         # initialize flags for
         #      verbose printing
         #      high order quadrature in all elements
@@ -113,7 +82,7 @@ class PolyMesh2D():
 
     @property
     def num_vertices(self):
-        """ Getter for number of vertices in PolyMesh2D. """
+        """Number of vertices defining the geometry"""
         if self._vertices is None:
             return 0
         else:
@@ -121,27 +90,27 @@ class PolyMesh2D():
 
     @property
     def num_boundary_vertices(self):
-        """ Getter for number of boundary vertices in PolyMesh2D. """
+        """Number of vertices defining the boundary geometry"""
         return len(self.boundary_vertices)
 
     @property
     def num_boundary_edges(self):
-        """ Getter for number of boundary edges in PolyMesh2D. """
+        """Number of edges on the boundary geometry"""
         return len(self.boundary_edges)
 
     @property
     def num_material_regions(self):
-        """ Getter for number of material regions in PolyMesh2D. """
+        """Number of material regions"""
         return len(self.material_regions)
 
     @property
     def num_mesh_edges(self):
-        """ Getter for number of mesh edges in PolyMesh2D. """
+        """Number of edges to be preserved in mesh generation"""
         return len(self.mesh_edges)
 
     @property
     def num_nodes(self):
-        """ Getter for number of nodes in PolyMesh2D. """
+        """Number of nodes in the generated mesh"""
         if self._nodes is None:
             return 0
         else:
@@ -149,27 +118,27 @@ class PolyMesh2D():
 
     @property
     def num_elements(self):
-        """ Getter for number of elements in PolyMesh2D. """
+        """Number of elements in the generated mesh"""
         return len(self.elements)
 
     @property
     def num_element_edges(self):
-        """ Getter for number of element edge vertex lists in PolyMesh2D. """
+        """Number of edges separating elements in the generated mesh"""
         return len(self.element_edges)
 
     @property
     def num_element_neighbors(self):
-        """ Getter for number of element neighbor lists in PolyMesh2D. """
+        """Number of element neighbor lists in the generated mesh"""
         return len(self.element_neighbors)
 
     @property
     def num_nodes_per_element(self):
-        """ Getter for number of nodes per element in PolyMesh2D. """
+        """Number of nodes per element in the generated mesh"""
         return [e.num_nodes for e in self.elements]
 
     @property
     def num_points(self):
-        """ Getter for number of element seed points in PolyMesh2D. """
+        """Number of element seed points used to generate the mesh"""
         if self._points is None:
             return 0
         else:
@@ -177,41 +146,43 @@ class PolyMesh2D():
 
     @property
     def vertices(self):
-        """ Getter for vertices in PolyMesh2D. """
+        """Array of vertex coordinates defining mesh generation geometry"""
         return self._vertices
 
     @property
     def boundary_vertices(self):
-        """ Getter for list of boundary_vertices in PolyMesh2D. """
+        """List of vertex indices defining boundary geometry"""
         return self._boundary_vertices
 
     @property
     def boundary_edges(self):
-        """ Getter for list of boundary_edges in PolyMesh2D. """
+        """List of lists of vertex indices defining boundary edges"""
         return self._boundary_edges
 
     @property
     def material_regions(self):
-        """ Getter for list of material_regions in PolyMesh2D. """
+        """List of MaterialRegion2D in defining mesh materials"""
         return self._material_regions
 
     @property
     def mesh_edges(self):
-        """ Getter for list of mesh edges in PolyMesh2D. """
+        """List of lists of vertex indices defining edges to be
+        preserved in mesh generation
+        """
         return self._mesh_edges
 
     @property
     def mesh_valid(self):
-        """ Getter for mesh valid flag for PolyMesh2D. """
+        """Flag for whether there is a valid generated mesh
+
+        If setting to False, resets mesh properties.
+        If setting to True, performs basic checks of mesh validity before
+        setting.
+        """
         return self._mesh_valid
 
     @mesh_valid.setter
     def mesh_valid(self, val):
-        """ Setter for mesh valid flag for PolyMesh2D.
-            If setting to False, resets mesh properties.
-            If setting to True, performs basic checks of mesh validity before
-            setting.
-        """
         # simple type check of val
         if type(val) not in [bool, np.bool_]:
             raise TypeError('cannot set PolyMesh2D.mesh_valid to non-bool')
@@ -255,62 +226,72 @@ class PolyMesh2D():
 
     @property
     def nodes(self):
-        """ Getter for nodes in PolyMesh2D. """
+        """Array of node coordinates defining the generated mesh
+        """
         return self._nodes
 
     @property
     def points(self):
-        """ Getter for element seed points in PolyMesh2D. """
+        """Array of seed point coordinates for mesh generation
+        """
         return self._points
 
     @property
     def elements(self):
-        """ Getter for elements in PolyMesh2D. """
+        """List of PolyElement2D in the generated mesh"""
         return self._elements
 
     @property
     def element_neighbors(self):
-        """ Getter for list of element neighbors in PolyMesh2D. """
+        """List of lists of element indices defining neighboring
+        elements in the generated mesh
+        """
         return self._element_neighbors
 
     @property
     def element_edges(self):
-        """ Getter for list of element edges in PolyMesh2D. """
+        """List of lists of node indices defining edges between
+        elements in the generated mesh
+        """
         return self._element_edges
 
     @property
     def element_materials(self):
-        """ Getter for list of element materials in PolyMesh2D. """
+        """List of material types assigned to each element in the
+        generated mesh
+        """
         return [e.material for e in self.elements]
 
     @property
     def element_areas(self):
-        """ Getter for list of element areas in PolyMesh2D. """
+        """List of element areas"""
         return [e.area for e in self.elements]
 
     @property
     def element_centroids(self):
-        """ Getter for list of element centroids in PolyMesh2D. """
+        """List of element centroid coordinates"""
         return [e.centroid for e in self.elements]
 
     @property
     def element_quad_points(self):
-        """ Getter for list of element quadrature points in PolyMesh2D. """
+        """List of arrays of element quadrature point coordinates"""
         return [e.quad_points for e in self.elements]
 
     @property
     def element_quad_weights(self):
-        """ Getter for list of element quadrature weights in PolyMesh2D. """
+        """List of arrays of element quadrature point weights"""
         return [e.quad_weights for e in self.elements]
 
     @property
     def high_order_quadrature(self):
-        """ Getter for high order quadrature flag. """
+        """Flag for high order quadrature generation
+        Used by PolyElement2D.generate_quadrature()
+        """
         return self._high_order_quadrature
 
     @high_order_quadrature.setter
     def high_order_quadrature(self, flag):
-        """ Setter for high order quadrature flag. """
+        # basic type check of flag
         if type(flag) not in [bool, np.bool_]:
             raise TypeError('cannot set PolyMesh2D.high_order_quadrature '
                             + 'to non-bool')
@@ -323,12 +304,14 @@ class PolyMesh2D():
 
     @property
     def verbose_printing(self):
-        """ Getter for verbose printing flag. """
+        """Flag for verbose printing of mesh properties
+        Used by self.__str__
+        """
         return self._verbose_printing
 
     @verbose_printing.setter
     def verbose_printing(self, flag):
-        """ Setter for verbose printing flag. """
+        # basic type check of flag
         if type(flag) not in [bool, np.bool_]:
             raise TypeError('cannot set PolyMesh2D.verbose_printing '
                             + 'to non-bool')
@@ -386,13 +369,19 @@ class PolyMesh2D():
         <BLANKLINE>
         """
         # print header indicating type Mesh and basic information
-        mesh_string = 'vcfempy.meshgen.PolyMesh2D\n'
-        mesh_string += 'Number of Vertices = {!s}\n'.format(self.num_vertices)
-        mesh_string += 'Number of Boundary Vertices = {!s}\n'.format(self.num_boundary_vertices)
-        mesh_string += 'Number of Boundary Edges = {!s}\n'.format(self.num_boundary_edges)
-        mesh_string += 'Number of Nodes = {!s}\n'.format(self.num_nodes)
-        mesh_string += 'Number of Elements = {!s}\n'.format(self.num_elements)
-        mesh_string += 'Number of Element Edges = {!s}\n\n'.format(self.num_element_edges)
+        mesh_string = ('vcfempy.meshgen.PolyMesh2D\n'
+                       + 'Number of Vertices = '
+                       + f'{self.num_vertices}\n'
+                       + 'Number of Boundary Vertices = '
+                       + f'{self.num_boundary_vertices}\n'
+                       + 'Number of Boundary Edges = '
+                       + f'{self.num_boundary_edges}\n'
+                       + 'Number of Nodes = '
+                       + f'{self.num_nodes}\n'
+                       + 'Number of Elements = '
+                       + f'{self.num_elements}\n'
+                       + 'Number of Element Edges = '
+                       + f'{self.num_element_edges}\n\n')
 
         if not self.verbose_printing:
             return mesh_string
@@ -433,7 +422,7 @@ class PolyMesh2D():
         Parameters
         ----------
         vertices : list[int or float] | list[list[int or float]]
-                   | array_like, shape = (*,2)
+                   | array_like, shape = (2, )
 
         Returns
         -------
@@ -461,7 +450,6 @@ class PolyMesh2D():
 
         Examples
         --------
-
         """
         # basic type check of vertices
         if type(vertices) not in [type(None), list, np.ndarray]:
@@ -512,7 +500,7 @@ class PolyMesh2D():
                     if len(v) != 2:
                         raise ValueError('vertices given as list of lists, '
                                          + 'but not all vertices have '
-                                         + 'shape (*, 2)')
+                                         + 'shape (, 2)')
                     # check that the values in the vertex list are numeric
                     for x in v:
                         if type(x) not in [int, float, np.int32, np.float64]:
@@ -535,7 +523,7 @@ class PolyMesh2D():
                or (len(vertices.shape) == 1 and vertices.shape[0] != 2)
                or (len(vertices.shape) == 2 and vertices.shape[1] != 2)):
                 raise ValueError('vertices given as numpy.ndarray, '
-                                 + 'but shape is not (*, 2)')
+                                 + 'but shape is not (, 2)')
             # check type of vertices array contents
             # Note: can just check vertices[0,0] since we know type(vertices)
             #       is numpy.ndarray which has uniform type
@@ -664,7 +652,6 @@ class PolyMesh2D():
 
         Examples
         --------
-
         """
         # basic type check of material_regions
         if type(material_regions) not in [type(None), list, MaterialRegion2D]:
@@ -771,7 +758,6 @@ class PolyMesh2D():
 
         Examples
         --------
-
         """
         # basic type check of mesh_edges
         if type(mesh_edges) not in [type(None), list]:
@@ -1123,125 +1109,107 @@ class PolyMesh2D():
         for k, e in enumerate(self.element_edges):
             for j, v in enumerate(self.element_edges[k]):
                 self.element_edges[k][j] = node_dict[self.element_edges[k][j]]
-                
+
         # determine material type of each element
         m0 = mtl.Material('NULL')
         element_materials = np.array([m0 for k, _ in enumerate(element_nodes)])
         for mr in self.material_regions:
-            bpath = path.Path(self.vertices[mr.vertices,:])
+            bpath = path.Path(self.vertices[mr.vertices, :])
             in_bnd = bpath.contains_points(self.points)
             element_materials[in_bnd] = mr.material
 
         # create list of elements
         self._elements = []
         for e, m in zip(element_nodes, element_materials):
-
             # create a new element and add it to the list of elements
             # Note: here, the first argument self initializes the element
             #       with a reference to the current mesh as its parent mesh
-            self.elements.append( PolyElement2D( self, e, m ) )
-        
+            self.elements.append(PolyElement2D(self, e, m))
+
         # set mesh valid
         # Note: the setter will perform checks for mesh validity
         self.mesh_valid = True
-            
-            
-    def plot_boundaries(self, ax = None, line_type = '-k'):
+
+    def plot_boundaries(self, ax=None, line_type='-k'):
         """ Plot out PolyMesh2D boundaries. """
-        
         if ax is None:
             ax = plt.gca()
-        
         for edge in self.boundary_edges:
-            ax.plot(self.vertices[edge,0], self.vertices[edge,1], line_type)
-        
+            ax.plot(self.vertices[edge, 0], self.vertices[edge, 1], line_type)
         return ax
-    
-    def plot_vertices(self, ax = None, line_type = 'sk', markersize = 5.0):
+
+    def plot_vertices(self, ax=None, line_type='sk', markersize=5.0):
         """ Plot out PolyMesh2D vertices. """
-        
         if ax is None:
             ax = plt.gca()
-        
-        ax.plot(self.vertices[:,0], self.vertices[:,1], line_type, markersize = markersize)
-        
+        ax.plot(self.vertices[:, 0],
+                self.vertices[:, 1],
+                line_type, markersize=markersize)
         return ax
-    
-    def plot_mesh_edges(self, ax = None, line_type = '-k'):
+
+    def plot_mesh_edges(self, ax=None, line_type='-k'):
         """ Plot out PolyMesh2D mesh edges. """
-        
         if ax is None:
             ax = plt.gca()
-        
         for edge in self.mesh_edges:
-            ax.plot(self.vertices[edge,0], self.vertices[edge,1], line_type)
-        
+            ax.plot(self.vertices[edge, 0],
+                    self.vertices[edge, 1],
+                    line_type)
         return ax
-    
-    def plot_material_regions(self, ax = None, line_type = '-k', fill = True):
+
+    def plot_material_regions(self, ax=None, line_type='-k', fill=True):
         """ Plot out PolyMesh2D material regions. """
-        
         if ax is None:
             ax = plt.gca()
-            
         for mr in self.material_regions:
             mr.plot(ax, line_type, fill)
-
         return ax
-            
-    
-    def plot_mesh(self, ax = None, line_type = ':k', fill = True):
+
+    def plot_mesh(self, ax=None, line_type=':k', fill=True):
         """ Plot out PolyMesh2D elements. """
-        
         if ax is None:
             ax = plt.gca()
-            
         for e in self.elements:
             e.plot(ax, line_type, fill)
-        
         for edge in self.element_edges:
-            ax.plot(self.nodes[edge,0], self.nodes[edge,1], line_type)
-        
+            ax.plot(self.nodes[edge, 0],
+                    self.nodes[edge, 1],
+                    line_type)
         return ax
 
-    def plot_mesh_boundaries(self, ax = None, line_type = '--b'):
+    def plot_mesh_boundaries(self, ax=None, line_type='--b'):
         """ Plot out PolyMesh2D element edges that are on the boundaries. """
-
         if ax is None:
             ax = plt.gca()
-
         for ee, en in zip(self.element_edges, self.element_neighbors):
             if en[0] < 0 or en[1] < 0:
-                ax.plot(self.nodes[ee,0], self.nodes[ee,1], line_type)
+                ax.plot(self.nodes[ee, 0],
+                        self.nodes[ee, 1],
+                        line_type)
+        return ax
 
-        return ax
-    
-    def plot_mesh_nodes(self, ax = None, line_type = 'ok', markersize = 2.0):
+    def plot_mesh_nodes(self, ax=None, line_type='ok', markersize=2.0):
         """ Plot out PolyMesh2D nodes. """
-        
         if ax is None:
             ax = plt.gca()
-        
-        ax.plot(self.nodes[:,0], self.nodes[:,1], line_type, markersize = markersize)
-        
+        ax.plot(self.nodes[:, 0],
+                self.nodes[:, 1],
+                line_type, markersize=markersize)
         return ax
-    
-    def plot_quadrature_points(self, ax = None, line_type = '+k', markersize = 1.5):
+
+    def plot_quadrature_points(self, ax=None, line_type='+k', markersize=1.5):
         """ Plot out PolyMesh2D quadrature points. """
-        
         if ax is None:
             ax = plt.gca()
-        
         for e in self.elements:
             e.plot_quadrature_points(ax, line_type, markersize)
-        
         return ax
+
 
 class MaterialRegion2D():
     """ A class for defining material regions and their attributes. """
 
-    def __init__(self, mesh, vertices = None, material = None):
-
+    def __init__(self, mesh, vertices=None, material=None):
         self.mesh = mesh
 
         self._vertices = []
@@ -1263,10 +1231,9 @@ class MaterialRegion2D():
 
     @mesh.setter
     def mesh(self, mesh):
-
         if type(mesh) not in [type(None), PolyMesh2D]:
-            raise TypeError('type(mesh) not in [NoneType, vcfempy.meshgen.PolyMesh2D]')
-
+            raise TypeError('type(mesh) not in [NoneType, '
+                            + 'vcfempy.meshgen.PolyMesh2D]')
         self._mesh = mesh
 
     @property
@@ -1275,194 +1242,108 @@ class MaterialRegion2D():
 
     @material.setter
     def material(self, material):
-
         if type(material) not in [type(None), mtl.Material]:
-            raise TypeError('type(material) not in [NoneType, vcfempy.materials.Material]')
-
+            raise TypeError('type(material) not in [NoneType, '
+                            + 'vcfempy.materials.Material]')
         # change the material type of the material region
         # invalidate parent mesh since existing mesh would have
         # incorrect material assigned to elements
         self._material = material
         self.mesh.mesh_valid = False
-    
-    
+
     def insert_vertices(self, i, vertices):
-        
         # basic type check of vertices
         if type(vertices) not in [type(None), int, np.int32, list]:
-            raise TypeError('type(vertices) not in [NoneType, int, numpy.int32, list]')
-            
+            raise TypeError('type(vertices) not in [NoneType, int, '
+                            + 'numpy.int32, list]')
+
         # catch case of single vertex
         if type(vertices) in [int, np.int32]:
-            
             vertices = [vertices]
-           
+
         # if vertices given as None or empty list, return early
         # Note: if here, we know that vertices is either None or a list
         #       (i.e. not int) because of earlier type check and first if block
-        # in this case, we can skip re-processing the mesh since it is still valid
+        # in this case, we can skip re-processing the mesh since it
+        # is still valid
         elif vertices is None or len(vertices) == 0:
             return
-            
+
         # vertices is a non-empty list
         # Note: we know this because of earlier type check on vertices
-            
+
         # check contents of vertices
         for v in vertices:
-            
             # check type is integer
             if type(v) not in [int, np.int32]:
-                raise TypeError('type of vertices contents not in [int, numpy.int32]')
-                
+                raise TypeError('type of vertices contents not in [int, '
+                                + 'numpy.int32]')
             # check value of vertex is less than number of vertices
             if v >= self.mesh.num_vertices:
-                raise ValueError('vertices values must all be less than number of vertices in the parent mesh')
-                
+                raise ValueError('vertices values must all be less than '
+                                 + 'number of vertices in the parent mesh')
+
         # insert vertices
         # Note: if here, we know that vertices is a valid list of ints
+        # reset the mesh
         vertices.reverse()
         for k in vertices:
             self.vertices.insert(i, int(k))
-            
-        # since valid vertices were added
-        # reset the mesh
         self.mesh.mesh_valid = False
 
-
-    def plot(self, ax = None, fill = True):
-
+    def plot(self, ax=None, fill=True, line_type='-k'):
         if ax is None:
             ax = plt.gca()
-
         if fill:
-            ax.fill(self.mesh.vertices[self.vertices,0], \
-                    self.mesh.vertices[self.vertices,1], \
+            ax.fill(self.mesh.vertices[self.vertices, 0],
+                    self.mesh.vertices[self.vertices, 1],
                     color=self.material.color)
-
-        vlist = [self.vertices[j % self.num_vertices] for j in range(self.num_vertices+1)]
-        ax.plot(self.mesh.vertices[vlist, 0], \
-                self.mesh.vertices[vlist, 1], \
+        vlist = [self.vertices[j % self.num_vertices]
+                 for j in range(self.num_vertices+1)]
+        ax.plot(self.mesh.vertices[vlist, 0],
+                self.mesh.vertices[vlist, 1],
                 line_type)
-    
+
 
 class PolyElement2D():
     """
     A class for polygonal element geometry and quadrature generation
 
-    Properties
+    Parameters
     ----------
-    num_nodes : int
-        The number of nodes in the element
-    nodes : list of ints
-        The node indices, in CW or CCW order
-    mesh : PolyMesh2D
+    mesh : vcfempy.meshgen.PolyMesh2D
         The parent mesh
-        Can be set, but recommended to allow this to be set by PolyMesh2D.generate_mesh()
-    material : vcfempy.materials.Material
+    nodes : None or list[int], optional
+        The list of node indices from the parent mesh
+        Can be in CW or CCW order
+    material : None or vcfempy.materials.Material, optional
         The material type assigned to the element
-    area : float, signed
-        The element area
-        Positive if nodes in CCW order, negative if nodes in CW order
-    centroid : numpy.array, size = (2,)
-        The element centroid coordinates
-    quad_points : numpy.array, size = (*,2)
-        The element quadrature point coordinates
-    quad_weights : numpy.array, size = (*,)
-        The element quadrature point weights
-        Sums to 1.0
-    quad_integrals : numpy.array, size = (*,)
-        The element quadrature basis function integrals
-        For testing quadrature accuracy
 
-    Private Attributes
-    ------------------
-    _nodes : list of ints
-        The node indices, in CW or CCW order
-    _mesh : PolyMesh2D
-        The parent mesh
-    _material : vcfempy.materials.Material
-        The material type assigned to the element
-    _area : None | float, signed
-        The element area
-        Positive if nodes in CCW order, negative if nodes in CW order
-        Set to None by invalidate_properties()
-    _centroid : None | numpy.array, size = (2,)
-        The element centroid coordinates
-        Set to None by invalidate_properties()
-    _quad_points : None | numpy.array, size = (*,2)
-        The element quadrature point coordinates
-        Set to None by invalidate_properties()
-    _quad_weights : None | numpy.array, size = (*,)
-        The element quadrature point weights
-        Set to None by invalidate_properties()
-    _quad_integrals : None | numpy.array, size = (*,)
-        The element quadrature basis function integrals
-        Set to None by invalidate_properties()
+    Attributes
+    ----------
+    num_nodes
+    nodes
+    mesh
+    material
+    area
+    centroid
+    quad_points
+    quad_weights
+    quad_integrals
 
     Methods
     -------
-    __init__(mesh, nodes = None, material = None) -> None
-        Initializes element
-        Must provide parent mesh, optionally can provide initial 
-        list of nodes and material type
-    insert_nodes(i, nodes) -> None
-        Insert one or more nodes at index i
-        nodes can be int or list of ints
-    invalidate_properties() -> None
-        Resets computed element properties (area, centroid, quad_*)
-        Should be called whenever nodes is changed
-    generate_quadrature() -> None
-        Computes element properties quad_*
-        Determines correct _quadcon*() method to call depending on
-        num_nodes and mesh.high_order_quadrature
-    plot(ax = None, line_type = ':k', fill = True, borders = False) -> matplotlib.pyplot.axis
-        Plots the element
-        Can provide a matplotlib.pyplot.axis or if None will use matplotlib.pyplot.gca()
-        If fill, will fill the area with material.color
-        If borders, will plot element borders with line_type
-    plot_quadrature_points(ax = None, line_type = '+k', markersize = 1.5) -> matplotlib.pyplot.axis
-        Plots element quadrature points
-        Can provide a matplotlib.pyplot.axis or if None will use matplotlib.pyplot.gca()
-
-    Private Methods
-    ---------------
-    _quadcon3() -> None
-        Sets _quad_* attributes for elements with 3 nodes
-    _quadcon5()
-        Sets _quad_* attributes for elements with up to 5 nodes
-    _quadcon7()
-        Sets _quad_* attributes for elements with up to 7 nodes
-    _quadcon10()
-        Sets _quad_* attributes for elements with up to 10 nodes
-        or when mesh.high_order_quadrature == True
+    insert_nodes
+    invalidate_properties
+    generate_quadrature
+    plot
+    plot_quadrature_points
 
     Examples
     --------
     """
 
-    def __init__(self, mesh, nodes = None, material = None):
-        """ Initialize a PolyElement2D object.
-
-        Parameters
-        ----------
-        mesh : PolyMesh2D
-            The parent mesh
-        nodes : None | list of ints, optional
-            The list of node indices from the parent mesh
-            Can be in CW or CCW order
-        material : None | vcfempy.materials.Material
-            The material type assigned to the element
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        None
-
-        """
-
+    def __init__(self, mesh, nodes=None, material=None):
         # initialize parent mesh
         self.mesh = mesh
 
@@ -1476,10 +1357,9 @@ class PolyElement2D():
         # initialize geometry and quadrature attributes
         self.invalidate_properties()
 
-
     @property
     def num_nodes(self):
-        """ Getter for number of nodes in the element
+        """Number of nodes in the element
 
         Returns
         -------
@@ -1493,11 +1373,11 @@ class PolyElement2D():
 
     @property
     def nodes(self):
-        """ Getter for list of element nodes
+        """List of element nodes
 
         Returns
         -------
-        list of ints
+        list[int]
             The list of node indices in the element
 
         Examples
@@ -1507,12 +1387,22 @@ class PolyElement2D():
 
     @property
     def mesh(self):
-        """ Getter for parent mesh
+        """Parent mesh
+
+        Parameters
+        ----------
+        mesh : None | PolyMesh2D
+            The parent mesh to assign to the element
 
         Returns
         -------
         None | PolyMesh2D
             The parent mesh assigned to the element
+
+        Raises
+        ------
+        TypeError
+            type(mesh) not in [NoneType, PolyMesh2D]
 
         Examples
         --------
@@ -1521,35 +1411,30 @@ class PolyElement2D():
 
     @mesh.setter
     def mesh(self, mesh):
-        """ Setter for parent mesh
-
-        Parameters
-        ----------
-        mesh : None | PolyMesh2D
-            The parent mesh to assign to the element
-
-        Raises
-        ------
-        TypeError
-            type(mesh) not in [NoneType, PolyMesh2D]
-
-        """
-
         # basic type check of mesh
         if type(mesh) not in [type(None), PolyMesh2D]:
-            raise TypeError('type(mesh) not in [NoneType, vcfempy.meshgen.PolyMesh2D]')
-
-        # assign mesh
+            raise TypeError('type(mesh) not in [NoneType, '
+                            + 'vcfempy.meshgen.PolyMesh2D]')
         self._mesh = mesh
 
     @property
     def material(self):
-        """ Getter for element material
+        """Material type of the PolyElement2D
+
+        Parameters
+        ----------
+        material : None | vcfempy.materials.Material
+            The material to assign to the element
 
         Returns
         -------
         None | vcfempy.materials.Material
             The material assigned to the element
+
+        Raises
+        ------
+        TypeError
+            If type(material) not in [NoneType, vcfempy.materials.Material]
 
         Examples
         --------
@@ -1558,30 +1443,15 @@ class PolyElement2D():
 
     @material.setter
     def material(self, material):
-        """ Setter for element material
-
-        Parameters
-        ----------
-        material : None | vcfempy.materials.Material
-            The material to assign to the element
-
-        Raises
-        ------
-        TypeError
-            type(material) not in [NoneType, vcfempy.materials.Material]
-
-        """
-
         # basic type check of material
         if type(material) not in [type(None), mtl.Material]:
-            raise TypeError('type(material) not in [NoneType, vcfempy.materials.Material]')
-
-        # assign material
+            raise TypeError('type(material) not in [NoneType, '
+                            + 'vcfempy.materials.Material]')
         self._material = material
-    
+
     @property
     def area(self):
-        """ Getter for element area
+        """Element area
 
         Returns
         -------
@@ -1592,157 +1462,153 @@ class PolyElement2D():
         Examples
         --------
         """
-
         # check if area has not been calculated
         # if not, calculate it
         if self._area is None:
             self._area = polygon_area(self.mesh.nodes[self.nodes])
-
         return self._area
 
     @property
     def centroid(self):
-        """ Getter for element centroid coordinates
+        """Element centroid coordinates
 
         Returns
         -------
-        numpy.array, size = (2,)
+        numpy.array, shape = (2, )
             The coordinates of the element centroid
 
         Examples
         --------
         """
-
         # check if centroid has not been calculated
         # if not, calculate it
         if self._centroid is None:
-            self._centroid, _ = polygon_centroid(self.mesh.nodes[self.nodes], self.area)
-
+            self._centroid = polygon_centroid(self.mesh.nodes[self.nodes],
+                                              self.area)[0]
         return self._centroid
 
     @property
     def quad_points(self):
-        """ Getter for element quadrature point coordinates
+        """Element quadrature point coordinates
 
         Returns
         -------
-        numpy.array, size = (*,2)
+        numpy.ndarray, shape = (num_quad_points, 2)
             The coordinates of the element quadrature points
 
         Examples
         --------
         """
-
         # check if quadrature has not been generated
         # if not, generate it
         if self._quad_points is None:
             self.generate_quadrature()
-
         return self._quad_points
-    
+
     @property
     def quad_weights(self):
-        """ Getter for element quadrature point weights
+        """Element quadrature point weights
 
         Returns
         -------
-        numpy.array, size = (*,)
+        numpy.ndarray, shape = (num_quad_points, )
             The weights of the element quadrature points
             Should sum to 1.0
 
         Examples
         --------
         """
-
         # check if quadrature has not been generated
         # if not, generate it
         if self._quad_weights is None:
             self.generate_quadrature()
-
         return self._quad_weights
 
     @property
     def quad_integrals(self):
-        """ Getter for element quadrature basis function integrals
+        """Element quadrature basis function integrals
 
         Returns
         -------
-        numpy.array, size = (*,)
+        numpy.ndarray, size = (num_quad_basis_functions, )
             The values of the element quadrature basis function integrals
             Computed in local coordinates with origin at centroid
-            Basis functions depends on number of nodes and mesh.high_order_quadrature
+            Basis functions depends on number of nodes and
+            mesh.high_order_quadrature
             3 nodes: 1
             up to 5 nodes: ..., x**2, x*y, y**2
             up to 7 nodes: ..., x**4, x**3 * y, ... y**4
-            mesh.high_order_quadrature or up to 10 nodes: ..., x**6, x**5 * y, ... y**6
+            mesh.high_order_quadrature or up to 10 nodes: ..., x**6, x**5 * y,
+                                                          ... y**6
 
         Examples
         --------
         """
-
         # check if quadrature has not been generated
         # if not, generate it
         if self._quad_integrals is None:
             self.generate_quadrature()
-
         return self._quad_integrals
 
-
     def insert_nodes(self, i, nodes):
-        
+        """Insert one or more nodes at index i
+        nodes can be int or list of ints
+        """
         # basic type check of nodes
         if type(nodes) not in [type(None), int, np.int32, list]:
-            raise TypeError('type(nodes) not in [NoneType, int, numpy.int32, list]')
-            
+            raise TypeError('type(nodes) not in [NoneType, int, '
+                            + 'numpy.int32, list]')
+
         # catch case of single node
         if type(nodes) in [int, np.int32]:
-            
             nodes = [nodes]
-           
         # if nodes given as None or empty list, return early
         # Note: if here, we know that nodes is either None or a list
         #       (i.e. not int) because of earlier type check and first if block
-        # in this case, we can skip re-processing the mesh since it is still valid
+        # in this case, we can skip re-processing the mesh since it is
+        # still valid
         elif nodes is None or len(nodes) == 0:
             return
-            
+
         # nodes is a non-empty list
         # Note: we know this because of earlier type check on nodes
-            
         # check contents of nodes
         for v in nodes:
-            
             # check type is integer
             if type(v) not in [int, np.int32]:
-                raise TypeError('type of nodes contents not in [int, numpy.int32]')
-                
+                raise TypeError('type of nodes contents not in [int, '
+                                + 'numpy.int32]')
             # check value of node is less than number of nodes in parent mesh
             if v >= self.mesh.num_nodes:
-                raise ValueError('nodes values must all be less than number of nodes in the parent mesh')
-                
+                raise ValueError('nodes values must all be less than number '
+                                 + 'of nodes in the parent mesh')
+
         # insert nodes
         # Note: if here, we know that nodes is a valid list of ints
+        # nodes were added, so reset element properties
         nodes.reverse()
         for k in nodes:
             self.nodes.insert(i, int(k))
-
-        # nodes were added, so reset element properties
         self.invalidate_properties()
 
-
     def invalidate_properties(self):
+        """Resets computed element properties
+        Should be called whenever nodes is changed
+        """
         self._area = None
         self._centroid = None
         self._quad_points = None
         self._quad_weights = None
         self._quad_integrals = None
 
-    
     def generate_quadrature(self):
-        """ Generate quadrature points and weights for a PolyElement2D. """
+        """Generate quadrature points and weights for a PolyElement2D
+        Determines correct quadcon method to call depending on
+        num_nodes and mesh.high_order_quadrature
+        """
 
         n = self.num_nodes
-        
+
         if self.mesh.high_order_quadrature or n > 7:
             self._quadcon10()
         elif n > 5:
@@ -1752,56 +1618,63 @@ class PolyElement2D():
         else:
             self._quadcon3()
 
-
     def _quadcon3(self):
-        
         # only require linear integration over a triangle
         # one integration point is sufficient
-        self._quad_points = np.array([[0.,0.]])
+        self._quad_points = np.zeros((1, 2))
         self._quad_weights = np.array([1.])
         self._quad_integrals = np.array([self.area])
 
-
     def _quadcon5(self):
-        
         vertices = self.mesh.nodes[self.nodes] - self.centroid
-        cent = np.array([0.,0.])
+        cent = np.zeros(2)
         area = self.area
-            
+
         # integrate basis functions
         # f(x,y) = {1, x, y, x**2, x*y, y**2}
-        
+
         # using subdivision of polygon into triangles
         # each triangle is integrated using Gaussian quadrature
-        # as per: Cowper, G.R. 1973. Gaussian quadrature formulas for triangles,
-        #             International Journal for Numerical Methods 7(3): 405-408,
-        #             doi: 10.1002/nme.1620070316
+        # as per: Cowper, G.R. 1973. Gaussian quadrature formulas for
+        #             triangles, International Journal for Numerical
+        #             Methods 7(3): 405-408, doi: 10.1002/nme.1620070316
         # here, use the 3-point formula  with degree of precision 2
-        N = np.array([[0.66666_66666_66667, 0.16666_66666_66667, 0.16666_66666_66667], \
-                      [0.16666_66666_66667, 0.66666_66666_66667, 0.16666_66666_66667], \
-                      [0.16666_66666_66667, 0.16666_66666_66667, 0.66666_66666_66667]])
-        w = np.array([0.33333_33333_33333, \
-                      0.33333_33333_33333, \
+        N = np.array([[0.66666_66666_66667,
+                       0.16666_66666_66667,
+                       0.16666_66666_66667],
+                      [0.16666_66666_66667,
+                       0.66666_66666_66667,
+                       0.16666_66666_66667],
+                      [0.16666_66666_66667,
+                       0.16666_66666_66667,
+                       0.66666_66666_66667]])
+        w = np.array([0.33333_33333_33333,
+                      0.33333_33333_33333,
                       0.33333_33333_33333])
         nphi = 6
         phi = np.zeros(nphi)
-        
+
         # loop over vertices
         n = len(vertices)
         for k, v0 in enumerate(vertices):
-            
             # form triangle with 2 vertices + centroid
-            v1 = vertices[(k+1)%n]
+            v1 = vertices[(k+1) % n]
             x = np.vstack([cent, v0, v1])
-            
+
             # triangle area
-            detJ = 0.5 * np.abs((x[1,0]-x[0,0])*(x[2,1]-x[0,1]) - (x[2,0]-x[0,0])*(x[1,1]-x[0,1]))
-            
+            detJ = 0.5 * np.abs((x[1, 0]-x[0, 0]) * (x[2, 1]-x[0, 1])
+                                - (x[2, 0]-x[0, 0]) * (x[1, 1]-x[0, 1]))
+
             # perform Gaussian integration over triangle
-            for wj, Nj in zip(w,N):
+            for wj, Nj in zip(w, N):
                 xj = Nj @ x
-                phi += detJ * wj * np.array([1., xj[0], xj[1], xj[0]**2, xj[0]*xj[1], xj[1]**2])
-        
+                phi += detJ * wj * np.array([1.,
+                                             xj[0],
+                                             xj[1],
+                                             xj[0]**2,
+                                             xj[0] * xj[1],
+                                             xj[1]**2])
+
         # initialize polygon integration points
         # this produces a 9-point integration rule for quadrilaterals
         # and an 11-point integration rule for pentagons
@@ -1817,84 +1690,101 @@ class PolyElement2D():
             mid_xq0.append((x0+x1+cent)/3)
         xq = np.vstack([xq0, mid_xq0, cent])
         nq = len(xq)
-            
-        # evaluate basis functions at integration points
-        PHI = np.array([np.ones(nq), xq[:,0], xq[:,1], xq[:,0]**2, xq[:,0]*xq[:,1], xq[:,1]**2])
 
-        # solve for the quadrature coefficients and normalize integration point weights
+        # evaluate basis functions at integration points
+        PHI = np.array([np.ones(nq),
+                        xq[:, 0],
+                        xq[:, 1],
+                        xq[:, 0]**2,
+                        xq[:, 0] * xq[:, 1],
+                        xq[:, 1]**2])
+
+        # solve for the quadrature coefficients and normalize integration
+        # point weights
         # Note: if nq > nphi, this is a least squares solution
         wq = np.linalg.lstsq(PHI, phi, rcond=None)[0]
         wq /= np.abs(area)
-            
+
+        # set element quadrature (private) attributes
         self._quad_points = xq
         self._quad_weights = wq
         self._quad_integrals = phi
 
-
     def _quadcon7(self):
-
         vertices = self.mesh.nodes[self.nodes] - self.centroid
-        cent = np.array([0.,0.])
+        cent = np.zeros(2)
         area = self.area
-            
+
         # integrate basis functions
-        # f(x,y) = { 1, 
-        #            x, y, 
-        #            x**2, x * y, y**2, 
-        #            x**3, x**2 * y, x * y**2, y**3, 
+        # f(x,y) = { 1,
+        #            x, y,
+        #            x**2, x * y, y**2,
+        #            x**3, x**2 * y, x * y**2, y**3,
         #            x**4, x**3 * y, x**2 * y**2, x * y**3, y**4}
-        
+
         # using subdivision of polygon into triangles
         # each triangle is integrated using Gaussian quadrature
-        # as per: Cowper, G.R. 1973. Gaussian quadrature formulas for triangles,
-        #             International Journal for Numerical Methods 7(3): 405-408,
-        #             doi: 10.1002/nme.1620070316
+        # as per: Cowper, G.R. 1973. Gaussian quadrature formulas for
+        #             triangles, International Journal for Numerical
+        #             Methods 7(3): 405-408, doi: 10.1002/nme.1620070316
         # here, use the 6-point formula  with degree of precision 4
-        N = np.array([[0.81684_75729_80459, 0.09157_62135_09771, 0.09157_62135_09771], \
-                      [0.09157_62135_09771, 0.81684_75729_80459, 0.09157_62135_09771], \
-                      [0.09157_62135_09771, 0.09157_62135_09771, 0.81684_75729_80459], \
-                      [0.10810_30181_68070, 0.44594_84909_15965, 0.44594_84909_15965], \
-                      [0.44594_84909_15965, 0.10810_30181_68070, 0.44594_84909_15965], \
-                      [0.44594_84909_15965, 0.44594_84909_15965, 0.10810_30181_68070]])
-        w = np.array([0.10995_17436_55322, \
-                      0.10995_17436_55322, \
-                      0.10995_17436_55322, \
-                      0.22338_15896_78011, \
-                      0.22338_15896_78011, \
+        N = np.array([[0.81684_75729_80459,
+                       0.09157_62135_09771,
+                       0.09157_62135_09771],
+                      [0.09157_62135_09771,
+                       0.81684_75729_80459,
+                       0.09157_62135_09771],
+                      [0.09157_62135_09771,
+                       0.09157_62135_09771,
+                       0.81684_75729_80459],
+                      [0.10810_30181_68070,
+                       0.44594_84909_15965,
+                       0.44594_84909_15965],
+                      [0.44594_84909_15965,
+                       0.10810_30181_68070,
+                       0.44594_84909_15965],
+                      [0.44594_84909_15965,
+                       0.44594_84909_15965,
+                       0.10810_30181_68070]])
+        w = np.array([0.10995_17436_55322,
+                      0.10995_17436_55322,
+                      0.10995_17436_55322,
+                      0.22338_15896_78011,
+                      0.22338_15896_78011,
                       0.22338_15896_78011])
         nphi = 15
         phi = np.zeros(nphi)
-        
+
         # loop over vertices
         n = len(vertices)
         for k, v0 in enumerate(vertices):
-            
             # form triangle with 2 vertices + centroid
-            v1 = vertices[(k+1)%n]
+            v1 = vertices[(k+1) % n]
             x = np.vstack([cent, v0, v1])
-            
+
             # triangle area
-            detJ = 0.5 * np.abs((x[1,0]-x[0,0])*(x[2,1]-x[0,1]) - (x[2,0]-x[0,0])*(x[1,1]-x[0,1]))
-            
+            detJ = 0.5 * np.abs((x[1, 0]-x[0, 0]) * (x[2, 1]-x[0, 1])
+                                - (x[2, 0]-x[0, 0]) * (x[1, 1]-x[0, 1]))
+
             # perform Gaussian integration over triangle
-            for wj, Nj in zip(w,N):
+            for wj, Nj in zip(w, N):
                 xj = Nj @ x
-                phi += detJ * wj * np.array([1., \
-                                             xj[0], \
-                                             xj[1], \
-                                             xj[0]**2, \
-                                             xj[0]*xj[1], \
-                                             xj[1]**2, \
-                                             xj[0]**3, \
-                                             xj[0]**2 * xj[1], \
-                                             xj[0] * xj[1]**2, \
-                                             xj[1]**3, \
-                                             xj[0]**4, \
-                                             xj[0]**3 * xj[1], \
-                                             xj[0]**2 * xj[1]**2, \
-                                             xj[0] * xj[1]**3, \
+                phi += detJ * wj * np.array([1.,
+                                             xj[0],
+                                             xj[1],
+                                             xj[0]**2,
+                                             xj[0] * xj[1],
+                                             xj[1]**2,
+                                             xj[0]**3,
+                                             xj[0]**2 * xj[1],
+                                             xj[0] * xj[1]**2,
+                                             xj[1]**3,
+                                             xj[0]**4,
+                                             xj[0]**3 * xj[1],
+                                             xj[0]**2 * xj[1]**2,
+                                             xj[0] * xj[1]**3,
                                              xj[1]**4])
-        
+
         # initialize polygon integration points
         # this produces a 19-point integration rule for hexagons
         # and a 22-point integration rule for heptagons
@@ -1914,125 +1804,150 @@ class PolyElement2D():
             tri_xq0.append(0.5*(cent + x))
         xq = np.vstack([xq0, mid_xq0, tri_xq0, cent])
         nq = len(xq)
-            
-        # evaluate basis functions at integration points
-        PHI = np.array([np.ones(nq), \
-                        xq[:,0], \
-                        xq[:,1], \
-                        xq[:,0]**2, \
-                        xq[:,0]*xq[:,1], \
-                        xq[:,1]**2, \
-                        xq[:,0]**3, \
-                        xq[:,0]**2 * xq[:,1], \
-                        xq[:,0] * xq[:,1]**2, \
-                        xq[:,1]**3, \
-                        xq[:,0]**4, \
-                        xq[:,0]**3 * xq[:,1], \
-                        xq[:,0]**2 * xq[:,1]**2, \
-                        xq[:,0] * xq[:,1]**3, \
-                        xq[:,1]**4])
 
-        # solve for the quadrature coefficients and normalize integration point weights
+        # evaluate basis functions at integration points
+        PHI = np.array([np.ones(nq),
+                        xq[:, 0],
+                        xq[:, 1],
+                        xq[:, 0]**2,
+                        xq[:, 0] * xq[:, 1],
+                        xq[:, 1]**2,
+                        xq[:, 0]**3,
+                        xq[:, 0]**2 * xq[:, 1],
+                        xq[:, 0] * xq[:, 1]**2,
+                        xq[:, 1]**3,
+                        xq[:, 0]**4,
+                        xq[:, 0]**3 * xq[:, 1],
+                        xq[:, 0]**2 * xq[:, 1]**2,
+                        xq[:, 0] * xq[:, 1]**3,
+                        xq[:, 1]**4])
+
+        # solve for the quadrature coefficients and normalize integration
+        # point weights
         # Note: if nq > nphi, this is a least squares solution
         wq = np.linalg.lstsq(PHI, phi, rcond=None)[0]
         wq /= np.abs(area)
 
+        # set element quadrature (private) attributes
         self._quad_points = xq
         self._quad_weights = wq
         self._quad_integrals = phi
 
-
     def _quadcon10(self):
-        
         vertices = self.mesh.nodes[self.nodes] - self.centroid
-        cent = np.array([0.,0.])
+        cent = np.zeros(2)
         area = self.area
 
         # integrate basis functions
-        # f(x,y) = { 1, 
-        #            x, y, 
-        #            x**2, x * y, y**2, 
-        #            x**3, x**2 * y, x * y**2, y**3, 
-        #            x**4, x**3 * y, x**2 * y**2, x * y**3, y**4, 
-        #            x**5, x**4 * y, x**3 * y**2, x**2 * y**3, x * y**4, y**5, 
-        #            x**6, x**5 * y, x**4 * y**2, x**3 * y**3, x**2 * y**4, x * y**5, y**6}
-        
+        # f(x,y) = { 1,
+        #            x, y,
+        #            x**2, x * y, y**2,
+        #            x**3, x**2 * y, x * y**2, y**3,
+        #            x**4, x**3 * y, x**2 * y**2, x * y**3, y**4,
+        #            x**5, x**4 * y, x**3 * y**2, x**2 * y**3, x * y**4, y**5,
+        #            x**6, x**5 * y, x**4 * y**2, x**3 * y**3,
+        #            x**2 * y**4, x * y**5, y**6}
+
         # using subdivision of polygon into triangles
         # each triangle is integrated using Gaussian quadrature
-        # as per: Cowper, G.R. 1973. Gaussian quadrature formulas for triangles,
-        #             International Journal for Numerical Methods 7(3): 405-408,
-        #             doi: 10.1002/nme.1620070316
+        # as per: Cowper, G.R. 1973. Gaussian quadrature formulas for
+        #             triangles, International Journal for Numerical
+        #             Methods 7(3): 405-408, doi: 10.1002/nme.1620070316
         # here, use the 12-point formula  with degree of precision 6
-        N = np.array([[0.87382_19710_16996, 0.06308_90144_91502, 0.06308_90144_91502], \
-                      [0.06308_90144_91502, 0.87382_19710_16996, 0.06308_90144_91502], \
-                      [0.06308_90144_91502, 0.06308_90144_91502, 0.87382_19710_16996], \
-                      [0.50142_65096_58179, 0.24928_67451_70911, 0.24928_67451_70911], \
-                      [0.24928_67451_70911, 0.50142_65096_58179, 0.24928_67451_70911], \
-                      [0.24928_67451_70911, 0.24928_67451_70911, 0.50142_65096_58179], \
-                      [0.63650_24991_21399, 0.31035_24510_33785, 0.05314_50498_44816], \
-                      [0.63650_24991_21399, 0.05314_50498_44816, 0.31035_24510_33785], \
-                      [0.31035_24510_33785, 0.63650_24991_21399, 0.05314_50498_44816], \
-                      [0.31035_24510_33785, 0.05314_50498_44816, 0.63650_24991_21399], \
-                      [0.05314_50498_44816, 0.63650_24991_21399, 0.31035_24510_33785], \
-                      [0.05314_50498_44816, 0.31035_24510_33785, 0.63650_24991_21399]])
-        w = np.array([0.05084_49063_70207, \
-                      0.05084_49063_70207, \
-                      0.05084_49063_70207, \
-                      0.11678_62757_26379, \
-                      0.11678_62757_26379, \
-                      0.11678_62757_26379, \
-                      0.08285_10756_18374, \
-                      0.08285_10756_18374, \
-                      0.08285_10756_18374, \
-                      0.08285_10756_18374, \
-                      0.08285_10756_18374, \
+        N = np.array([[0.87382_19710_16996,
+                       0.06308_90144_91502,
+                       0.06308_90144_91502],
+                      [0.06308_90144_91502,
+                       0.87382_19710_16996,
+                       0.06308_90144_91502],
+                      [0.06308_90144_91502,
+                       0.06308_90144_91502,
+                       0.87382_19710_16996],
+                      [0.50142_65096_58179,
+                       0.24928_67451_70911,
+                       0.24928_67451_70911],
+                      [0.24928_67451_70911,
+                       0.50142_65096_58179,
+                       0.24928_67451_70911],
+                      [0.24928_67451_70911,
+                       0.24928_67451_70911,
+                       0.50142_65096_58179],
+                      [0.63650_24991_21399,
+                       0.31035_24510_33785,
+                       0.05314_50498_44816],
+                      [0.63650_24991_21399,
+                       0.05314_50498_44816,
+                       0.31035_24510_33785],
+                      [0.31035_24510_33785,
+                       0.63650_24991_21399,
+                       0.05314_50498_44816],
+                      [0.31035_24510_33785,
+                       0.05314_50498_44816,
+                       0.63650_24991_21399],
+                      [0.05314_50498_44816,
+                       0.63650_24991_21399,
+                       0.31035_24510_33785],
+                      [0.05314_50498_44816,
+                       0.31035_24510_33785,
+                       0.63650_24991_21399]])
+        w = np.array([0.05084_49063_70207,
+                      0.05084_49063_70207,
+                      0.05084_49063_70207,
+                      0.11678_62757_26379,
+                      0.11678_62757_26379,
+                      0.11678_62757_26379,
+                      0.08285_10756_18374,
+                      0.08285_10756_18374,
+                      0.08285_10756_18374,
+                      0.08285_10756_18374,
+                      0.08285_10756_18374,
                       0.08285_10756_18374])
         nphi = 28
         phi = np.zeros(nphi)
-        
+
         # loop over vertices
         n = len(vertices)
         for k, v0 in enumerate(vertices):
-            
             # form triangle with 2 vertices + centroid
-            v1 = vertices[(k+1)%n]
+            v1 = vertices[(k+1) % n]
             x = np.vstack([cent, v0, v1])
-            
+
             # triangle area
-            detJ = 0.5 * np.abs((x[1,0]-x[0,0])*(x[2,1]-x[0,1]) - (x[2,0]-x[0,0])*(x[1,1]-x[0,1]))
-            
+            detJ = 0.5 * np.abs((x[1, 0]-x[0, 0]) * (x[2, 1]-x[0, 1])
+                                - (x[2, 0]-x[0, 0]) * (x[1, 1]-x[0, 1]))
+
             # perform Gaussian integration over triangle
-            for wj, Nj in zip(w,N):
+            for wj, Nj in zip(w, N):
                 xj = Nj @ x
-                phi += detJ * wj * np.array([1., \
-                                             xj[0], \
-                                             xj[1], \
-                                             xj[0]**2, \
-                                             xj[0]*xj[1], \
-                                             xj[1]**2, \
-                                             xj[0]**3, \
-                                             xj[0]**2 * xj[1], \
-                                             xj[0] * xj[1]**2, \
-                                             xj[1]**3, \
-                                             xj[0]**4, \
-                                             xj[0]**3 * xj[1], \
-                                             xj[0]**2 * xj[1]**2, \
-                                             xj[0] * xj[1]**3, \
-                                             xj[1]**4, \
-                                             xj[0]**5, \
-                                             xj[0]**4 * xj[1], \
-                                             xj[0]**3 * xj[1]**2, \
-                                             xj[0]**2 * xj[1]**3, \
-                                             xj[0] * xj[1]**4, \
-                                             xj[1]**5, \
-                                             xj[0]**6, \
-                                             xj[0]**5 * xj[1], \
-                                             xj[0]**4 * xj[1]**2, \
-                                             xj[0]**3 * xj[1]**3, \
-                                             xj[0]**2 * xj[1]**4, \
-                                             xj[0] * xj[1]**5, \
+                phi += detJ * wj * np.array([1.,
+                                             xj[0],
+                                             xj[1],
+                                             xj[0]**2,
+                                             xj[0] * xj[1],
+                                             xj[1]**2,
+                                             xj[0]**3,
+                                             xj[0]**2 * xj[1],
+                                             xj[0] * xj[1]**2,
+                                             xj[1]**3,
+                                             xj[0]**4,
+                                             xj[0]**3 * xj[1],
+                                             xj[0]**2 * xj[1]**2,
+                                             xj[0] * xj[1]**3,
+                                             xj[1]**4,
+                                             xj[0]**5,
+                                             xj[0]**4 * xj[1],
+                                             xj[0]**3 * xj[1]**2,
+                                             xj[0]**2 * xj[1]**3,
+                                             xj[0] * xj[1]**4,
+                                             xj[1]**5,
+                                             xj[0]**6,
+                                             xj[0]**5 * xj[1],
+                                             xj[0]**4 * xj[1]**2,
+                                             xj[0]**3 * xj[1]**3,
+                                             xj[0]**2 * xj[1]**4,
+                                             xj[0] * xj[1]**5,
                                              xj[1]**6])
-        
+
         # initialize polygon integration points
         # this produces a 33-point integration rule for octagons,
         # a 37-point integration rule for nonagons, and
@@ -2042,103 +1957,107 @@ class PolyElement2D():
             d = cent - v
             xq0.append(v + 0.15*d)
         xq0 = np.array(xq0)
-        Ntri = np.array([[0.6, 0.2, 0.2], \
-                         [0.2, 0.6, 0.2], \
+        Ntri = np.array([[0.6, 0.2, 0.2],
+                         [0.2, 0.6, 0.2],
                          [0.2, 0.2, 0.6]])
         tri_xq0 = []
         nq0 = len(xq0)
         for k, x0 in enumerate(xq0):
             x1 = xq0[(k+1) % nq0]
-            x = np.vstack([x0,x1,cent])
+            x = np.vstack([x0, x1, cent])
             for Nj in Ntri:
                 tri_xq0.append(Nj @ x)
         xq = np.vstack([xq0, tri_xq0, cent])
         nq = len(xq)
-            
-        # evaluate basis functions at integration points
-        PHI = np.array([np.ones(nq), \
-                        xq[:,0], \
-                        xq[:,1], \
-                        xq[:,0]**2, \
-                        xq[:,0]*xq[:,1], \
-                        xq[:,1]**2, \
-                        xq[:,0]**3, \
-                        xq[:,0]**2 * xq[:,1], \
-                        xq[:,0] * xq[:,1]**2, \
-                        xq[:,1]**3, \
-                        xq[:,0]**4, \
-                        xq[:,0]**3 * xq[:,1], \
-                        xq[:,0]**2 * xq[:,1]**2, \
-                        xq[:,0] * xq[:,1]**3, \
-                        xq[:,1]**4, \
-                        xq[:,0]**5, \
-                        xq[:,0]**4 * xq[:,1], \
-                        xq[:,0]**3 * xq[:,1]**2, \
-                        xq[:,0]**2 * xq[:,1]**3, \
-                        xq[:,0] * xq[:,1]**4, \
-                        xq[:,1]**5, \
-                        xq[:,0]**6, \
-                        xq[:,0]**5 * xq[:,1], \
-                        xq[:,0]**4 * xq[:,1]**2, \
-                        xq[:,0]**3 * xq[:,1]**3, \
-                        xq[:,0]**2 * xq[:,1]**4, \
-                        xq[:,0] * xq[:,1]**5, \
-                        xq[:,1]**6])
 
-        # solve for the quadrature coefficients and normalize integration point weights
+        # evaluate basis functions at integration points
+        PHI = np.array([np.ones(nq),
+                        xq[:, 0],
+                        xq[:, 1],
+                        xq[:, 0]**2,
+                        xq[:, 0]*xq[:, 1],
+                        xq[:, 1]**2,
+                        xq[:, 0]**3,
+                        xq[:, 0]**2 * xq[:, 1],
+                        xq[:, 0] * xq[:, 1]**2,
+                        xq[:, 1]**3,
+                        xq[:, 0]**4,
+                        xq[:, 0]**3 * xq[:, 1],
+                        xq[:, 0]**2 * xq[:, 1]**2,
+                        xq[:, 0] * xq[:, 1]**3,
+                        xq[:, 1]**4,
+                        xq[:, 0]**5,
+                        xq[:, 0]**4 * xq[:, 1],
+                        xq[:, 0]**3 * xq[:, 1]**2,
+                        xq[:, 0]**2 * xq[:, 1]**3,
+                        xq[:, 0] * xq[:, 1]**4,
+                        xq[:, 1]**5,
+                        xq[:, 0]**6,
+                        xq[:, 0]**5 * xq[:, 1],
+                        xq[:, 0]**4 * xq[:, 1]**2,
+                        xq[:, 0]**3 * xq[:, 1]**3,
+                        xq[:, 0]**2 * xq[:, 1]**4,
+                        xq[:, 0] * xq[:, 1]**5,
+                        xq[:, 1]**6])
+
+        # solve for the quadrature coefficients and normalize integration
+        # point weights
         # Note: if nq > nphi, this is a least squares solution
         wq = np.linalg.lstsq(PHI, phi, rcond=None)[0]
         wq /= np.abs(area)
-            
+
+        # set element quadrature (private) attributes
         self._quad_points = xq
         self._quad_weights = wq
         self._quad_integrals = phi
-     
 
-    def plot(self, ax = None, line_type = ':k', fill = True, borders = False):
-
+    def plot(self, ax=None, line_type=':k', fill=True, borders=False):
+        """Plots the element
+        Can provide a matplotlib.pyplot.axis or if None will
+        use matplotlib.pyplot.gca()
+        If fill, will fill the area with material.color
+        If borders, will plot element borders with line_type
+        """
         if ax is None:
             ax = plt.gca()
-
         if fill:
-            ax.fill(self.mesh.nodes[self.nodes,0], \
-                    self.mesh.nodes[self.nodes,1], \
+            ax.fill(self.mesh.nodes[self.nodes, 0],
+                    self.mesh.nodes[self.nodes, 1],
                     color=self.material.color)
-
         if borders:
-            vlist = [self.nodes[j % self.num_nodes] for j in range(self.num_nodes+1)]
-            ax.plot(self.mesh.nodes[vlist, 0], \
-                    self.mesh.nodes[vlist, 1], \
+            vlist = [self.nodes[j % self.num_nodes]
+                     for j in range(self.num_nodes+1)]
+            ax.plot(self.mesh.nodes[vlist, 0],
+                    self.mesh.nodes[vlist, 1],
                     line_type)
+        return ax
 
-    def plot_quadrature_points(self, ax = None, line_type = '+k', markersize = 1.5):
-
+    def plot_quadrature_points(self, ax=None, line_type='+k', markersize=1.5):
+        """Plots element quadrature points
+        Can provide a matplotlib.pyplot.axis or if None will
+        use matplotlib.pyplot.gca()
+        """
         if ax is None:
             ax = plt.gca()
-
-        ax.plot( self.quad_points[:,0] + self.centroid[0], \
-                 self.quad_points[:,1] + self.centroid[1], \
-                 line_type, markersize = markersize)
-
+        ax.plot(self.quad_points[:, 0] + self.centroid[0],
+                self.quad_points[:, 1] + self.centroid[1],
+                line_type, markersize=markersize)
         return ax
- 
-        
+
+
 def polygon_area(x):
-    
     n = len(x)
     area = 0.
     for k, v0 in enumerate(x):
         vm1 = x[k-1]
         vp1 = x[(k+1) % n]
         area += v0[0] * (vp1[1] - vm1[1])
-    
     return 0.5*area
 
-def polygon_centroid(x, area = None):
-    
+
+def polygon_centroid(x, area=None):
     if area is None:
         area = polygon_area(x)
-    
     n = len(x)
     cent = np.zeros(2)
     for k, v0 in enumerate(x):
@@ -2146,7 +2065,4 @@ def polygon_centroid(x, area = None):
         d = v0[0]*v1[1] - v0[1]*v1[0]
         cent += (v0+v1) * d
     cent /= (6. * area)
-        
-    return cent , area
-
-
+    return cent, area
