@@ -1,72 +1,50 @@
-""" Module for flow / seepage analysis in the Voronoi Cell Finite Element Method (VCFEM). 
-
-See Also
---------
-vcfempy.materials
-    A module for materials and their properties in the VCFEM
-vcfempy.meshgen
-    A module for generating meshes for the VCFEM
-
-Notes
------
-This module is part of the `vcfempy` package and is commonly imported internally as
-`import vcfempy.flow as flw`
+"""A module for flow / seepage analysis in the Voronoi Cell Finite Element
+Method (VCFEM).
 
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-
 import vcfempy.meshgen as msh
-import vcfempy.materials as mtl
+
 
 class PolyFlow2D():
-    """ A class for 2D flow analysis in the VCFEM. 
-    
+    """A class for 2D flow analysis in the VCFEM.
+
     Parameters
     ----------
-    mesh : vcfempy.meshgen.PolyMesh2D, optional, default = None
-        The parent mesh for the flow analysis
-
-    Attributes
-    ----------
-    mesh
+    mesh : vcfempy.meshgen.PolyMesh2D, optional
+        The parent mesh for the **PolyFlow2D** analysis.
 
     Returns
     -------
-    None
-
-    Raises
-    ------
-    None
+    `vcfempy.flow.PolyFlow2D`
+        A new **PolyFlow2D** object.
 
     Examples
     --------
     """
-    
-    def __init__(self, mesh = None):
-        """ Initialization method for PolyFlow2D """
 
+    def __init__(self, mesh=None):
         self.mesh = mesh
-
 
     @property
     def mesh(self):
-        """ The parent mesh for the PolyFlow2D analysis
+        """The parent mesh for the **PolyFlow2D** analysis.
 
         Parameters
         ----------
         mesh : vcfempy.meshgen.PolyMesh2D
+            The parent mesh object
 
         Returns
         -------
-        None | vcfempy.meshgen.PolyMesh2D
-            The parent mesh. If None, no parent mesh is assigned.
+        `None` or `vcfempy.meshgen.PolyMesh2D`
+            The parent mesh. If `None`, no parent mesh is assigned.
 
         Raises
         ------
         TypeError
-            If `mesh` is not None or a PolyMesh2D
+            If **mesh** is not `None` or a `vcfempy.meshgen.PolyMesh2D`
+            object.
 
         Examples
         --------
@@ -75,12 +53,8 @@ class PolyFlow2D():
 
     @mesh.setter
     def mesh(self, mesh):
-        """ Setter for the `mesh` property """
-
         # basic type check of mesh
         if type(mesh) not in [type(None), msh.PolyMesh2D]:
-            raise TypeError('type(mesh) not in [NoneType, vcfempy.meshgen.PolyMesh2D]')
-
-        # if type is valid, assign the mesh
+            raise TypeError('type(mesh) not in [NoneType, '
+                            + 'vcfempy.meshgen.PolyMesh2D]')
         self._mesh = mesh
-

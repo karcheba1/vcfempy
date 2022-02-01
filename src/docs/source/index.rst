@@ -11,6 +11,7 @@ Welcome to VcFemPy's documentation!
    :caption: Contents:
 
    readme
+   license
    modules
 
 
