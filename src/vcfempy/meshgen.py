@@ -1,13 +1,5 @@
 """A module containing attributes, functions, classes and methods for
-meshes in the Voronoi Cell Finite Element Method (VCFEM).
-
-See Also
-----
-numpy
-matplotlib.pyplot
-matplotlib.path
-scipy.spatial.Voronoi
-vcfempy.materials
+mesh generation in the Voronoi Cell Finite Element Method (VCFEM).
 
 """
 
@@ -24,24 +16,17 @@ class PolyMesh2D():
 
     Parameters
     ----------
-    vertices : list[list[int or float]] | array_like[int or float],
-                optional, shape (nvertices, 2)
+    vertices : array_like, optional, shape=(num_vertices, 2)
         Initial vertices to be added to the PolyMesh2D
-    boundary_vertices : int | list[int], optional
+    boundary_vertices : int or list of int, optional
         Initial list of boundary vertices to be added
-    material_regions : list[int] | list[list[int]], optional
+    material_regions : list of int or list of list of int, optional
         Initial list(s) of material region vertices to be added
-    materials : list[vcfempy.materials.Material], optional
+    materials : list of vcfempy.materials.Material, optional
         Initial list of material types
-    mesh_edges : list[int] | list[list[int]], optional
+    mesh_edges : list of int or list of list of int, optional
         Initial list(s) defining non-boundary edges to be preserved in
         the mesh generation
-
-    Attributes
-    ----------
-    vertices
-    boundary_vertices
-    boundary_edges
 
     Examples
     --------
@@ -620,8 +605,8 @@ class PolyMesh2D():
 
         Parameters
         ----------
-        material_regions : list[int] | list[list[int]]
-                           | list[vcfempy.meshgen.MaterialRegion2D]
+        material_regions : list[int] | list[list[int]] | \
+list[vcfempy.meshgen.MaterialRegion2D]
             Lists of vertex indices defining clockwise boundary path of
             each new material region or list of object references to
             defined MaterialRegion2D
@@ -1313,31 +1298,11 @@ class PolyElement2D():
     ----------
     mesh : vcfempy.meshgen.PolyMesh2D
         The parent mesh
-    nodes : None or list[int], optional
+    nodes : None or list of int, optional
         The list of node indices from the parent mesh
         Can be in CW or CCW order
     material : None or vcfempy.materials.Material, optional
         The material type assigned to the element
-
-    Attributes
-    ----------
-    num_nodes
-    nodes
-    mesh
-    material
-    area
-    centroid
-    quad_points
-    quad_weights
-    quad_integrals
-
-    Methods
-    -------
-    insert_nodes
-    invalidate_properties
-    generate_quadrature
-    plot
-    plot_quadrature_points
 
     Examples
     --------
@@ -1538,8 +1503,8 @@ class PolyElement2D():
             3 nodes: 1
             up to 5 nodes: ..., x**2, x*y, y**2
             up to 7 nodes: ..., x**4, x**3 * y, ... y**4
-            mesh.high_order_quadrature or up to 10 nodes: ..., x**6, x**5 * y,
-                                                          ... y**6
+            mesh.high_order_quadrature or up to 10 nodes:
+            ..., x**6, x**5 * y, ... y**6
 
         Examples
         --------

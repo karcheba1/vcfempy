@@ -8,8 +8,6 @@ dist/
 
 # docs built files
 docs/build/*
-src/html/*
-src/docs/build/*
 
 # Compiled Java class files
 *.class

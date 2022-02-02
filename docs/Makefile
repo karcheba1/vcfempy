@@ -8,7 +8,7 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
 SPHINXAPI     = sphinx-apidoc
-PKGDIR       = ../vcfempy/
+PKGDIR        = ../src/vcfempy/
 
 # Put it first so that "make" without argument is like "make help".
 help:
