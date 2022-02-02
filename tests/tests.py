@@ -1,32 +1,23 @@
-""" A script for running unit tests on the 
-    Voronoi Cell Finite Element Method package (vcfempy).
-    This can be run as a standalone script since it has the
-    __name__ == '__main__' idiom.
-
-Uses
-----
-doctest
-vcfempy.materials
-vcfempy.meshgen
-vcfempy.flow
-
-Functions
----------
-main()
-    Runs all unit tests and prints summary of results
+""" A script for running unit tests on the Voronoi Cell Finite Element
+Method package (vcfempy). This can be run as a standalone script since it
+has the if __name__ == '__main__': idiom.
 
 """
 
+import os
+import sys
 import doctest
 
-import vcfempy.materials as mtl
-import vcfempy.meshgen as msh
-import vcfempy.flow as flw
+# add relative path to package, in case it is not installed
+sys.path.insert(0, os.path.abspath('../src/'))
+
 
 def main():
+    """Run all unit tests for vcfempy modules.
     """
-    Run all unit tests for vcfempy modules.
-    """
+    import vcfempy.materials as mtl
+    import vcfempy.meshgen as msh
+    import vcfempy.flow as flw
 
     # initialize counters for tests
     total_tests = 0

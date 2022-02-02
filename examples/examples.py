@@ -2,34 +2,13 @@
 Voronoi Cell Finite Element Method package (vcfempy). This can be
 run as a standalone script since it has the __name__ == '__main__' idiom.
 
-Uses
-----
-numpy
-matplotlib.pyplot
-vcfempy.materials
-vcfempy.meshgen
-
-Functions
----------
-rectangular_mesh()
-    An example demonstrating mesh generation for a simple rectangular domain
-    with a single material
-dam_mesh()
-    An example demonstrating mesh generation for a polygonal domain with
-    multiple materials and mesh edges between the materials. Demonstrates
-    "soft" (no mesh_edge) vs. "hard" edges (using a mesh_edge).
-tunnel_mesh()
-    An example demonstrating mesh generation for a symmetric analysis of
-    a tunnel, which has a concave domain boundary. Also demonstrates
-    mesh_edges within a material.
-
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
+import os
+import sys
 
-import vcfempy.materials as mtl
-import vcfempy.meshgen as msh
+# add relative path to package, in case it is not installed
+sys.path.insert(0, os.path.abspath('../src/'))
 
 
 def rectangular_mesh():
@@ -329,6 +308,11 @@ def tunnel_mesh():
 
 if __name__ == '__main__':
     """ If called as a standalone script, run all examples. """
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    import vcfempy.materials as mtl
+    import vcfempy.meshgen as msh
 
     print('\nRunning all examples:\n')
 
