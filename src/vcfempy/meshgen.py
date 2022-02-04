@@ -108,8 +108,8 @@ class PolyMesh2D():
 
     >>> # check some mesh statistics
     >>> import matplotlib.pyplot as plt
-    >>> n, bins, _ = plt.hist(msh.num_nodes_per_element, \
-bins=[k for k in range(3, 11)])
+    >>> n, bins, _ = plt.hist(msh.num_nodes_per_element,
+    ...                       bins=[k for k in range(3, 11)])
     >>> print(bins)
     [ 3  4  5  6  7  8  9 10]
     >>> print(n)
@@ -251,8 +251,8 @@ bins=[k for k in range(3, 11)])
         0
 
         >>> # add some boundary vertices
-        >>> msh.insert_boundary_vertices(0, [k for k, _ \
-in enumerate(msh.vertices)])
+        >>> msh.insert_boundary_vertices(0, [k for k, _ 
+        ...                                  in enumerate(msh.vertices)])
         >>> print(msh.num_boundary_vertices)
         4
 
