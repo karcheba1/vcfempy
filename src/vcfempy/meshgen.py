@@ -1923,13 +1923,13 @@ list[vcfempy.meshgen.MaterialRegion2D]
                 # delete points near vertex b0
                 keep_points = np.bool_(np.ones(len(self.points)))
                 for j, p in enumerate(self.points):
-                    if np.linalg.norm(p-b0) < 0.5*d_scale_loc:
+                    if np.linalg.norm(p-b0) < d_scale_loc:
                         keep_points[j] = False
                 self._points = self.points[keep_points]
 
                 # create two new points near concave vertex
-                new_points = [b0 + d_scale_loc*(0.2*pp_hat + 0.4*vv_hat),
-                              b0 + d_scale_loc*(0.2*pp_hat - 0.4*vv_hat)]
+                new_points = [b0 + d_scale_loc*(0.4*pp_hat + 0.8*vv_hat),
+                              b0 + d_scale_loc*(0.4*pp_hat - 0.8*vv_hat)]
                 self._points = np.vstack([self.points, new_points])
 
             # check for concave vertex
@@ -1940,13 +1940,13 @@ list[vcfempy.meshgen.MaterialRegion2D]
                 # delete points near vertex b0
                 keep_points = np.bool_(np.ones(len(self.points)))
                 for j, p in enumerate(self.points):
-                    if np.linalg.norm(p-b0) < 0.5*d_scale_loc:
+                    if np.linalg.norm(p-b0) < d_scale_loc:
                         keep_points[j] = False
                 self._points = self.points[keep_points]
 
                 # create two new points near concave vertex
-                new_points = [b0 + 0.4*d_scale_loc*vv_hat,
-                              b0 - 0.4*d_scale_loc*vv_hat]
+                new_points = [b0 + 0.8*d_scale_loc*vv_hat,
+                              b0 - 0.8*d_scale_loc*vv_hat]
                 self._points = np.vstack([self.points, new_points])
 
             # otherwise, it is a convex vertex
@@ -1958,13 +1958,13 @@ list[vcfempy.meshgen.MaterialRegion2D]
                 # delete points near vertex b0
                 keep_points = np.bool_(np.ones(len(self.points)))
                 for j, p in enumerate(self.points):
-                    if np.linalg.norm(p-b0) < 0.5*d_scale_loc:
+                    if np.linalg.norm(p-b0) < d_scale_loc:
                         keep_points[j] = False
                 self._points = self.points[keep_points]
 
                 # create new point near convex vertex
                 # adjacent to a short boundary edge
-                new_points = [b0 + 0.4*d_scale_loc*pp_hat]
+                new_points = [b0 + 0.8*d_scale_loc*pp_hat]
                 self._points = np.vstack([self.points, new_points])
 
         if verbose_plot:
