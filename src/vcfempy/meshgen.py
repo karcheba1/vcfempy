@@ -945,7 +945,7 @@ class PolyMesh2D():
 
     @property
     def num_nodes_per_element(self):
-        """Number of nodes per element in the generated mesh for the 
+        """Number of nodes per element in the generated mesh for the
         :c:`PolyMesh2D`.
 
         Returns
@@ -953,10 +953,14 @@ class PolyMesh2D():
         list[int]
             The number of nodes in each element in the :c:`PolyMesh2D`.
 
+        Notes
+        -----
+        The len(:a:`num_nodes_per_element`) will always be the same as
+        :a:`num_elements`.
+
         Examples
         --------
-        >>> # import the meshgen and materials modules
-        >>> import vcfempy.materials
+        >>> # import the meshgen module
         >>> import vcfempy.meshgen
 
         >>> # initialize a mesh, no initial information provided
@@ -991,8 +995,67 @@ class PolyMesh2D():
 
     @property
     def element_materials(self):
-        """List of material types assigned to each element in the
-        generated mesh
+        """List of :c:`vcfempy.materials.Material` types assigned to each
+        element in the generated mesh for the :c:`PolyMesh2D`.
+
+        Returns
+        -------
+        `list` of :c:`vcfempy.materials.Material`
+            The list of material types assigned to each element in the
+            :c:`PolyMesh2D`.
+
+        Notes
+        -----
+        The len(:a:`element_materials`) will always be :a:`num_elements`.
+
+        Examples
+        --------
+        >>> # import the meshgen and materials modules
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+
+        >>> # initialize a mesh, no initial information provided
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> print(msh.element_materials)
+        []
+
+        >>> # add some vertices and boundary vertices to the mesh
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, [k for k, _
+        ...                                  in enumerate(msh.vertices)])
+
+
+        >>> # add some more vertices and create two materials and material
+        >>> # regions and add them to the mesh
+        >>> # the rock material region covers the bottom half of the mesh
+        >>> # and the sand material region covers the top half
+        >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
+        >>> rock = vcfempy.materials.Material('rock')
+        >>> sand = vcfempy.materials.Material('sand')
+        >>> msh.add_material_regions([[0, 4, 5, 3], [4, 1, 2, 5]],
+        ...                          [rock, sand])
+
+        >>> # still no materials assigned to elements though
+        >>> # because the mesh has not been generated
+        >>> print(msh.element_materials)
+        []
+
+        >>> # generate a simple mesh
+        >>> # now materials will be assigned to elements
+        >>> msh.generate_mesh((2, 2))
+        >>> for e in msh.elements:
+        ...     print(e.material.name)
+        rock
+        rock
+        sand
+        sand
+
+        >>> # changing the boundary geometry clears the mesh
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> msh.insert_boundary_vertices(3, 4)
+        >>> print(msh.element_materials)
+        []
         """
         return [e.material for e in self.elements]
 
