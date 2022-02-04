@@ -1,13 +1,6 @@
-# local copies of examples.py and tests.py
-src/examples.py
-src/tests.py
-
 # Node artifact files
 node_modules/
 dist/
-
-# docs built files
-docs/build/*
 
 # Compiled Java class files
 *.class
