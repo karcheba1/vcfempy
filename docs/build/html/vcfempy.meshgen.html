@@ -1412,23 +1412,6 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_element_edges</span><span class="p">)</span>
 <span class="go">13</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[9, 0, 3, 2, 6]</span>
-<span class="go">[8, 7, 6, 9]</span>
-<span class="go">[2, 5, 1, 3]</span>
-<span class="go">[6, 2, 5, 4, 7]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the element edges</span>
@@ -1439,12 +1422,8 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[9, 0, 3, 2, 6]</span>
-<span class="go">[8, 7, 6, 9]</span>
-<span class="go">[2, 5, 1, 3]</span>
-<span class="go">[6, 2, 5, 4, 7]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_element_edges</span><span class="p">)</span>
+<span class="go">13</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -1667,7 +1646,7 @@ the other will be -1 (meaning no element, or the boundary).</p>
 <dd class="field-even"><p>The value of the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.mesh_valid" title="vcfempy.meshgen.PolyMesh2D.mesh_valid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh_valid</span></code></a> flag.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><cite>bool</cite></p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If the value of <strong>flag</strong> cannot be converted to a <cite>bool</cite>.
@@ -1753,8 +1732,164 @@ properties.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.high_order_quadrature">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">high_order_quadrature</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="Permalink to this definition"></a></dt>
-<dd><p>Flag for high order quadrature generation
-Used by PolyElement2D.generate_quadrature()</p>
+<dd><p>Flag for whether high order quadrature will be used by the
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> of the generated mesh for the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flag</strong> (<em>bool_like</em>) – The new value of the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">high_order_quadrature</span></code></a> flag.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">high_order_quadrature</span></code></a> flag.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><cite>bool</cite></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the value of <strong>flag</strong> cannot be converted to a <cite>bool</cite>.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Setting <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">high_order_quadrature</span></code></a> for the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a> will clear
+previously generated <code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_points</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_weights</span></code>, and
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_integrals</span></code> for <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>,
+regardless of the previous value. <cite>str</cite> values that can be cast to
+<cite>float</cite> are considered <code class="docutils literal notranslate"><span class="pre">True</span></code>-like if non-zero and <code class="docutils literal notranslate"><span class="pre">False</span></code>-like
+if zero. If the <cite>str</cite> cannot be cast to <cite>float</cite>, then the values ‘y’,
+‘yes’, ‘t’, ‘true’, and ‘on’ (case insensitive) are converted to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> and the values ‘n’, ‘no’, ‘f’, ‘false’, and ‘off’ are
+converted to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Other <cite>str</cite> values raise a <cite>ValueError</cite>.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices but no mesh generated yet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_verts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bnd_verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bnd_verts</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">high_order_quadrature</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># elements will use minimum order quadrature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
+<span class="go">Element 0 quad points, nq0 = 11</span>
+<span class="go">[[ 0.22686688 -0.18242695]</span>
+<span class="go"> [-0.24188312 -0.18242695]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.15124459 -0.01224297]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 1 quad points, nq1 = 9</span>
+<span class="go">[[ 0.13235294 -0.20128676]</span>
+<span class="go"> [ 0.13235294  0.26746324]</span>
+<span class="gp">...</span>
+<span class="go"> [-0.00551471 -0.13419118]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 2 quad points, nq2 = 9</span>
+<span class="go">[[ 0.14889706 -0.12683824]</span>
+<span class="go"> [ 0.14889706  0.20128676]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.00551471 -0.13143382]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 3 quad points, nq3 = 11</span>
+<span class="go">[[-0.03936688 -0.23944805]</span>
+<span class="go"> [-0.22686688 -0.14569805]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.06750541 -0.11275703]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># switch to high order quadrature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># no need to regenerate mesh, element quadrature will be reset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">high_order_quadrature</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">high_order_quadrature</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
+<span class="go">Element 0 quad points, nq0 = 21</span>
+<span class="go">[[ 0.2571158  -0.20675054]</span>
+<span class="go"> [-0.2741342  -0.20675054]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.10284632 -0.00832522]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 1 quad points, nq1 = 17</span>
+<span class="go">[[ 0.15     -0.228125]</span>
+<span class="go"> [ 0.15      0.303125]</span>
+<span class="gp">...</span>
+<span class="go"> [-0.00375  -0.09125 ]</span>
+<span class="go"> [ 0.        0.      ]]</span>
+
+<span class="go">Element 2 quad points, nq2 = 17</span>
+<span class="go">[[ 0.16875  -0.14375 ]</span>
+<span class="go"> [ 0.16875   0.228125]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.00375  -0.089375]</span>
+<span class="go"> [ 0.        0.      ]]</span>
+
+<span class="go">Element 3 quad points, nq3 = 21</span>
+<span class="go">[[-0.0446158  -0.27137446]</span>
+<span class="go"> [-0.2571158  -0.16512446]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.04590368 -0.07667478]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># switch back to low order quadrature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use a False-like string</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">high_order_quadrature</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">high_order_quadrature</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
+<span class="go">Element 0 quad points, nq0 = 11</span>
+<span class="go">[[ 0.22686688 -0.18242695]</span>
+<span class="go"> [-0.24188312 -0.18242695]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.15124459 -0.01224297]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 1 quad points, nq1 = 9</span>
+<span class="go">[[ 0.13235294 -0.20128676]</span>
+<span class="go"> [ 0.13235294  0.26746324]</span>
+<span class="gp">...</span>
+<span class="go"> [-0.00551471 -0.13419118]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 2 quad points, nq2 = 9</span>
+<span class="go">[[ 0.14889706 -0.12683824]</span>
+<span class="go"> [ 0.14889706  0.20128676]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.00551471 -0.13143382]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 3 quad points, nq3 = 11</span>
+<span class="go">[[-0.03936688 -0.23944805]</span>
+<span class="go"> [-0.22686688 -0.14569805]</span>
+<span class="gp">...</span>
+<span class="go"> [ 0.06750541 -0.11275703]</span>
+<span class="go"> [ 0.          0.        ]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># attempting to set high_order_quadrature</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to a non-truth-like str value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">high_order_quadrature</span> <span class="o">=</span> <span class="s1">&#39;dslk&#39;</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid truth value &#39;dslk&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">

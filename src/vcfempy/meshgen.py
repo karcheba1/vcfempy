@@ -1285,23 +1285,6 @@ class PolyMesh2D():
         >>> msh.generate_mesh((2, 2))
         >>> print(msh.num_element_edges)
         13
-        >>> print(msh.nodes)
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
-        >>> for e in msh.elements:
-        ...     print(e.nodes)
-        [9, 0, 3, 2, 6]
-        [8, 7, 6, 9]
-        [2, 5, 1, 3]
-        [6, 2, 5, 4, 7]
 
         >>> # explicitly resetting the mesh clears the element edges
         >>> msh.mesh_valid = False
@@ -1310,12 +1293,8 @@ class PolyMesh2D():
 
         >>> # regenerate the mesh
         >>> msh.generate_mesh((2, 2))
-        >>> for e in msh.elements:
-        ...     print(e.nodes)
-        [9, 0, 3, 2, 6]
-        [8, 7, 6, 9]
-        [2, 5, 1, 3]
-        [6, 2, 5, 4, 7]
+        >>> print(msh.num_element_edges)
+        13
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1525,7 +1504,7 @@ class PolyMesh2D():
 
         Returns
         -------
-        bool
+        `bool`
             The value of the :a:`mesh_valid` flag.
 
         Raises
@@ -1653,8 +1632,166 @@ self.nodes is empty
 
     @property
     def high_order_quadrature(self):
-        """Flag for high order quadrature generation
-        Used by PolyElement2D.generate_quadrature()
+        """Flag for whether high order quadrature will be used by the
+        :a:`elements` of the generated mesh for the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        flag : bool_like
+            The new value of the :a:`high_order_quadrature` flag.
+
+        Returns
+        -------
+        `bool`
+            The value of the :a:`high_order_quadrature` flag.
+
+        Raises
+        ------
+        `ValueError`
+            If the value of **flag** cannot be converted to a `bool`.
+
+        Notes
+        -----
+        Setting :a:`high_order_quadrature` for the :c:`PolyMesh2D` will clear
+        previously generated :a:`quad_points`, :a:`quad_weights`, and
+        :a:`quad_integrals` for :a:`elements` in the :c:`PolyMesh2D`,
+        regardless of the previous value. `str` values that can be cast to
+        `float` are considered ``True``-like if non-zero and ``False``-like
+        if zero. If the `str` cannot be cast to `float`, then the values 'y',
+        'yes', 't', 'true', and 'on' (case insensitive) are converted to
+        ``True`` and the values 'n', 'no', 'f', 'false', and 'off' are
+        converted to ``False``. Other `str` values raise a `ValueError`.
+
+        Examples
+        --------
+        >>> # create a mesh and add some vertices but no mesh generated yet
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, bnd_verts)
+        >>> print(msh.high_order_quadrature)
+        False
+
+        >>> # generate a simple mesh
+        >>> # elements will use minimum order quadrature
+        >>> msh.generate_mesh((2, 2))
+        >>> for k, qp in enumerate(msh.element_quad_points):
+        ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
+        ...     print(qp)
+        ...     print() # doctest: +ELLIPSIS
+        Element 0 quad points, nq0 = 11
+        [[ 0.22686688 -0.18242695]
+         [-0.24188312 -0.18242695]
+        ...
+         [ 0.15124459 -0.01224297]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 1 quad points, nq1 = 9
+        [[ 0.13235294 -0.20128676]
+         [ 0.13235294  0.26746324]
+        ...
+         [-0.00551471 -0.13419118]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 2 quad points, nq2 = 9
+        [[ 0.14889706 -0.12683824]
+         [ 0.14889706  0.20128676]
+        ...
+         [ 0.00551471 -0.13143382]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 3 quad points, nq3 = 11
+        [[-0.03936688 -0.23944805]
+         [-0.22686688 -0.14569805]
+        ...
+         [ 0.06750541 -0.11275703]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+
+        >>> # switch to high order quadrature
+        >>> # no need to regenerate mesh, element quadrature will be reset
+        >>> msh.high_order_quadrature = True
+        >>> print(msh.high_order_quadrature)
+        True
+        >>> for k, qp in enumerate(msh.element_quad_points):
+        ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
+        ...     print(qp)
+        ...     print() # doctest: +ELLIPSIS
+        Element 0 quad points, nq0 = 21
+        [[ 0.2571158  -0.20675054]
+         [-0.2741342  -0.20675054]
+        ...
+         [ 0.10284632 -0.00832522]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 1 quad points, nq1 = 17
+        [[ 0.15     -0.228125]
+         [ 0.15      0.303125]
+        ...
+         [-0.00375  -0.09125 ]
+         [ 0.        0.      ]]
+        <BLANKLINE>
+        Element 2 quad points, nq2 = 17
+        [[ 0.16875  -0.14375 ]
+         [ 0.16875   0.228125]
+        ...
+         [ 0.00375  -0.089375]
+         [ 0.        0.      ]]
+        <BLANKLINE>
+        Element 3 quad points, nq3 = 21
+        [[-0.0446158  -0.27137446]
+         [-0.2571158  -0.16512446]
+        ...
+         [ 0.04590368 -0.07667478]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+
+        >>> # switch back to low order quadrature
+        >>> # use a False-like string
+        >>> msh.high_order_quadrature = 'off'
+        >>> print(msh.high_order_quadrature)
+        False
+        >>> for k, qp in enumerate(msh.element_quad_points):
+        ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
+        ...     print(qp)
+        ...     print() # doctest: +ELLIPSIS
+        Element 0 quad points, nq0 = 11
+        [[ 0.22686688 -0.18242695]
+         [-0.24188312 -0.18242695]
+        ...
+         [ 0.15124459 -0.01224297]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 1 quad points, nq1 = 9
+        [[ 0.13235294 -0.20128676]
+         [ 0.13235294  0.26746324]
+        ...
+         [-0.00551471 -0.13419118]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 2 quad points, nq2 = 9
+        [[ 0.14889706 -0.12683824]
+         [ 0.14889706  0.20128676]
+        ...
+         [ 0.00551471 -0.13143382]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 3 quad points, nq3 = 11
+        [[-0.03936688 -0.23944805]
+         [-0.22686688 -0.14569805]
+        ...
+         [ 0.06750541 -0.11275703]
+         [ 0.          0.        ]]
+        <BLANKLINE>
+
+        >>> # attempting to set high_order_quadrature
+        >>> # to a non-truth-like str value
+        >>> msh.high_order_quadrature = 'dslk'
+        Traceback (most recent call last):
+        ...
+        ValueError: invalid truth value 'dslk'
         """
         return self._high_order_quadrature
 
@@ -1663,7 +1800,10 @@ self.nodes is empty
         # try to cast flag to bool
         # will raise a ValueError if this does not work
         if type(flag) is str:
-            flag = distutils.util.strtobool(flag)
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
         self._high_order_quadrature = bool(flag)
         # assume value changed, reset element quadrature
         for e in self.elements:
