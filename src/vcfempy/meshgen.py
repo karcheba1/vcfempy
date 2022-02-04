@@ -944,19 +944,55 @@ class PolyMesh2D():
         return self._elements
 
     @property
+    def num_nodes_per_element(self):
+        """Number of nodes per element in the generated mesh"""
+        return [e.num_nodes for e in self.elements]
+
+    @property
+    def element_materials(self):
+        """List of material types assigned to each element in the
+        generated mesh
+        """
+        return [e.material for e in self.elements]
+
+    @property
+    def element_areas(self):
+        """List of element areas"""
+        return [e.area for e in self.elements]
+
+    @property
+    def element_centroids(self):
+        """List of element centroid coordinates"""
+        return [e.centroid for e in self.elements]
+
+    @property
+    def element_quad_points(self):
+        """List of arrays of element quadrature point coordinates"""
+        return [e.quad_points for e in self.elements]
+
+    @property
+    def element_quad_weights(self):
+        """List of arrays of element quadrature point weights"""
+        return [e.quad_weights for e in self.elements]
+
+    @property
     def num_element_edges(self):
         """Number of edges separating elements in the generated mesh"""
         return len(self.element_edges)
 
     @property
-    def num_element_neighbors(self):
-        """Number of element neighbor lists in the generated mesh"""
-        return len(self.element_neighbors)
+    def element_edges(self):
+        """List of lists of node indices defining edges between
+        elements in the generated mesh
+        """
+        return self._element_edges
 
     @property
-    def num_nodes_per_element(self):
-        """Number of nodes per element in the generated mesh"""
-        return [e.num_nodes for e in self.elements]
+    def element_neighbors(self):
+        """List of lists of element indices defining neighboring
+        elements in the generated mesh
+        """
+        return self._element_neighbors
 
     @property
     def mesh_valid(self):
@@ -998,61 +1034,16 @@ class PolyMesh2D():
                 raise ValueError('trying to set PolyMesh2D.mesh_valid '
                                  + '= True, but len(self.points) '
                                  + '!= self.num_elements')
-            if not self.num_element_neighbors:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.element_neighbors '
-                                 + 'is empty')
             if not self.num_element_edges:
                 raise ValueError('trying to set PolyMesh2D.mesh_valid '
                                  + '= True, but self.element_edges is empty')
-            if self.num_element_neighbors != self.num_element_edges:
+            if len(self.element_neighbors) != self.num_element_edges:
                 raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.num_element_neighbors '
+                                 + '= True, but len(self.element_neighbors) '
                                  + '!= self.num_element_edges')
             # if here, then all checks for mesh validity succeeded
             # set the mesh valid flag
             self._mesh_valid = True
-
-    @property
-    def element_neighbors(self):
-        """List of lists of element indices defining neighboring
-        elements in the generated mesh
-        """
-        return self._element_neighbors
-
-    @property
-    def element_edges(self):
-        """List of lists of node indices defining edges between
-        elements in the generated mesh
-        """
-        return self._element_edges
-
-    @property
-    def element_materials(self):
-        """List of material types assigned to each element in the
-        generated mesh
-        """
-        return [e.material for e in self.elements]
-
-    @property
-    def element_areas(self):
-        """List of element areas"""
-        return [e.area for e in self.elements]
-
-    @property
-    def element_centroids(self):
-        """List of element centroid coordinates"""
-        return [e.centroid for e in self.elements]
-
-    @property
-    def element_quad_points(self):
-        """List of arrays of element quadrature point coordinates"""
-        return [e.quad_points for e in self.elements]
-
-    @property
-    def element_quad_weights(self):
-        """List of arrays of element quadrature point weights"""
-        return [e.quad_weights for e in self.elements]
 
     @property
     def high_order_quadrature(self):
