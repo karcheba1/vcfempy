@@ -945,7 +945,48 @@ class PolyMesh2D():
 
     @property
     def num_nodes_per_element(self):
-        """Number of nodes per element in the generated mesh"""
+        """Number of nodes per element in the generated mesh for the 
+        :c:`PolyMesh2D`.
+
+        Returns
+        -------
+        list[int]
+            The number of nodes in each element in the :c:`PolyMesh2D`.
+
+        Examples
+        --------
+        >>> # import the meshgen and materials modules
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+
+        >>> # initialize a mesh, no initial information provided
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> print(msh.num_nodes_per_element)
+        []
+
+        >>> # add some vertices and boundary vertices to the mesh
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, [k for k, _
+        ...                                  in enumerate(msh.vertices)])
+
+        >>> # generate a simple mesh
+        >>> msh.generate_mesh((2, 2))
+        >>> for e in msh.elements:
+        ...     print(e.nodes)
+        [9, 0, 3, 2, 6]
+        [8, 7, 6, 9]
+        [2, 5, 1, 3]
+        [6, 2, 5, 4, 7]
+        >>> print(msh.num_nodes_per_element)
+        [5, 4, 4, 5]
+
+        >>> # changing the boundary geometry clears the mesh
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> msh.insert_boundary_vertices(3, 4)
+        >>> print(msh.num_nodes_per_element)
+        []
+        """
         return [e.num_nodes for e in self.elements]
 
     @property
