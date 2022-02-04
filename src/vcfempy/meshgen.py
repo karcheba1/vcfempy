@@ -1024,8 +1024,6 @@ class PolyMesh2D():
         >>> msh.add_vertices(new_verts)
         >>> msh.insert_boundary_vertices(0, [k for k, _
         ...                                  in enumerate(msh.vertices)])
-
-
         >>> # add some more vertices and create two materials and material
         >>> # regions and add them to the mesh
         >>> # the rock material region covers the bottom half of the mesh
@@ -1035,7 +1033,6 @@ class PolyMesh2D():
         >>> sand = vcfempy.materials.Material('sand')
         >>> msh.add_material_regions([[0, 4, 5, 3], [4, 1, 2, 5]],
         ...                          [rock, sand])
-
         >>> # still no materials assigned to elements though
         >>> # because the mesh has not been generated
         >>> print(msh.element_materials)
@@ -1061,7 +1058,56 @@ class PolyMesh2D():
 
     @property
     def element_areas(self):
-        """List of element areas"""
+        """List of areas of the :a:`elements` in the :c:`PolyMesh2D`.
+
+        Returns
+        -------
+        `list[float]`
+            The list of areas of the :a:`elements` in the :c:`PolyMesh2D`.
+
+        Notes
+        -----
+        The len(:a:`element_areas`) will always be :a:`num_elements`.
+
+        Examples
+        --------
+        >>> # import the numpy and meshgen modules
+        >>> import numpy as np
+        >>> import vcfempy.meshgen
+
+        >>> # initialize a mesh, no initial information provided
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> print(msh.element_areas)
+        []
+
+        >>> # add some vertices and boundary vertices to the mesh
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, [k for k, _
+        ...                                  in enumerate(msh.vertices)])
+        >>> # still no element areas though
+        >>> # because the mesh has not been generated
+        >>> print(msh.element_areas)
+        []
+
+        >>> # generate a simple mesh
+        >>> # now element areas can be calculated
+        >>> msh.generate_mesh((2, 2))
+        >>> print(msh.element_areas)
+        [-0.30078125, 0.19921875, 0.19921875, -0.30078125]
+
+        >>> # notice that element areas sum to the area of the boundary
+        >>> print(np.sum(np.abs(msh.element_areas)))
+        1.0
+        >>> print(np.abs(vcfempy.meshgen.polygon_area(msh.vertices)))
+        1.0
+
+        >>> # changing the boundary geometry clears the mesh
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> msh.insert_boundary_vertices(3, 4)
+        >>> print(msh.element_areas)
+        []
+        """
         return [e.area for e in self.elements]
 
     @property
