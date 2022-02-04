@@ -251,7 +251,7 @@ class PolyMesh2D():
         0
 
         >>> # add some boundary vertices
-        >>> msh.insert_boundary_vertices(0, [k for k, _ 
+        >>> msh.insert_boundary_vertices(0, [k for k, _
         ...                                  in enumerate(msh.vertices)])
         >>> print(msh.num_boundary_vertices)
         4
@@ -260,8 +260,8 @@ class PolyMesh2D():
         >>> # and boundary vertices
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1.5, 0.5], [1, 0]]
         >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
-        >>> msh = vcfempy.meshgen.PolyMesh2D(vertices=new_verts, \
-boundary_vertices=bnd_verts)
+        >>> msh = vcfempy.meshgen.PolyMesh2D(vertices=new_verts,
+        ...                                  boundary_vertices=bnd_verts)
         >>> print(msh.num_boundary_vertices)
         5
         """
@@ -315,10 +315,10 @@ boundary_vertices=bnd_verts)
 
         Notes
         -----
-        The :a:`boundary_edges` property is not intended to be directly mutable.
-        It is updated each time :a:`boundary_vertices` is changed, so the
-        number of :a:`boundary_edges` should always be :a:`num_boundary_vertices`
-        since the geometry is a closed polygon.
+        The :a:`boundary_edges` property is not intended to be directly
+        mutable. It is updated each time :a:`boundary_vertices` is changed,
+        so the number of :a:`boundary_edges` should always be
+        :a:`num_boundary_vertices` since the geometry is a closed polygon.
 
         Examples
         --------
