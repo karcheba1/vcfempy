@@ -1456,8 +1456,14 @@ class PolyMesh2D():
         >>> msh.generate_mesh((2, 2))
         >>> print(msh.num_elements)
         4
+        >>> num_bnd_edges = 0
+        >>> num_int_edges = 0
         >>> for e in msh.element_neighbors:
         ...     print(e)
+        ...     if e[0] < 0 or e[1] < 0:
+        ...         num_bnd_edges += 1
+        ...     else:
+        ...         num_int_edges += 1
         [-1, 2]
         [-1, 0]
         [-1, 3]
@@ -1471,6 +1477,10 @@ class PolyMesh2D():
         [-1, 0]
         [1, 0]
         [1, -1]
+        >>> print(num_bnd_edges)
+        8
+        >>> print(num_int_edges)
+        5
 
         >>> # explicitly resetting the mesh clears the element edges
         >>> msh.mesh_valid = False
@@ -1505,11 +1515,95 @@ class PolyMesh2D():
 
     @property
     def mesh_valid(self):
-        """Flag for whether there is a valid generated mesh
+        """Flag for whether there is a valid generated mesh for the
+        :c:`PolyMesh2D`.
 
-        If setting to False, resets mesh properties.
-        If setting to True, performs basic checks of mesh validity before
-        setting.
+        Parameters
+        ----------
+        flag : bool_like
+            The new value of the :a:`mesh_valid` flag.
+
+        Returns
+        -------
+        bool
+            The value of the :a:`mesh_valid` flag.
+
+        Raises
+        ------
+        `ValueError`
+            If the value of **flag** cannot be converted to a `bool`.
+            If **flag** is ``True``-like, but mesh properties are not set or
+            are invalid or inconsistent.
+
+        Notes
+        -----
+        If setting to ``False``, mesh properties are reset. If setting to
+        ``True``, basic checks of mesh validity are performed before setting
+        the value. `str` values that can be cast to `float` are considered
+        ``True``-like if non-zero and ``False``-like if zero. If the `str`
+        cannot be cast to `float`, then the values 'y', 'yes', 't', 'true',
+        and 'on' (case insensitive) are converted to ``True`` and the values
+        'n', 'no', 'f', 'false', and 'off' are converted to ``False``. Other
+        `str` values raise a `ValueError`. In general, directly setting
+        :a:`mesh_valid` to ``False`` is a way to explicitly clear the mesh,
+        but setting :a:`mesh_valid` to ``True`` should only be done
+        indirectly using the :m:`generate_mesh` method, otherwise it is
+        likely that a `ValueError` will be raised due to invalid mesh
+        properties.
+
+        Examples
+        --------
+        >>> # create a mesh and add some vertices but no mesh generated yet
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, bnd_verts)
+        >>> print(msh.mesh_valid)
+        False
+
+        >>> # generate a simple mesh, which sets mesh_valid as a side effect
+        >>> msh.generate_mesh((2, 2))
+        >>> print(msh.mesh_valid)
+        True
+        >>> print(msh.num_elements)
+        4
+
+        >>> # explicitly resetting the mesh with a bool value
+        >>> msh.mesh_valid = False
+        >>> print(msh.mesh_valid)
+        False
+        >>> print(msh.num_elements)
+        0
+
+        >>> # regenerate the mesh
+        >>> msh.generate_mesh((2, 2))
+        >>> print(msh.mesh_valid)
+        True
+
+        >>> # resetting the mesh with a False-like string
+        >>> msh.mesh_valid = 'no'
+        >>> print(msh.mesh_valid)
+        False
+        >>> print(msh.num_elements)
+        0
+
+        >>> # attempting to set mesh_valid to True-like value, but mesh has
+        >>> # not been generated
+        >>> msh.mesh_valid = 'yes'
+        Traceback (most recent call last):
+        ...
+        ValueError: trying to set PolyMesh2D.mesh_valid = True, but \
+self.nodes is empty
+        >>> print(msh.mesh_valid)
+        False
+
+        >>> # attempting to set mesh_valid to non-truth-like str value
+        >>> msh.mesh_valid = 'dslk'
+        Traceback (most recent call last):
+        ...
+        ValueError: invalid truth value 'dslk'
         """
         return self._mesh_valid
 
@@ -1518,7 +1612,10 @@ class PolyMesh2D():
         # try to cast flag to bool
         # will raise a ValueError if this does not work
         if type(flag) is str:
-            flag = distutils.util.strtobool(flag)
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
         flag = bool(flag)
 
         # if invalidating mesh,
