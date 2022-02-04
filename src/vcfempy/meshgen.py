@@ -1112,8 +1112,49 @@ class PolyMesh2D():
 
     @property
     def element_centroids(self):
-        """List of element centroid coordinates"""
-        return [e.centroid for e in self.elements]
+        """Array of centroid coordinates for the :a:`elements` in the
+        :c:`PolyMesh2D`.
+
+        Returns
+        -------
+        `numpy.ndarray`, shape = (:a:`num_elements`, 2)
+
+        Examples
+        --------
+        >>> # import the meshgen module
+        >>> import vcfempy.meshgen
+
+        >>> # initialize a mesh, no initial information provided
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> print(msh.element_centroids)
+        []
+
+        >>> # add some vertices and boundary vertices to the mesh
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, [k for k, _
+        ...                                  in enumerate(msh.vertices)])
+        >>> # still no element centroids though
+        >>> # because the mesh has not been generated
+        >>> print(msh.element_centroids)
+        []
+
+        >>> # generate a simple mesh
+        >>> # now element centroids can be calculated
+        >>> msh.generate_mesh((2, 2))
+        >>> print(msh.element_centroids)
+        [[0.32251082 0.24323593]
+         [0.82352941 0.26838235]
+         [0.17647059 0.73161765]
+         [0.67748918 0.75676407]]
+
+        >>> # changing the boundary geometry clears the mesh
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> msh.insert_boundary_vertices(3, 4)
+        >>> print(msh.element_centroids)
+        []
+        """
+        return np.array([e.centroid for e in self.elements])
 
     @property
     def element_quad_points(self):
