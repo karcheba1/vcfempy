@@ -1895,8 +1895,189 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.verbose_printing">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">verbose_printing</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.verbose_printing" title="Permalink to this definition"></a></dt>
-<dd><p>Flag for verbose printing of mesh properties
-Used by self.__str__</p>
+<dd><p>Flag for whether <code class="xref py py-meth docutils literal notranslate"><span class="pre">__str__()</span></code> will print verbose mesh information
+for the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>flag</strong> (<em>bool_like</em>) – The new value of the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.verbose_printing" title="vcfempy.meshgen.PolyMesh2D.verbose_printing"><code class="xref py py-attr docutils literal notranslate"><span class="pre">verbose_printing</span></code></a> flag.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.verbose_printing" title="vcfempy.meshgen.PolyMesh2D.verbose_printing"><code class="xref py py-attr docutils literal notranslate"><span class="pre">verbose_printing</span></code></a> flag.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><cite>bool</cite></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the value of <strong>flag</strong> cannot be converted to a <cite>bool</cite>.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p><cite>str</cite> values that can be cast to <cite>float</cite> are considered <code class="docutils literal notranslate"><span class="pre">True</span></code>-like
+if non-zero and <code class="docutils literal notranslate"><span class="pre">False</span></code>-like if zero. If the <cite>str</cite> cannot be cast
+to <cite>float</cite>, then the values ‘y’, ‘yes’, ‘t’, ‘true’, and ‘on’ (case
+insensitive) are converted to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the values ‘n’, ‘no’, ‘f’,
+‘false’, and ‘off’ are converted to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Other <cite>str</cite> values
+raise a <cite>ValueError</cite>.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh with no initial information provided</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.materials</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
+<span class="go">vcfempy.meshgen.PolyMesh2D</span>
+<span class="go">Number of Vertices = 0</span>
+<span class="go">Number of Boundary Vertices = 0</span>
+<span class="go">Number of Material Regions = 0</span>
+<span class="go">Number of Mesh Edges = 0</span>
+<span class="go">Verbose Printing = False</span>
+<span class="go">High Order Quadrature = False</span>
+<span class="go">Mesh Generated = False</span>
+
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># add some vertices and boundary vertices to the mesh</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># no mesh generated yet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_verts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bnd_verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bnd_verts</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
+<span class="go">vcfempy.meshgen.PolyMesh2D</span>
+<span class="go">Number of Vertices = 4</span>
+<span class="go">Number of Boundary Vertices = 4</span>
+<span class="go">Number of Material Regions = 0</span>
+<span class="go">Number of Mesh Edges = 0</span>
+<span class="go">Verbose Printing = False</span>
+<span class="go">High Order Quadrature = False</span>
+<span class="go">Mesh Generated = False</span>
+
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># set verbose printing flag</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">verbose_printing</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
+<span class="go">vcfempy.meshgen.PolyMesh2D</span>
+<span class="go">Number of Vertices = 4</span>
+<span class="go">Number of Boundary Vertices = 4</span>
+<span class="go">Number of Material Regions = 0</span>
+<span class="go">Number of Mesh Edges = 0</span>
+<span class="go">Verbose Printing = True</span>
+<span class="go">High Order Quadrature = False</span>
+<span class="go">Mesh Generated = False</span>
+
+<span class="go">Vertices</span>
+<span class="go">[[0. 0.]</span>
+<span class="go"> [0. 1.]</span>
+<span class="go"> [1. 1.]</span>
+<span class="go"> [1. 0.]]</span>
+
+<span class="go">Boundary Vertices</span>
+<span class="go">[0, 1, 2, 3]</span>
+
+<span class="go">Boundary Edges</span>
+<span class="go">[[0, 1], [1, 2], [2, 3], [3, 0]]</span>
+
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># turn off verbose printing and add some vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># and two material regions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">verbose_printing</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;rock&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sand</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;sand&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_material_regions</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]],</span>
+<span class="gp">... </span>                         <span class="p">[</span><span class="n">rock</span><span class="p">,</span> <span class="n">sand</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
+<span class="go">vcfempy.meshgen.PolyMesh2D</span>
+<span class="go">Number of Vertices = 6</span>
+<span class="go">Number of Boundary Vertices = 4</span>
+<span class="go">Number of Material Regions = 2</span>
+<span class="go">Number of Mesh Edges = 0</span>
+<span class="go">Verbose Printing = False</span>
+<span class="go">High Order Quadrature = False</span>
+<span class="go">Mesh Generated = False</span>
+
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># turn verbose printing back on and generate the mesh</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">verbose_printing</span> <span class="o">=</span> <span class="s1">&#39;yes&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
+<span class="go">vcfempy.meshgen.PolyMesh2D</span>
+<span class="go">Number of Vertices = 6</span>
+<span class="go">Number of Boundary Vertices = 4</span>
+<span class="go">Number of Material Regions = 2</span>
+<span class="go">Number of Mesh Edges = 0</span>
+<span class="go">Verbose Printing = True</span>
+<span class="go">High Order Quadrature = False</span>
+<span class="go">Mesh Generated = True</span>
+<span class="go">Number of Nodes = 10</span>
+<span class="go">Number of Elements = 4</span>
+<span class="go">Number of Element Edges = 13</span>
+
+<span class="go">Vertices</span>
+<span class="go">[[0.  0. ]</span>
+<span class="go"> [0.  1. ]</span>
+<span class="go"> [1.  1. ]</span>
+<span class="go"> [1.  0. ]</span>
+<span class="go"> [0.  0.5]</span>
+<span class="go"> [1.  0.5]]</span>
+
+<span class="go">Boundary Vertices</span>
+<span class="go">[0, 1, 2, 3]</span>
+
+<span class="go">Boundary Edges</span>
+<span class="go">[[0, 1], [1, 2], [2, 3], [3, 0]]</span>
+
+<span class="go">Material Region 0, rock</span>
+<span class="go">[0, 4, 5, 3]</span>
+
+<span class="go">Material Region 1, sand</span>
+<span class="go">[4, 1, 2, 5]</span>
+
+<span class="go">Nodes</span>
+<span class="go">[[0.     0.    ]</span>
+<span class="go"> [0.     1.    ]</span>
+<span class="go"> [0.375  0.5625]</span>
+<span class="go"> [0.     0.375 ]</span>
+<span class="go"> [1.     1.    ]</span>
+<span class="go"> [0.375  1.    ]</span>
+<span class="go"> [0.625  0.4375]</span>
+<span class="go"> [1.     0.625 ]</span>
+<span class="go"> [1.     0.    ]</span>
+<span class="go"> [0.625  0.    ]]</span>
+
+<span class="go">Element Nodes, Areas, Points, Centroids, Materials</span>
+<span class="go">[9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], [0.32251082 0.24323593], rock</span>
+<span class="go">[8, 7, 6, 9], 0.19921875, [0.875 0.25 ], [0.82352941 0.26838235], rock</span>
+<span class="go">[2, 5, 1, 3], 0.19921875, [0.125 0.75 ], [0.17647059 0.73161765], sand</span>
+<span class="go">[6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], [0.67748918 0.75676407], sand</span>
+
+<span class="go">Element Edge Nodes and Neighbors</span>
+<span class="go">[1, 3], [-1, 2]</span>
+<span class="go">[0, 3], [-1, 0]</span>
+<span class="go">[4, 5], [-1, 3]</span>
+<span class="go">[1, 5], [-1, 2]</span>
+<span class="go">[2, 5], [2, 3]</span>
+<span class="go">[2, 3], [2, 0]</span>
+<span class="go">[2, 6], [3, 0]</span>
+<span class="go">[4, 7], [3, -1]</span>
+<span class="go">[6, 7], [3, 1]</span>
+<span class="go">[8, 9], [-1, 1]</span>
+<span class="go">[0, 9], [-1, 0]</span>
+<span class="go">[6, 9], [1, 0]</span>
+<span class="go">[7, 8], [1, -1]</span>
+
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># attempting to set verbose_printing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to a non-truth-like str value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">verbose_printing</span> <span class="o">=</span> <span class="s1">&#39;dslk&#39;</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid truth value &#39;dslk&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">

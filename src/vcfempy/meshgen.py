@@ -1811,8 +1811,196 @@ self.nodes is empty
 
     @property
     def verbose_printing(self):
-        """Flag for verbose printing of mesh properties
-        Used by self.__str__
+        """Flag for whether :m:`__str__` will print verbose mesh information
+        for the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        flag : bool_like
+            The new value of the :a:`verbose_printing` flag.
+
+        Returns
+        -------
+        `bool`
+            The value of the :a:`verbose_printing` flag.
+
+        Raises
+        ------
+        `ValueError`
+            If the value of **flag** cannot be converted to a `bool`.
+
+        Notes
+        -----
+        `str` values that can be cast to `float` are considered ``True``-like
+        if non-zero and ``False``-like if zero. If the `str` cannot be cast
+        to `float`, then the values 'y', 'yes', 't', 'true', and 'on' (case
+        insensitive) are converted to ``True`` and the values 'n', 'no', 'f',
+        'false', and 'off' are converted to ``False``. Other `str` values
+        raise a `ValueError`.
+
+        Examples
+        --------
+        >>> # initialize a mesh with no initial information provided
+        >>> import vcfempy.meshgen
+        >>> import vcfempy.materials
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D
+        Number of Vertices = 0
+        Number of Boundary Vertices = 0
+        Number of Material Regions = 0
+        Number of Mesh Edges = 0
+        Verbose Printing = False
+        High Order Quadrature = False
+        Mesh Generated = False
+        <BLANKLINE>
+        <BLANKLINE>
+
+        >>> # add some vertices and boundary vertices to the mesh
+        >>> # no mesh generated yet
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, bnd_verts)
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D
+        Number of Vertices = 4
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 0
+        Number of Mesh Edges = 0
+        Verbose Printing = False
+        High Order Quadrature = False
+        Mesh Generated = False
+        <BLANKLINE>
+        <BLANKLINE>
+
+        >>> # set verbose printing flag
+        >>> msh.verbose_printing = True
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D
+        Number of Vertices = 4
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 0
+        Number of Mesh Edges = 0
+        Verbose Printing = True
+        High Order Quadrature = False
+        Mesh Generated = False
+        <BLANKLINE>
+        Vertices
+        [[0. 0.]
+         [0. 1.]
+         [1. 1.]
+         [1. 0.]]
+        <BLANKLINE>
+        Boundary Vertices
+        [0, 1, 2, 3]
+        <BLANKLINE>
+        Boundary Edges
+        [[0, 1], [1, 2], [2, 3], [3, 0]]
+        <BLANKLINE>
+        <BLANKLINE>
+
+        >>> # turn off verbose printing and add some vertices
+        >>> # and two material regions
+        >>> msh.verbose_printing = 'off'
+        >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
+        >>> rock = vcfempy.materials.Material('rock')
+        >>> sand = vcfempy.materials.Material('sand')
+        >>> msh.add_material_regions([[0, 4, 5, 3], [4, 1, 2, 5]],
+        ...                          [rock, sand])
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D
+        Number of Vertices = 6
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 2
+        Number of Mesh Edges = 0
+        Verbose Printing = False
+        High Order Quadrature = False
+        Mesh Generated = False
+        <BLANKLINE>
+        <BLANKLINE>
+
+        >>> # turn verbose printing back on and generate the mesh
+        >>> msh.verbose_printing = 'yes'
+        >>> msh.generate_mesh((2, 2))
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D
+        Number of Vertices = 6
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 2
+        Number of Mesh Edges = 0
+        Verbose Printing = True
+        High Order Quadrature = False
+        Mesh Generated = True
+        Number of Nodes = 10
+        Number of Elements = 4
+        Number of Element Edges = 13
+        <BLANKLINE>
+        Vertices
+        [[0.  0. ]
+         [0.  1. ]
+         [1.  1. ]
+         [1.  0. ]
+         [0.  0.5]
+         [1.  0.5]]
+        <BLANKLINE>
+        Boundary Vertices
+        [0, 1, 2, 3]
+        <BLANKLINE>
+        Boundary Edges
+        [[0, 1], [1, 2], [2, 3], [3, 0]]
+        <BLANKLINE>
+        Material Region 0, rock
+        [0, 4, 5, 3]
+        <BLANKLINE>
+        Material Region 1, sand
+        [4, 1, 2, 5]
+        <BLANKLINE>
+        Nodes
+        [[0.     0.    ]
+         [0.     1.    ]
+         [0.375  0.5625]
+         [0.     0.375 ]
+         [1.     1.    ]
+         [0.375  1.    ]
+         [0.625  0.4375]
+         [1.     0.625 ]
+         [1.     0.    ]
+         [0.625  0.    ]]
+        <BLANKLINE>
+        Element Nodes, Areas, Points, Centroids, Materials
+        [9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], \
+[0.32251082 0.24323593], rock
+        [8, 7, 6, 9], 0.19921875, [0.875 0.25 ], \
+[0.82352941 0.26838235], rock
+        [2, 5, 1, 3], 0.19921875, [0.125 0.75 ], \
+[0.17647059 0.73161765], sand
+        [6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], \
+[0.67748918 0.75676407], sand
+        <BLANKLINE>
+        Element Edge Nodes and Neighbors
+        [1, 3], [-1, 2]
+        [0, 3], [-1, 0]
+        [4, 5], [-1, 3]
+        [1, 5], [-1, 2]
+        [2, 5], [2, 3]
+        [2, 3], [2, 0]
+        [2, 6], [3, 0]
+        [4, 7], [3, -1]
+        [6, 7], [3, 1]
+        [8, 9], [-1, 1]
+        [0, 9], [-1, 0]
+        [6, 9], [1, 0]
+        [7, 8], [1, -1]
+        <BLANKLINE>
+        <BLANKLINE>
+
+        >>> # attempting to set verbose_printing
+        >>> # to a non-truth-like str value
+        >>> msh.verbose_printing = 'dslk'
+        Traceback (most recent call last):
+        ...
+        ValueError: invalid truth value 'dslk'
         """
         return self._verbose_printing
 
@@ -1821,97 +2009,75 @@ self.nodes is empty
         # try to cast flag to bool
         # will raise a ValueError if this does not work
         if type(flag) is str:
-            flag = distutils.util.strtobool(flag)
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
         self._verbose_printing = bool(flag)
 
     def __str__(self):
-        """Print out detailed information about the PolyMesh2D.
-
-        Returns
-        -------
-        str
-            A string representation of the PolyMesh2D.
-
-        Examples
-        --------
-        >>> print(PolyMesh2D())
-        vcfempy.meshgen.PolyMesh2D
-        Number of Vertices = 0
-        Number of Boundary Vertices = 0
-        Number of Nodes = 0
-        Number of Elements = 0
-        Number of Element Edges = 0
-        <BLANKLINE>
-        <BLANKLINE>
-
-        >>> print(PolyMesh2D([[0,0], [0,1], [1,1], [1,0]]))
-        vcfempy.meshgen.PolyMesh2D
-        Number of Vertices = 4
-        Number of Boundary Vertices = 0
-        Number of Nodes = 0
-        Number of Elements = 0
-        Number of Element Edges = 0
-        <BLANKLINE>
-        <BLANKLINE>
-
-        >>> m = PolyMesh2D([[0,0], [0,1], [1,1], [1,0]]); \
-            m.verbose_printing = True; \
-            print(m)
-        vcfempy.meshgen.PolyMesh2D
-        Number of Vertices = 4
-        Number of Boundary Vertices = 0
-        Number of Nodes = 0
-        Number of Elements = 0
-        Number of Element Edges = 0
-        <BLANKLINE>
-        vertices
-        [[0. 0.]
-         [0. 1.]
-         [1. 1.]
-         [1. 0.]]
-        <BLANKLINE>
-        <BLANKLINE>
-        """
-        # print header indicating type Mesh and basic information
+        # print header indicating basic information
         mesh_string = ('vcfempy.meshgen.PolyMesh2D\n'
                        + 'Number of Vertices = '
                        + f'{self.num_vertices}\n'
                        + 'Number of Boundary Vertices = '
                        + f'{self.num_boundary_vertices}\n'
-                       + 'Number of Nodes = '
-                       + f'{self.num_nodes}\n'
-                       + 'Number of Elements = '
-                       + f'{self.num_elements}\n'
-                       + 'Number of Element Edges = '
-                       + f'{self.num_element_edges}\n\n')
+                       + 'Number of Material Regions = '
+                       + f'{self.num_material_regions}\n'
+                       + 'Number of Mesh Edges = '
+                       + f'{self.num_mesh_edges}\n'
+                       + f'Verbose Printing = {self.verbose_printing}\n'
+                       + 'High Order Quadrature = '
+                       + f'{self.high_order_quadrature}\n'
+                       + f'Mesh Generated = {self.mesh_valid}\n')
 
+        # if mesh has been generated, print basic mesh information
+        if self.mesh_valid:
+            mesh_string += ('Number of Nodes = '
+                            + f'{self.num_nodes}\n'
+                            + 'Number of Elements = '
+                            + f'{self.num_elements}\n'
+                            + 'Number of Element Edges = '
+                            + f'{self.num_element_edges}\n\n')
+        # otherwise, finish the string with an extra line break
+        else:
+            mesh_string += '\n'
+
+        # check for verbose printing flag, return now if False
         if not self.verbose_printing:
             return mesh_string
 
-        # print vertices
+        # otherwise, if verbose printing is True, continue printing
+        # detailed mesh information
+
         if self.num_vertices:
-            mesh_string += 'vertices\n'
-            mesh_string += '{!s}\n\n'.format(self.vertices)
-        # print boundary_vertices and boundary_edges
+            mesh_string += f'Vertices\n{self.vertices}\n\n'
         if self.num_boundary_vertices:
-            mesh_string += 'boundary_vertices\n'
-            mesh_string += '{!s}\n\n'.format(self.boundary_vertices)
-            mesh_string += 'boundary_edges\n'
-            mesh_string += '{!s}\n\n'.format(self.boundary_edges)
-        # print nodes
+            mesh_string += f'Boundary Vertices\n{self.boundary_vertices}\n\n'
+            mesh_string += f'Boundary Edges\n{self.boundary_edges}\n\n'
+        if self.num_material_regions:
+            for k, mr in enumerate(self.material_regions):
+                mesh_string += f'Material Region {k}, {mr.material.name}\n'
+                mesh_string += f'{mr.vertices}\n\n'
+        if self.num_mesh_edges:
+            mesh_string += 'Mesh Edges\n'
+            for e in self.mesh_edges:
+                mesh_string += '{e}\n'
+            mesh_string += '\n'
         if self.num_nodes:
-            mesh_string += 'nodes\n'
-            mesh_string += '{!s}\n\n'.format(self.nodes)
-        # print points and elements
+            mesh_string += f'Nodes\n{self.nodes}\n\n'
         if self.num_elements:
-            mesh_string += 'points\n'
-            mesh_string += '{!s}\n\n'.format(self.points)
-            mesh_string += 'elements\n'
-            mesh_string += '{!s}\n\n'.format(self.elements)
-        # print element edges
+            mesh_string += ('Element Nodes, Areas, Points, Centroids, '
+                            + 'Materials\n')
+            for e, p in zip(self.elements, self.points):
+                mesh_string += (f'{e.nodes}, {e.area}, {p}, {e.centroid}, '
+                                + f'{e.material.name}\n')
+            mesh_string += '\n'
         if self.num_element_edges:
-            mesh_string += 'element edges\n'
-            mesh_string += '{!s}\n\n'.format(self.element_edges)
+            mesh_string += 'Element Edge Nodes and Neighbors\n'
+            for ev, en in zip(self.element_edges, self.element_neighbors):
+                mesh_string += f'{ev}, {en}\n'
+            mesh_string += '\n'
         return mesh_string
 
     def add_vertices(self, vertices):
