@@ -4079,10 +4079,10 @@ class BoundaryElement2D():
     @neighbor.setter
     def neighbor(self, n):
         # basic type check of neighbor
-        if type(n) is not PolyElement2D:
-            raise TypeError('neighbor must be a PolyElement2D')
+        if type(n) not in [type(None), PolyElement2D]:
+            raise TypeError('type(n) not in [NoneType, PolyElement2D]')
         # check for matching parent mesh
-        if self.mesh is not n.mesh:
+        if n is not None and self.mesh is not n.mesh:
             raise ValueError('neighbor must have same parent mesh')
         self._neighbor = n
 
