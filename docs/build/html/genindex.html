@@ -84,6 +84,7 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  | <a href="#Y"><strong>Y</strong></a>
  
 </div>
@@ -96,6 +97,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.add_neighbors">add_neighbors() (vcfempy.meshgen.InterfaceElement2D method)</a>
+</li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.add_vertices">add_vertices() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.area">area (vcfempy.meshgen.PolyElement2D property)</a>
@@ -108,9 +111,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.boundary_edges">boundary_edges (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.boundary_elements">boundary_elements (vcfempy.meshgen.PolyMesh2D property)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.boundary_vertices">boundary_vertices (vcfempy.meshgen.PolyMesh2D property)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D">BoundaryElement2D (class in vcfempy.meshgen)</a>
 </li>
       <li><a href="vcfempy.materials.html#vcfempy.materials.Material.bulk_modulus">bulk_modulus (vcfempy.materials.Material property)</a>
 </li>
@@ -138,13 +145,9 @@
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.element_centroids">element_centroids (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.element_edges">element_edges (vcfempy.meshgen.PolyMesh2D property)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.element_materials">element_materials (vcfempy.meshgen.PolyMesh2D property)</a>
-</li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.element_neighbors">element_neighbors (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.element_quad_points">element_quad_points (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
@@ -186,14 +189,30 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices">insert_boundary_vertices() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.insert_nodes">insert_nodes() (vcfempy.meshgen.PolyElement2D method)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D.insert_nodes">insert_nodes() (vcfempy.meshgen.BoundaryElement2D method)</a>
+
+      <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.insert_nodes">(vcfempy.meshgen.InterfaceElement2D method)</a>
+</li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.insert_nodes">(vcfempy.meshgen.PolyElement2D method)</a>
+</li>
+      </ul></li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.insert_vertices">insert_vertices() (vcfempy.meshgen.MaterialRegion2D method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.insert_vertices">insert_vertices() (vcfempy.meshgen.MaterialRegion2D method)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.interface_elements">interface_elements (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.invalidate_properties">invalidate_properties() (vcfempy.meshgen.PolyElement2D method)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D">InterfaceElement2D (class in vcfempy.meshgen)</a>
 </li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D.invalidate_properties">invalidate_properties() (vcfempy.meshgen.BoundaryElement2D method)</a>
+
+      <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.invalidate_properties">(vcfempy.meshgen.InterfaceElement2D method)</a>
+</li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.invalidate_properties">(vcfempy.meshgen.PolyElement2D method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -203,6 +222,14 @@
       <li><a href="vcfempy.materials.html#vcfempy.materials.Material.lame_parameter">lame_parameter (vcfempy.materials.Material property)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D.length">length (vcfempy.meshgen.BoundaryElement2D property)</a>
+
+      <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.length">(vcfempy.meshgen.InterfaceElement2D property)</a>
+</li>
+      </ul></li>
+  </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
@@ -210,9 +237,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.materials.html#vcfempy.materials.Material">Material (class in vcfempy.materials)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.material">material (vcfempy.meshgen.MaterialRegion2D property)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.material">material (vcfempy.meshgen.InterfaceElement2D property)</a>
 
       <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.material">(vcfempy.meshgen.MaterialRegion2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.material">(vcfempy.meshgen.PolyElement2D property)</a>
 </li>
       </ul></li>
@@ -223,6 +252,10 @@
       <li><a href="vcfempy.flow.html#vcfempy.flow.PolyFlow2D.mesh">mesh (vcfempy.flow.PolyFlow2D property)</a>
 
       <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D.mesh">(vcfempy.meshgen.BoundaryElement2D property)</a>
+</li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.mesh">(vcfempy.meshgen.InterfaceElement2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.mesh">(vcfempy.meshgen.MaterialRegion2D property)</a>
 </li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.mesh">(vcfempy.meshgen.PolyElement2D property)</a>
@@ -255,27 +288,43 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.materials.html#vcfempy.materials.Material.name">name (vcfempy.materials.Material property)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.nodes">nodes (vcfempy.meshgen.PolyElement2D property)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D.neighbor">neighbor (vcfempy.meshgen.BoundaryElement2D property)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.neighbors">neighbors (vcfempy.meshgen.InterfaceElement2D property)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D.nodes">nodes (vcfempy.meshgen.BoundaryElement2D property)</a>
 
       <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.nodes">(vcfempy.meshgen.InterfaceElement2D property)</a>
+</li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.nodes">(vcfempy.meshgen.PolyElement2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.nodes">(vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       </ul></li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_boundary_vertices">num_boundary_vertices (vcfempy.meshgen.PolyMesh2D property)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_boundary_elements">num_boundary_elements (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_element_edges">num_element_edges (vcfempy.meshgen.PolyMesh2D property)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_boundary_vertices">num_boundary_vertices (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_elements">num_elements (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_interface_elements">num_interface_elements (vcfempy.meshgen.PolyMesh2D property)</a>
+</li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_material_regions">num_material_regions (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_mesh_edges">num_mesh_edges (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.num_nodes">num_nodes (vcfempy.meshgen.PolyElement2D property)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.num_neighbors">num_neighbors (vcfempy.meshgen.InterfaceElement2D property)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.BoundaryElement2D.num_nodes">num_nodes (vcfempy.meshgen.BoundaryElement2D property)</a>
 
       <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.num_nodes">(vcfempy.meshgen.InterfaceElement2D property)</a>
+</li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.num_nodes">(vcfempy.meshgen.PolyElement2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_nodes">(vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       </ul></li>
@@ -430,6 +479,14 @@
 </li>
       </ul></li>
       <li><a href="vcfempy.materials.html#vcfempy.materials.Material.void_ratio">void_ratio (vcfempy.materials.Material property)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.InterfaceElement2D.width">width (vcfempy.meshgen.InterfaceElement2D property)</a>
 </li>
   </ul></td>
 </tr></table>

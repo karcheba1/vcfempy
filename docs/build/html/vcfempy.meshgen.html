@@ -1384,13 +1384,13 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.num_element_edges">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_element_edges</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.num_element_edges" title="Permalink to this definition"></a></dt>
-<dd><p>Number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.element_edges" title="vcfempy.meshgen.PolyMesh2D.element_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">element_edges</span></code></a> in the generated mesh for a
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.num_interface_elements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_interface_elements</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.num_interface_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.interface_elements" title="vcfempy.meshgen.PolyMesh2D.interface_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">interface_elements</span></code></a> in the generated mesh for a
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.element_edges" title="vcfempy.meshgen.PolyMesh2D.element_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">element_edges</span></code></a> in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dd class="field-odd"><p>The number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.interface_elements" title="vcfempy.meshgen.PolyMesh2D.interface_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">interface_elements</span></code></a> in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><cite>int</cite></p>
@@ -1404,56 +1404,50 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bnd_verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bnd_verts</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_element_edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_interface_elements</span><span class="p">)</span>
 <span class="go">0</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_element_edges</span><span class="p">)</span>
-<span class="go">13</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_interface_elements</span><span class="p">)</span>
+<span class="go">5</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the element edges</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the interface elements</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_element_edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_interface_elements</span><span class="p">)</span>
 <span class="go">0</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_element_edges</span><span class="p">)</span>
-<span class="go">13</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_interface_elements</span><span class="p">)</span>
+<span class="go">5</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_element_edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_interface_elements</span><span class="p">)</span>
 <span class="go">0</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.element_edges">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">element_edges</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.element_edges" title="Permalink to this definition"></a></dt>
-<dd><p>List of lists of node indices defining the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.element_edges" title="vcfempy.meshgen.PolyMesh2D.element_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">element_edges</span></code></a> in
-the generated mesh for a <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.interface_elements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">interface_elements</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.interface_elements" title="Permalink to this definition"></a></dt>
+<dd><p>List of <a class="reference internal" href="#vcfempy.meshgen.InterfaceElement2D" title="vcfempy.meshgen.InterfaceElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">InterfaceElement2D</span></code></a> in the generated mesh for a
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The list of lists of vertex indices defining the
-<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.element_edges" title="vcfempy.meshgen.PolyMesh2D.element_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">element_edges</span></code></a> in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dd class="field-odd"><p>The list of interface elements in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><cite>list[list[int]]</cite></p>
+<dd class="field-even"><p><cite>list</cite> of <a class="reference internal" href="#vcfempy.meshgen.InterfaceElement2D" title="vcfempy.meshgen.InterfaceElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">InterfaceElement2D</span></code></a></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The number of nodes defining the edge between two elements may be
-different for each edge, depending on whether the adjacent elements
-are directly connected, or separated by an interface element. An
-element edge may also be on the boundary.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices but no mesh generated yet</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1462,12 +1456,15 @@ element edge may also be on the boundary.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bnd_verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bnd_verts</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">)</span>
 <span class="go">[]</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh and print the element edges</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that edge node indices are all &lt; msh.num_nodes</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh and print the interface elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that interface node indices are all &lt; msh.num_nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># and the neighbor element indices are all &lt; msh.num_elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># also note that interface elements all include at least one</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># node that is not on the boundary</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
 <span class="go">10</span>
@@ -1482,78 +1479,70 @@ element edge may also be on the boundary.</p>
 <span class="go"> [1.     0.625 ]</span>
 <span class="go"> [1.     0.    ]</span>
 <span class="go"> [0.625  0.    ]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">element_edges</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<span class="go">[1, 3]</span>
-<span class="go">[0, 3]</span>
-<span class="go">[4, 5]</span>
-<span class="go">[1, 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 <span class="go">[2, 5]</span>
 <span class="go">[2, 3]</span>
 <span class="go">[2, 6]</span>
-<span class="go">[4, 7]</span>
 <span class="go">[6, 7]</span>
-<span class="go">[8, 9]</span>
-<span class="go">[0, 9]</span>
 <span class="go">[6, 9]</span>
-<span class="go">[7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">neighbors</span><span class="p">])</span>
+<span class="go">[2, 3]</span>
+<span class="go">[2, 0]</span>
+<span class="go">[3, 0]</span>
+<span class="go">[3, 1]</span>
+<span class="go">[1, 0]</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the element edges</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the interface elements</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">)</span>
 <span class="go">[]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">element_edges</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<span class="go">[1, 3]</span>
-<span class="go">[0, 3]</span>
-<span class="go">[4, 5]</span>
-<span class="go">[1, 5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 <span class="go">[2, 5]</span>
 <span class="go">[2, 3]</span>
 <span class="go">[2, 6]</span>
-<span class="go">[4, 7]</span>
 <span class="go">[6, 7]</span>
-<span class="go">[8, 9]</span>
-<span class="go">[0, 9]</span>
 <span class="go">[6, 9]</span>
-<span class="go">[7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">neighbors</span><span class="p">])</span>
+<span class="go">[2, 3]</span>
+<span class="go">[2, 0]</span>
+<span class="go">[3, 0]</span>
+<span class="go">[3, 1]</span>
+<span class="go">[1, 0]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">)</span>
 <span class="go">[]</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.element_neighbors">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">element_neighbors</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.element_neighbors" title="Permalink to this definition"></a></dt>
-<dd><p>List of lists of element indices defining the neighboring
-<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> in the generated mesh for a <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.num_boundary_elements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_boundary_elements</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.num_boundary_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_elements" title="vcfempy.meshgen.PolyMesh2D.boundary_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_elements</span></code></a> in the generated mesh for a
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The list of lists of element indices defining the neighboring
-<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dd class="field-odd"><p>The number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_elements" title="vcfempy.meshgen.PolyMesh2D.boundary_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_elements</span></code></a> in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><cite>list[list[int]]</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_element_edges" title="vcfempy.meshgen.PolyMesh2D.num_element_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_element_edges</span></code></a>, 2)</p>
+<dd class="field-even"><p><cite>int</cite></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The len(<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.element_neighbors" title="vcfempy.meshgen.PolyMesh2D.element_neighbors"><code class="xref py py-attr docutils literal notranslate"><span class="pre">element_neighbors</span></code></a>) == <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_element_edges" title="vcfempy.meshgen.PolyMesh2D.num_element_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_element_edges</span></code></a> since the
-neighbors are defined by the element edges. If an edge separates two
-elements, both element neighbor indices will be &gt;= 0, and correspond
-to the index of the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a>. If an edge is on a boundary, then
-one of the indices will be &gt;= 0 corresponding to an element index and
-the other will be -1 (meaning no element, or the boundary).</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices but no mesh generated yet</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1562,72 +1551,125 @@ the other will be -1 (meaning no element, or the boundary).</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bnd_verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bnd_verts</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_neighbors</span><span class="p">)</span>
-<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_boundary_elements</span><span class="p">)</span>
+<span class="go">0</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh and print the element neighbors</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that neighbor indices are all &lt; msh.num_elements</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># neighbor indices of -1 indicate boundary edges</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">num_bnd_edges</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">num_int_edges</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">element_neighbors</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">if</span> <span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="n">num_bnd_edges</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="gp">... </span>    <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>        <span class="n">num_int_edges</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="go">[-1, 2]</span>
-<span class="go">[-1, 0]</span>
-<span class="go">[-1, 3]</span>
-<span class="go">[-1, 2]</span>
-<span class="go">[2, 3]</span>
-<span class="go">[2, 0]</span>
-<span class="go">[3, 0]</span>
-<span class="go">[3, -1]</span>
-<span class="go">[3, 1]</span>
-<span class="go">[-1, 1]</span>
-<span class="go">[-1, 0]</span>
-<span class="go">[1, 0]</span>
-<span class="go">[1, -1]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">num_bnd_edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_boundary_elements</span><span class="p">)</span>
 <span class="go">8</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">num_int_edges</span><span class="p">)</span>
-<span class="go">5</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the element edges</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the interface elements</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_neighbors</span><span class="p">)</span>
-<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_boundary_elements</span><span class="p">)</span>
+<span class="go">0</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">element_neighbors</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-<span class="go">[-1, 2]</span>
-<span class="go">[-1, 0]</span>
-<span class="go">[-1, 3]</span>
-<span class="go">[-1, 2]</span>
-<span class="go">[2, 3]</span>
-<span class="go">[2, 0]</span>
-<span class="go">[3, 0]</span>
-<span class="go">[3, -1]</span>
-<span class="go">[3, 1]</span>
-<span class="go">[-1, 1]</span>
-<span class="go">[-1, 0]</span>
-<span class="go">[1, 0]</span>
-<span class="go">[1, -1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_boundary_elements</span><span class="p">)</span>
+<span class="go">8</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_neighbors</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_boundary_elements</span><span class="p">)</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.boundary_elements">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">boundary_elements</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.boundary_elements" title="Permalink to this definition"></a></dt>
+<dd><p>List of <a class="reference internal" href="#vcfempy.meshgen.BoundaryElement2D" title="vcfempy.meshgen.BoundaryElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoundaryElement2D</span></code></a> in the generated mesh for a
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of boundary elements in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><cite>list</cite> of <a class="reference internal" href="#vcfempy.meshgen.BoundaryElement2D" title="vcfempy.meshgen.BoundaryElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoundaryElement2D</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices but no mesh generated yet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_verts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bnd_verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="n">new_verts</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">bnd_verts</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">)</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh and print the boundary elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that boundary node indices are all &lt; msh.num_nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># and the neighbor element indices are all &lt; msh.num_elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># also note that boundary elements all have both nodes on the</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># analysis boundaries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[[0.     0.    ]</span>
+<span class="go"> [0.     1.    ]</span>
+<span class="go"> [0.375  0.5625]</span>
+<span class="go"> [0.     0.375 ]</span>
+<span class="go"> [1.     1.    ]</span>
+<span class="go"> [0.375  1.    ]</span>
+<span class="go"> [0.625  0.4375]</span>
+<span class="go"> [1.     0.625 ]</span>
+<span class="go"> [1.     0.    ]</span>
+<span class="go"> [0.625  0.    ]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[1, 3]</span>
+<span class="go">[0, 3]</span>
+<span class="go">[4, 5]</span>
+<span class="go">[1, 5]</span>
+<span class="go">[4, 7]</span>
+<span class="go">[8, 9]</span>
+<span class="go">[0, 9]</span>
+<span class="go">[7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">neighbor</span><span class="p">)</span>
+<span class="gp">... </span>       <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">])</span>
+<span class="go">[2, 0, 3, 2, 3, 1, 0, 1]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the boundary elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">)</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[1, 3]</span>
+<span class="go">[0, 3]</span>
+<span class="go">[4, 5]</span>
+<span class="go">[1, 5]</span>
+<span class="go">[4, 7]</span>
+<span class="go">[8, 9]</span>
+<span class="go">[0, 9]</span>
+<span class="go">[7, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">neighbor</span><span class="p">)</span>
+<span class="gp">... </span>       <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">])</span>
+<span class="go">[2, 0, 3, 2, 3, 1, 0, 1]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">)</span>
 <span class="go">[]</span>
 </pre></div>
 </div>
@@ -2013,7 +2055,8 @@ raise a <cite>ValueError</cite>.</p>
 <span class="go">Mesh Generated = True</span>
 <span class="go">Number of Nodes = 10</span>
 <span class="go">Number of Elements = 4</span>
-<span class="go">Number of Element Edges = 13</span>
+<span class="go">Number of Interface Elements = 5</span>
+<span class="go">Number of Boundary Elements = 8</span>
 
 <span class="go">Vertices</span>
 <span class="go">[[0.  0. ]</span>
@@ -2053,20 +2096,22 @@ raise a <cite>ValueError</cite>.</p>
 <span class="go">[2, 5, 1, 3], 0.19921875, [0.125 0.75 ], [0.17647059 0.73161765], sand</span>
 <span class="go">[6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], [0.67748918 0.75676407], sand</span>
 
-<span class="go">Element Edge Nodes and Neighbors</span>
-<span class="go">[1, 3], [-1, 2]</span>
-<span class="go">[0, 3], [-1, 0]</span>
-<span class="go">[4, 5], [-1, 3]</span>
-<span class="go">[1, 5], [-1, 2]</span>
+<span class="go">Interface Element Nodes and Neighbors</span>
 <span class="go">[2, 5], [2, 3]</span>
 <span class="go">[2, 3], [2, 0]</span>
 <span class="go">[2, 6], [3, 0]</span>
-<span class="go">[4, 7], [3, -1]</span>
 <span class="go">[6, 7], [3, 1]</span>
-<span class="go">[8, 9], [-1, 1]</span>
-<span class="go">[0, 9], [-1, 0]</span>
 <span class="go">[6, 9], [1, 0]</span>
-<span class="go">[7, 8], [1, -1]</span>
+
+<span class="go">Boundary Element Nodes and Neighbors</span>
+<span class="go">[1, 3], 2</span>
+<span class="go">[0, 3], 0</span>
+<span class="go">[4, 5], 3</span>
+<span class="go">[1, 5], 2</span>
+<span class="go">[4, 7], 3</span>
+<span class="go">[8, 9], 1</span>
+<span class="go">[0, 9], 0</span>
+<span class="go">[7, 8], 1</span>
 
 </pre></div>
 </div>
@@ -2510,6 +2555,141 @@ If borders, will plot element borders with line_type</p>
 Can provide a matplotlib.pyplot.axis or if None will
 use matplotlib.pyplot.gca()</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">InterfaceElement2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for interfaces between neighboring <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> elements
+in a <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>) – The parent mesh</p></li>
+<li><p><strong>material</strong> (<a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a>, optional) – The material type</p></li>
+<li><p><strong>nodes</strong> (<em>list[int], optional</em>) – Initial list of node indices from the parent mesh that are contained
+in the <a class="reference internal" href="#vcfempy.meshgen.InterfaceElement2D" title="vcfempy.meshgen.InterfaceElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">InterfaceElement2D</span></code></a></p></li>
+<li><p><strong>neighbors</strong> (<cite>list</cite> of <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>, optional) – List of neighboring <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> from the parent mesh</p></li>
+<li><p><strong>width</strong> (<em>float, optional</em>) – The element width in the direction normal to the length of the
+<a class="reference internal" href="#vcfempy.meshgen.InterfaceElement2D" title="vcfempy.meshgen.InterfaceElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">InterfaceElement2D</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.mesh">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.mesh" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.material">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">material</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.material" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.width">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.width" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.num_nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.num_nodes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.nodes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.insert_nodes">
+<span class="sig-name descname"><span class="pre">insert_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.insert_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Insert one or more nodes at index i
+nodes can be int or list of ints</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.num_neighbors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_neighbors</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.num_neighbors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.neighbors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">neighbors</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.neighbors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.add_neighbors">
+<span class="sig-name descname"><span class="pre">add_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighbors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.add_neighbors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.invalidate_properties">
+<span class="sig-name descname"><span class="pre">invalidate_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.invalidate_properties" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.InterfaceElement2D.length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#vcfempy.meshgen.InterfaceElement2D.length" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">BoundaryElement2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighbor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class for interfaces between <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> elements and the
+boundaries in a <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>) – The parent mesh</p></li>
+<li><p><strong>nodes</strong> (<em>list[int], optional</em>) – Initial list of node indices from the parent mesh that are contained
+in the <a class="reference internal" href="#vcfempy.meshgen.BoundaryElement2D" title="vcfempy.meshgen.BoundaryElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoundaryElement2D</span></code></a></p></li>
+<li><p><strong>neighbor</strong> (<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>, optional) – The neighboring <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> from the parent mesh</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D.mesh">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh</span></span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D.mesh" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D.num_nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D.num_nodes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D.nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D.nodes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D.insert_nodes">
+<span class="sig-name descname"><span class="pre">insert_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D.insert_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Insert one or more nodes at index i
+nodes can be int or list of ints</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D.neighbor">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">neighbor</span></span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D.neighbor" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D.invalidate_properties">
+<span class="sig-name descname"><span class="pre">invalidate_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D.invalidate_properties" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.BoundaryElement2D.length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#vcfempy.meshgen.BoundaryElement2D.length" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
