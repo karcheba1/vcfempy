@@ -35,11 +35,11 @@ class PolyMesh2D():
     boundary_vertices : int | list[int], optional
         Initial boundary vertex or list of boundary vertices to be added.
         Passed to :m:`insert_boundary_vertices`.
-    material_regions : *list[list[int]]* | *list* of :c:`MaterialRegion2D`, \
+    material_regions : `list[list[int]]` | `list` of :c:`MaterialRegion2D`, \
 *optional*
         Initial list(s) of material region(s) to be added. Passed to
         :m:`add_material_regions`.
-    materials : :c:`vcfempy.materials.Material` | *list* of \
+    materials : :c:`vcfempy.materials.Material` | `list` of \
 :c:`vcfempy.materials.Material`, *optional*
         Initial list of material types for the :a:`material_regions`. Passed
         to :m:`add_material_regions`.
@@ -1490,7 +1490,7 @@ class PolyMesh2D():
         [7, 8]
         >>> print(msh.num_elements)
         4
-        >>> print([msh.elements.index(e.neighbor) 
+        >>> print([msh.elements.index(e.neighbor)
         ...        for e in msh.boundary_elements])
         [2, 0, 3, 2, 3, 1, 0, 1]
 
@@ -1511,7 +1511,7 @@ class PolyMesh2D():
         [8, 9]
         [0, 9]
         [7, 8]
-        >>> print([msh.elements.index(e.neighbor) 
+        >>> print([msh.elements.index(e.neighbor)
         ...        for e in msh.boundary_elements])
         [2, 0, 3, 2, 3, 1, 0, 1]
 
@@ -1621,7 +1621,7 @@ self.nodes is empty
     def mesh_valid(self, flag):
         # try to cast flag to bool
         # will raise a ValueError if this does not work
-        if type(flag) is str:
+        if isinstance(flag, (str, np.str_)):
             try:
                 flag = float(flag)
             except ValueError:
@@ -1828,7 +1828,7 @@ self.nodes is empty
     def high_order_quadrature(self, flag):
         # try to cast flag to bool
         # will raise a ValueError if this does not work
-        if type(flag) is str:
+        if isinstance(flag, (str, np.str_)):
             try:
                 flag = float(flag)
             except ValueError:
@@ -2040,7 +2040,7 @@ self.nodes is empty
     def verbose_printing(self, flag):
         # try to cast flag to bool
         # will raise a ValueError if this does not work
-        if type(flag) is str:
+        if isinstance(flag, (str, np.str_)):
             try:
                 flag = float(flag)
             except ValueError:
@@ -2122,128 +2122,100 @@ self.nodes is empty
         return mesh_string
 
     def add_vertices(self, vertices):
-        """Add vertices to PolyMesh2D.
+        """Add vertices to the :c:`PolyMesh2D`.
 
         Parameters
         ----------
-        vertices : list[int or float] | list[list[int or float]]
-                   | array_like, shape = (2, )
-
-        Returns
-        -------
-        None
+        vertices : `array_like`, shape = (2, ) | (n, 2)
+            A pair of coordinates or array of coordinate pairs to add to the
+            :c:`PolyMesh2D`.
 
         Raises
         ------
         TypeError
-            if type(vertices) not in [NoneType, list, numpy.ndarray]
-            if type(vertices[0]) in [int, float, numpy.int32, numpy.float64]:
-                type(vertices[k]) not in [int, float, numpy.int32,
-                                          numpy.float64]
-            if type(vertices[0]) in [list, numpy.ndarray]:
-                type(vertices[k]) not in [list, numpy.ndarray]
-            if type(vertices[k]) in [list, numpy.ndarray]:
-                type(vertices[k][j]) not in [int, float, numpy.int32,
-                                             numpy.float64]
+            If **vertices** has no len() property (e.g. an `int`)
         ValueError
-            if type(vertices[0]) in [int, float, numpy.int32, numpy.float64]:
-                len(vertices) != 2
-            if type(vertices[k]) in [list, numpy.ndarray]:
-                len(vertices[k]) != 2
-            if type(vertices) is numpy.ndarray:
-                len(vertices.shape) != 2
+            If contents of **vertices** cannot be cast to ``float``.
+            If **vertices** cannot be stacked with self.vertices (e.g. due to
+            incompatible shape).
 
         Examples
         --------
+        >>> # create a mesh, passing initial vertex list
+        >>> import vcfempy.meshgen
+        >>> verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> msh = vcfempy.meshgen.PolyMesh2D(vertices=verts)
+        >>> print(msh.vertices)
+        [[0. 0.]
+         [0. 1.]
+         [1. 1.]
+         [1. 0.]]
+
+        >>> # add an individual vertex
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> print(msh.vertices)
+        [[0.  0. ]
+         [0.  1. ]
+         [1.  1. ]
+         [1.  0. ]
+         [1.5 0.5]]
+
+        >>> # add multiple vertices
+        >>> msh.add_vertices([[-0.5, 0.5], [0.5, 1.5]])
+        >>> print(msh.vertices)
+        [[ 0.   0. ]
+         [ 0.   1. ]
+         [ 1.   1. ]
+         [ 1.   0. ]
+         [ 1.5  0.5]
+         [-0.5  0.5]
+         [ 0.5  1.5]]
+
+        >>> # add nothing, in two different ways
+        >>> msh.add_vertices(None)
+        >>> msh.add_vertices([])
+        >>> print(msh.vertices)
+        [[ 0.   0. ]
+         [ 0.   1. ]
+         [ 1.   1. ]
+         [ 1.   0. ]
+         [ 1.5  0.5]
+         [-0.5  0.5]
+         [ 0.5  1.5]]
+
+        >>> # try to add some incompatible types/shapes
+        >>> msh.add_vertices(['one', 'two'])
+        Traceback (most recent call last):
+            ...
+        ValueError: could not convert string to float: 'one'
+        >>> msh.add_vertices(1)
+        Traceback (most recent call last):
+            ...
+        TypeError: object of type 'int' has no len()
+        >>> msh.add_vertices([1]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        >>> msh.add_vertices([1, 2, 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
         """
-        # basic type check of vertices
-        if type(vertices) not in [type(None), list, np.ndarray]:
-            raise TypeError('type(vertices) not in [NoneType, list,'
-                            + ' numpy.ndarray]')
         # catch case no vertices given
-        # either as None or empty list or empty numpy.ndarray
+        # either as None or empty array_like
         # in all cases, do nothing
-        if (vertices is None
-           or (type(vertices) is list and len(vertices) == 0)
-           or (type(vertices) is np.ndarray and vertices.size == 0)):
+        if (vertices is None or len(vertices) == 0):
             return
-        # vertices given as a list
-        # Note: if here, we know that len(vertices) > 0
-        elif type(vertices) is list:
-            # catch case of single vertex given as list of numerics
-            if type(vertices[0]) in [int, float, np.int32, np.float64]:
-                # check for correct dimensions
-                if len(vertices) != 2:
-                    raise ValueError('type(vertices) is list of numeric, but'
-                                     + ' len(vertices) != 2')
-                # check that all values are numeric
-                for v in vertices:
-                    if type(v) not in [int, float, np.int32, np.float64]:
-                        err_str = 'type(vertices) is list with len == 2, '
-                        err_str += 'vertices[0] is numeric, '
-                        err_str += 'but type of other values in vertices '
-                        err_str += 'not in [int, float, numpy.int32, '
-                        err_str += 'numpy.float64]'
-                        raise TypeError(err_str)
-                # if here, we know that we have a valid single vertex to add
-                if self.vertices is None:
-                    self._vertices = np.array([vertices])
-                else:
-                    self._vertices = np.vstack([self.vertices, vertices])
-            # otherwise, vertices should be list of list (or list of
-            # numpy.ndarray) of numeric where each sub-list or sub-array
-            # has len == 2
-            else:
-                # check that all vertex lists have the right type and size
-                for v in vertices:
-                    # check type of vertex
-                    if type(v) not in [list, np.ndarray]:
-                        raise TypeError('vertices given as list of lists, but '
-                                        + 'type of all contents not in [list, '
-                                        + 'numpy.ndarray]')
-                    # check that each vertex contains two components
-                    if len(v) != 2:
-                        raise ValueError('vertices given as list of lists, '
-                                         + 'but not all vertices have '
-                                         + 'shape (, 2)')
-                    # check that the values in the vertex list are numeric
-                    for x in v:
-                        if type(x) not in [int, float, np.int32, np.float64]:
-                            err_str = 'vertices given as list of lists with, '
-                            err_str += 'but type of contents not in [int, '
-                            err_str += 'float, numpy.int32, numpy.float64]'
-                            raise TypeError(err_str)
-                # if here, we know that we have a valid list of vertices to add
-                if self.vertices is None:
-                    self._vertices = np.array(vertices)
-                else:
-                    self._vertices = np.vstack([self.vertices, vertices])
-        # vertices given as a numpy.ndarray
-        # Note 1: we know this because of the earlier type check of vertices
-        # Note 2: if here, we know that len(vertices) > 0
-        else:
-            # check shape of vertices
-            # should have one or two dimensions
-            if (len(vertices.shape) > 2
-               or (len(vertices.shape) == 1 and vertices.shape[0] != 2)
-               or (len(vertices.shape) == 2 and vertices.shape[1] != 2)):
-                raise ValueError('vertices given as numpy.ndarray, '
-                                 + 'but shape is not (, 2)')
-            # check type of vertices array contents
-            # Note: can just check vertices[0,0] since we know type(vertices)
-            #       is numpy.ndarray which has uniform type
-            if type(vertices.flatten()[0]) not in [np.int32, np.float64]:
-                raise TypeError('vertices given as numpy.ndarray, but type '
-                                + 'of contents not in [numpy.int32, '
-                                + 'numpy.float64]')
-            # if here, we know we have a valid numpy.ndarray of vertices to add
-            if self.vertices is None:
-                if len(vertices.shape) == 1:
-                    self._vertices = np.array([vertices])
-                else:
-                    self._vertices = np.array(vertices)
-            else:
-                self._vertices = np.vstack([self.vertices, vertices])
+
+        # try to make an array of vertices
+        # this will raise a ValueError if the contents of vertices cannot be
+        # cast to float
+        vertices = np.array(vertices, dtype=float)
+
+        # try to stack the new vertices with the existing self.vertices
+        # since self.vertices is initialized as np.empty((0,2)), this will
+        # raise a ValueError if vertices is not compatible with that shape
+        self._vertices = np.vstack([self.vertices, vertices])
 
     def insert_boundary_vertices(self, i, boundary_vertices):
         """Insert one or more boundary vertex indices."""

@@ -105,9 +105,9 @@ routine.</p>
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_vertices" title="vcfempy.meshgen.PolyMesh2D.add_vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_vertices()</span></code></a>.</p></li>
 <li><p><strong>boundary_vertices</strong> (<em>int | list[int], optional</em>) – Initial boundary vertex or list of boundary vertices to be added.
 Passed to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_boundary_vertices()</span></code></a>.</p></li>
-<li><p><strong>material_regions</strong> (<em>list[list[int]]</em> | <em>list</em> of <a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D" title="vcfempy.meshgen.MaterialRegion2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialRegion2D</span></code></a>, <em>optional</em>) – Initial list(s) of material region(s) to be added. Passed to
+<li><p><strong>material_regions</strong> (<cite>list[list[int]]</cite> | <cite>list</cite> of <a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D" title="vcfempy.meshgen.MaterialRegion2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialRegion2D</span></code></a>, <em>optional</em>) – Initial list(s) of material region(s) to be added. Passed to
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_material_regions" title="vcfempy.meshgen.PolyMesh2D.add_material_regions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_material_regions()</span></code></a>.</p></li>
-<li><p><strong>materials</strong> (<a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a> | <em>list</em> of <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a>, <em>optional</em>) – Initial list of material types for the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.material_regions" title="vcfempy.meshgen.PolyMesh2D.material_regions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material_regions</span></code></a>. Passed
+<li><p><strong>materials</strong> (<a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a> | <cite>list</cite> of <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a>, <em>optional</em>) – Initial list of material types for the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.material_regions" title="vcfempy.meshgen.PolyMesh2D.material_regions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material_regions</span></code></a>. Passed
 to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_material_regions" title="vcfempy.meshgen.PolyMesh2D.add_material_regions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_material_regions()</span></code></a>.</p></li>
 <li><p><strong>mesh_edges</strong> (<em>list[int] | list[list[int]], optional</em>) – Initial list(s) defining non-boundary edges to be preserved in the
 mesh generation. Passed to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_mesh_edges" title="vcfempy.meshgen.PolyMesh2D.add_mesh_edges"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_mesh_edges()</span></code></a>.</p></li>
@@ -2128,35 +2128,87 @@ raise a <cite>ValueError</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.add_vertices">
 <span class="sig-name descname"><span class="pre">add_vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.add_vertices" title="Permalink to this definition"></a></dt>
-<dd><p>Add vertices to PolyMesh2D.</p>
+<dd><p>Add vertices to the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vertices</strong> (<em>list[int or float] | list[list[int or float]]</em>) – | array_like, shape = (2, )</p>
+<dd class="field-odd"><p><strong>vertices</strong> (<cite>array_like</cite>, shape = (2, ) | (n, 2)) – A pair of coordinates or array of coordinate pairs to add to the
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>TypeError</strong> – if type(vertices) not in [NoneType, list, numpy.ndarray]
-    if type(vertices[0]) in [int, float, numpy.int32, numpy.float64]:
-        type(vertices[k]) not in [int, float, numpy.int32,
-                                  numpy.float64]
-    if type(vertices[0]) in [list, numpy.ndarray]:
-        type(vertices[k]) not in [list, numpy.ndarray]
-    if type(vertices[k]) in [list, numpy.ndarray]:
-        type(vertices[k][j]) not in [int, float, numpy.int32,
-                                     numpy.float64]</p></li>
-<li><p><strong>ValueError</strong> – if type(vertices[0]) in [int, float, numpy.int32, numpy.float64]:
-        len(vertices) != 2
-    if type(vertices[k]) in [list, numpy.ndarray]:
-        len(vertices[k]) != 2
-    if type(vertices) is numpy.ndarray:
-        len(vertices.shape) != 2</p></li>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <strong>vertices</strong> has no len() property (e.g. an <cite>int</cite>)</p></li>
+<li><p><strong>ValueError</strong> – If contents of <strong>vertices</strong> cannot be cast to <code class="docutils literal notranslate"><span class="pre">float</span></code>.
+    If <strong>vertices</strong> cannot be stacked with self.vertices (e.g. due to
+    incompatible shape).</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh, passing initial vertex list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">(</span><span class="n">vertices</span><span class="o">=</span><span class="n">verts</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+<span class="go">[[0. 0.]</span>
+<span class="go"> [0. 1.]</span>
+<span class="go"> [1. 1.]</span>
+<span class="go"> [1. 0.]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># add an individual vertex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+<span class="go">[[0.  0. ]</span>
+<span class="go"> [0.  1. ]</span>
+<span class="go"> [1.  1. ]</span>
+<span class="go"> [1.  0. ]</span>
+<span class="go"> [1.5 0.5]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># add multiple vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+<span class="go">[[ 0.   0. ]</span>
+<span class="go"> [ 0.   1. ]</span>
+<span class="go"> [ 1.   1. ]</span>
+<span class="go"> [ 1.   0. ]</span>
+<span class="go"> [ 1.5  0.5]</span>
+<span class="go"> [-0.5  0.5]</span>
+<span class="go"> [ 0.5  1.5]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># add nothing, in two different ways</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+<span class="go">[[ 0.   0. ]</span>
+<span class="go"> [ 0.   1. ]</span>
+<span class="go"> [ 1.   1. ]</span>
+<span class="go"> [ 1.   0. ]</span>
+<span class="go"> [ 1.5  0.5]</span>
+<span class="go"> [-0.5  0.5]</span>
+<span class="go"> [ 0.5  1.5]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># try to add some incompatible types/shapes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">])</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">could not convert string to float: &#39;one&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">TypeError</span>: <span class="n">object of type &#39;int&#39; has no len()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span> 
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> 
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">...</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
