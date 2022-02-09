@@ -243,9 +243,11 @@ mesh generation. Passed to <a class="reference internal" href="#vcfempy.meshgen.
 <dd class="field-even"><p><cite>numpy.ndarray</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_vertices" title="vcfempy.meshgen.PolyMesh2D.num_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_vertices</span></code></a>, 2)</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.vertices" title="vcfempy.meshgen.PolyMesh2D.vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">vertices</span></code></a> property is not intended to be directly mutable.
 Instead, modify it using the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_vertices" title="vcfempy.meshgen.PolyMesh2D.add_vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_vertices()</span></code></a> method.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh, no initial vertices provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -319,10 +321,12 @@ Instead, modify it using the <a class="reference internal" href="#vcfempy.meshge
 <dd class="field-even"><p><cite>list[int]</cite></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_vertices</span></code></a> property is not intended to be directly
 mutable. Instead modify it using the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_boundary_vertices()</span></code></a>,
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.remove_boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.remove_boundary_vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">remove_boundary_vertices()</span></code></a>, and <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.pop_boundary_vertex" title="vcfempy.meshgen.PolyMesh2D.pop_boundary_vertex"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pop_boundary_vertex()</span></code></a> methods.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a new mesh, no initial vertices provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -356,11 +360,13 @@ the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfe
 <dd class="field-even"><p><cite>list[list[int]]</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.num_boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_boundary_vertices</span></code></a>, 2)</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_edges" title="vcfempy.meshgen.PolyMesh2D.boundary_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_edges</span></code></a> property is not intended to be directly
 mutable. It is updated each time <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_vertices</span></code></a> is changed,
 so the number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_edges" title="vcfempy.meshgen.PolyMesh2D.boundary_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_edges</span></code></a> should always be
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.num_boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_boundary_vertices</span></code></a> since the geometry is a closed polygon.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># creating a new mesh, no initial vertices provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -446,10 +452,12 @@ material geometry.</p>
 <dd class="field-even"><p><cite>list</cite> of <a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D" title="vcfempy.meshgen.MaterialRegion2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialRegion2D</span></code></a></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The list of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.material_regions" title="vcfempy.meshgen.PolyMesh2D.material_regions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material_regions</span></code></a> is not intended to be directly
 mutable. Instead modify it using the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_material_regions" title="vcfempy.meshgen.PolyMesh2D.add_material_regions"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_material_regions()</span></code></a>
 method.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initiaize a mesh, no initial properties provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -574,10 +582,12 @@ preserved in mesh generation for the <a class="reference internal" href="#vcfemp
 <dd class="field-even"><p><cite>list[list[int]]</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_mesh_edges" title="vcfempy.meshgen.PolyMesh2D.num_mesh_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_mesh_edges</span></code></a>, 2)</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The list of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.mesh_edges" title="vcfempy.meshgen.PolyMesh2D.mesh_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh_edges</span></code></a> is not intended to be directly mutable.
 Instead, modify the list of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.mesh_edges" title="vcfempy.meshgen.PolyMesh2D.mesh_edges"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh_edges</span></code></a> by using the
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_mesh_edges" title="vcfempy.meshgen.PolyMesh2D.add_mesh_edges"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_mesh_edges()</span></code></a> method.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh, no initial properties provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -661,13 +671,15 @@ Instead, modify the list of <a class="reference internal" href="#vcfempy.meshgen
 <dd class="field-even"><p><cite>numpy.ndarray</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_elements" title="vcfempy.meshgen.PolyMesh2D.num_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_elements</span></code></a>, 2)</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.points" title="vcfempy.meshgen.PolyMesh2D.points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></a> property is not intended to be directly mutable,
 rather <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.points" title="vcfempy.meshgen.PolyMesh2D.points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></a> are generated by <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.generate_mesh" title="vcfempy.meshgen.PolyMesh2D.generate_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate_mesh()</span></code></a>. If the mesh
 is reset (by setting <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.mesh_valid" title="vcfempy.meshgen.PolyMesh2D.mesh_valid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh_valid</span></code></a> to <code class="docutils literal notranslate"><span class="pre">False</span></code>, or by changing
 a property that affects the mesh validity), then the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.points" title="vcfempy.meshgen.PolyMesh2D.points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></a> will
 be cleared. The number of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.points" title="vcfempy.meshgen.PolyMesh2D.points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></a> will always be
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_elements" title="vcfempy.meshgen.PolyMesh2D.num_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_elements</span></code></a>.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices, but no mesh generated yet</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -787,12 +799,14 @@ the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfe
 <dd class="field-even"><p><cite>numpy.ndarray</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_nodes" title="vcfempy.meshgen.PolyMesh2D.num_nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_nodes</span></code></a>, 2)</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.nodes" title="vcfempy.meshgen.PolyMesh2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a> property is not intended to be directly mutable,
 rather <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.nodes" title="vcfempy.meshgen.PolyMesh2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a> are generated by <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.generate_mesh" title="vcfempy.meshgen.PolyMesh2D.generate_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate_mesh()</span></code></a>. If the mesh is
 reset (by setting <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.mesh_valid" title="vcfempy.meshgen.PolyMesh2D.mesh_valid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh_valid</span></code></a> to <code class="docutils literal notranslate"><span class="pre">False</span></code>, or by changing a
 property that affects the mesh validity), then the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.nodes" title="vcfempy.meshgen.PolyMesh2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a> will be
 cleared.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices, but no mesh generated yet</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -915,12 +929,14 @@ the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfe
 <dd class="field-even"><p><cite>list</cite> of <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> property is not intended to be directly mutable,
 rather <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> are generated by <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.generate_mesh" title="vcfempy.meshgen.PolyMesh2D.generate_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate_mesh()</span></code></a>. If the mesh
 is reset (by setting <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.mesh_valid" title="vcfempy.meshgen.PolyMesh2D.mesh_valid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh_valid</span></code></a> to <code class="docutils literal notranslate"><span class="pre">False</span></code>, or by changing a
 property that affects the mesh validity), then the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> will
 be cleared.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices but no mesh generated yet</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -992,9 +1008,11 @@ be cleared.</p>
 <dd class="field-even"><p>list[int]</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The len(<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_nodes_per_element" title="vcfempy.meshgen.PolyMesh2D.num_nodes_per_element"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_nodes_per_element</span></code></a>) will always be the same as
 <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_elements" title="vcfempy.meshgen.PolyMesh2D.num_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_elements</span></code></a>.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh, no initial information provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1045,8 +1063,10 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 <dd class="field-even"><p><cite>list</cite> of <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The len(<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.element_materials" title="vcfempy.meshgen.PolyMesh2D.element_materials"><code class="xref py py-attr docutils literal notranslate"><span class="pre">element_materials</span></code></a>) will always be <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_elements" title="vcfempy.meshgen.PolyMesh2D.num_elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_elements</span></code></a>.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh, no initial information provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1213,7 +1233,8 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 <dd class="field-even"><p><cite>list[numpy.ndarray]</cite></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>These are returned as a list of 2d arrays because the number of
 quadrature points is different for each element, in general, so it
 cannot be converted into a 3d array. This property is mostly provided
@@ -1221,6 +1242,7 @@ for plotting convenience (e.g. if performing global integrations over
 the whole mesh or plotting the quadrature points for the whole mesh).
 If performing integrations at the element level, it is better to
 access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_points" title="vcfempy.meshgen.PolyElement2D.quad_points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">PolyElement2D.quad_points</span></code></a> property for each element.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh, no initial information provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1321,7 +1343,8 @@ in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="v
 <dd class="field-even"><p><cite>list[numpy.ndarray]</cite></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>These are returned as a list of 1d arrays because the number of
 quadrature points is different for each element, in general, so it
 cannot be converted into a 2d array. This property is mostly provided
@@ -1329,6 +1352,7 @@ for plotting convenience (e.g. if performing global integrations over
 the whole mesh or plotting the quadrature points for the whole mesh).
 If performing integrations at the element level, it is better to
 access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_weights" title="vcfempy.meshgen.PolyElement2D.quad_weights"><code class="xref py py-attr docutils literal notranslate"><span class="pre">PolyElement2D.quad_weights</span></code></a> property for each element.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh, no initial information provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1696,7 +1720,8 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
     are invalid or inconsistent.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>If setting to <code class="docutils literal notranslate"><span class="pre">False</span></code>, mesh properties are reset. If setting to
 <code class="docutils literal notranslate"><span class="pre">True</span></code>, basic checks of mesh validity are performed before setting
 the value. <cite>str</cite> values that can be cast to <cite>float</cite> are considered
@@ -1710,6 +1735,7 @@ but setting <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.mesh
 indirectly using the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.generate_mesh" title="vcfempy.meshgen.PolyMesh2D.generate_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate_mesh()</span></code></a> method, otherwise it is
 likely that a <cite>ValueError</cite> will be raised due to invalid mesh
 properties.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices but no mesh generated yet</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1790,7 +1816,8 @@ properties.</p>
 <dd class="field-even"><p><strong>ValueError</strong> – If the value of <strong>flag</strong> cannot be converted to a <cite>bool</cite>.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>Setting <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">high_order_quadrature</span></code></a> for the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a> will clear
 previously generated <code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_points</span></code>, <code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_weights</span></code>, and
 <code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_integrals</span></code> for <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.elements" title="vcfempy.meshgen.PolyMesh2D.elements"><code class="xref py py-attr docutils literal notranslate"><span class="pre">elements</span></code></a> in the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>,
@@ -1800,6 +1827,7 @@ if zero. If the <cite>str</cite> cannot be cast to <cite>float</cite>, then the 
 ‘yes’, ‘t’, ‘true’, and ‘on’ (case insensitive) are converted to
 <code class="docutils literal notranslate"><span class="pre">True</span></code> and the values ‘n’, ‘no’, ‘f’, ‘false’, and ‘off’ are
 converted to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Other <cite>str</cite> values raise a <cite>ValueError</cite>.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a mesh and add some vertices but no mesh generated yet</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -1953,13 +1981,15 @@ for the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="
 <dd class="field-even"><p><strong>ValueError</strong> – If the value of <strong>flag</strong> cannot be converted to a <cite>bool</cite>.</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p><cite>str</cite> values that can be cast to <cite>float</cite> are considered <code class="docutils literal notranslate"><span class="pre">True</span></code>-like
 if non-zero and <code class="docutils literal notranslate"><span class="pre">False</span></code>-like if zero. If the <cite>str</cite> cannot be cast
 to <cite>float</cite>, then the values ‘y’, ‘yes’, ‘t’, ‘true’, and ‘on’ (case
 insensitive) are converted to <code class="docutils literal notranslate"><span class="pre">True</span></code> and the values ‘n’, ‘no’, ‘f’,
 ‘false’, and ‘off’ are converted to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Other <cite>str</cite> values
 raise a <cite>ValueError</cite>.</p>
+</div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh with no initial information provided</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
@@ -2137,8 +2167,8 @@ raise a <cite>ValueError</cite>.</p>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>TypeError</strong> – If <strong>vertices</strong> has no len() property (e.g. an <cite>int</cite>)</p></li>
-<li><p><strong>ValueError</strong> – If contents of <strong>vertices</strong> cannot be cast to <code class="docutils literal notranslate"><span class="pre">float</span></code>.
-    If <strong>vertices</strong> cannot be stacked with self.vertices (e.g. due to
+<li><p><strong>ValueError</strong> – If contents of <strong>vertices</strong> cannot be cast to <cite>float</cite>.
+    If <strong>vertices</strong> cannot be stacked with <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.vertices" title="vcfempy.meshgen.PolyMesh2D.vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">vertices</span></code></a> (e.g. due to
     incompatible shape).</p></li>
 </ul>
 </dd>
@@ -2213,59 +2243,257 @@ raise a <cite>ValueError</cite>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices">
-<span class="sig-name descname"><span class="pre">insert_boundary_vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices" title="Permalink to this definition"></a></dt>
-<dd><p>Insert one or more boundary vertex indices.</p>
+<span class="sig-name descname"><span class="pre">insert_boundary_vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.insert_boundary_vertices" title="Permalink to this definition"></a></dt>
+<dd><p>Insert one or more boundary vertex indices to the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – The index at which to insert the <strong>boundary_vertices</strong> into
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.vertices" title="vcfempy.meshgen.PolyMesh2D.vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vertices()</span></code></a>.</p></li>
+<li><p><strong>boundary_vertices</strong> (<em>int | list[int]</em>) – The list of vertex indices to add to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.vertices" title="vcfempy.meshgen.PolyMesh2D.vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">vertices()</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before inserting the values in <strong>boundary_vertices</strong>, it will be
+cast to a flattened <cite>numpy.ndarray</cite> of <cite>int</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <strong>index</strong> cannot be cast to <cite>int</cite>.</p></li>
+<li><p><strong>ValueError</strong> – If <strong>boundary_vertices</strong> is not <cite>array_like</cite>, such as a jagged
+    <cite>list[list[int]]</cite>.
+    If any values in <strong>boundary_vertices</strong> cannot be cast to <cite>int</cite>,
+    are already in <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_vertices</span></code></a>, are negative, or are
+    &gt;= <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.num_vertices" title="vcfempy.meshgen.PolyMesh2D.num_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_vertices</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create mesh, add some vertices, and add boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 1, 2, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># add a single vertex and add it as a boundary vertex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">boundary_vertices</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 1, 2, 4, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># add two more vertices and add multiply boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 1, 5, 6, 2, 4, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># the list of boundary vertices need not be 1d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># if not, it will be flattened</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">],</span>
+<span class="gp">... </span>                  <span class="p">[</span><span class="o">-</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># add no boundary vertices, in two different ways</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># try to insert some invalid boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid literal for int() with base 10: &#39;one&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">1 is already a boundary vertex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">vertex index 11 out of range</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">vertex index -1 out of range</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="mi">0</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">3</span><span class="p">])</span> 
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;str&#39; object cannot be interpreted as an integer</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.remove_boundary_vertices">
 <span class="sig-name descname"><span class="pre">remove_boundary_vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remove_vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.remove_boundary_vertices" title="Permalink to this definition"></a></dt>
-<dd><p>Remove one or more boundary vertex indices.</p>
+<dd><p>Remove one or more boundary vertex indices from the
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>remove_vertices</strong> (<em>int | list[int]</em>) – The vertex or list of vertices to remove from
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_vertices</span></code></a>.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before removing the values in <strong>remove_vertices</strong>, it will be cast to
+a flattened <cite>numpy.ndarray</cite> of <cite>int</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <strong>remove_vertices</strong> is not <cite>array_like</cite>, such as a jagged
+    <cite>list[list[int]]</cite>.
+    If any values in <strong>remove_vertices</strong> cannot be cast to <cite>int</cite> or
+    are not in <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_vertices</span></code></a>.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create mesh, add some vertices, add/remove boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 2, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># remove multiple boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 2]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># the list of boundary vertices to remove need not be 1d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># if not, it will be flattened</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># remove no boundary vertices, in two different ways</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">([])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 1, 2, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># try to remove some invalid boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid literal for int() with base 10: &#39;one&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">list.remove(x): x not in list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">3</span><span class="p">])</span> 
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">...</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.pop_boundary_vertex">
-<span class="sig-name descname"><span class="pre">pop_boundary_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.pop_boundary_vertex" title="Permalink to this definition"></a></dt>
-<dd><p>Pop a boundary vertex index at a specified index in the list.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.generate_boundary_edges">
-<span class="sig-name descname"><span class="pre">generate_boundary_edges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.generate_boundary_edges" title="Permalink to this definition"></a></dt>
-<dd><p>Generate boundary edge pairs from boundary vertex list.</p>
+<span class="sig-name descname"><span class="pre">pop_boundary_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.pop_boundary_vertex" title="Permalink to this definition"></a></dt>
+<dd><p>Pop a boundary vertex at a given index of <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_vertices</span></code></a>
+from the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pop_index</strong> (<em>int, optional, default=-1</em>) – The index at which to remove the boundary vertex.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the boundary vertex that was removed.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><cite>int</cite></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <strong>pop_index</strong> cannot be cast to <cite>int</cite>.</p></li>
+<li><p><strong>IndexError</strong> – If <strong>pop_index</strong> is not a valid index into
+    <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.boundary_vertices" title="vcfempy.meshgen.PolyMesh2D.boundary_vertices"><code class="xref py py-attr docutils literal notranslate"><span class="pre">boundary_vertices</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create mesh, add some vertices, add/remove boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">pop_boundary_vertex</span><span class="p">()</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[0, 1, 2]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># remove a boundary vertex from the middle</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">pop_boundary_vertex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">)</span>
+<span class="go">[3, 1, 2]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># try to remove some invalid boundary vertices</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">pop_boundary_vertex</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;str&#39; object cannot be interpreted as an integer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">pop_boundary_vertex</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">IndexError</span>: <span class="n">pop index out of range</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">remove_boundary_vertices</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">pop_boundary_vertex</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">IndexError</span>: <span class="n">pop from empty list</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.add_material_regions">
 <span class="sig-name descname"><span class="pre">add_material_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.add_material_regions" title="Permalink to this definition"></a></dt>
-<dd><p>Add material regions to PolyMesh2D.</p>
+<dd><p>Add material regions to the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>material_regions</strong> (<em>list[int] | list[list[int]] | list[vcfempy.meshgen.MaterialRegion2D]</em>) – Lists of vertex indices defining clockwise boundary path of
-each new material region or list of object references to
-defined MaterialRegion2D</p></li>
-<li><p><strong>materials</strong> (<em>Material | list of Materials</em>) – Materials corresponding to each material region to be added</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>TypeError</strong> – if type(material_regions) not in [NoneType, list]
-    if type(material_regions[k]) not in [int, numpy.int32, list]
-    if type(material_regions) is list[int]:
-        type(materials) is not vcfempy.material.Material
-    if material_regions is list of lists of ints:
-        type(materials) is not list
-    if type(materials) is list (and valid):
-        type(materials[k]) is not vcfempy_material.Material</p></li>
-<li><p><strong>ValueError</strong> – if material_regions is list of ints:
-        material_regions[k] &gt;= self.num_vertices
-    if material_regions is list of list of ints:
-        material_regions[k][j] &gt;= self.num_vertices
-        len(materials) != len(material_regions)</p></li>
+<li><p><strong>material_regions</strong> (<cite>list</cite> of [<a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D" title="vcfempy.meshgen.MaterialRegion2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialRegion2D</span></code></a> | <cite>list[int]</cite>]) – List of material regions to add to the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>. If
+provided as <cite>list[list[int]]</cite> then each <cite>list[int]</cite> is passed to
+<a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D" title="vcfempy.meshgen.MaterialRegion2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialRegion2D</span></code></a> along with the corresponding material from
+<strong>materials</strong>.</p></li>
+<li><p><strong>materials</strong> (<cite>list</cite> of <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a>, optional) – Materials corresponding to each material region to be added. This
+is ignored if <strong>material_regions</strong> is provided as a <cite>list</cite> of
+<a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D" title="vcfempy.meshgen.MaterialRegion2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialRegion2D</span></code></a>.</p></li>
 </ul>
 </dd>
 </dl>

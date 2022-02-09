@@ -30,6 +30,7 @@ def rectangular_mesh():
     rect_mesh.insert_boundary_vertices(0, [k for k
                                            in range(rect_mesh.num_vertices)])
 
+    print(rect_mesh.boundary_vertices)
     # add material types and regions
     # Note: here we create a MaterialRegion2D object and
     #       then add it to the mesh
