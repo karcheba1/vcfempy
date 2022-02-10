@@ -140,7 +140,7 @@ def dam_mesh():
     # add edges to be preserved in mesh generation
     # Note: the left edge of the clay region will be a "soft" edge
     #       and the right edge will be a "hard" edge
-    dam_mesh.add_mesh_edges([2, 4])
+    msh.MeshEdge2D(dam_mesh, [2, 4])
 
     # generate the mesh and print basic mesh properties
     dam_mesh.generate_mesh([44, 16], 0.2)
@@ -228,7 +228,8 @@ def tunnel_mesh():
     nv = tunnel_mesh.num_vertices
     tunnel_mesh.add_vertices([[2.5, 17.5], [10., 12.5], [12.5, 15.],
                               [17.5, 2.5]])
-    tunnel_mesh.add_mesh_edges([[nv, nv+1], [nv+3, nv+2]])
+    msh.MeshEdge2D(tunnel_mesh, [nv, nv+1])
+    msh.MeshEdge2D(tunnel_mesh, [nv+3, nv+2])
 
     # generate mesh and show properties
     tunnel_mesh.generate_mesh([20, 20], 0.3)

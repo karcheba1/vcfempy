@@ -94,7 +94,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.add_material_region">add_material_region() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.add_mesh_edges">add_mesh_edges() (vcfempy.meshgen.PolyMesh2D method)</a>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.add_mesh_edge">add_mesh_edge() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -205,7 +205,11 @@
 </li>
       </ul></li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.insert_vertices">insert_vertices() (vcfempy.meshgen.MaterialRegion2D method)</a>
+
+      <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.insert_vertices">(vcfempy.meshgen.MeshEdge2D method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.interface_elements">interface_elements (vcfempy.meshgen.PolyMesh2D property)</a>
@@ -249,6 +253,8 @@
       <ul>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.material">(vcfempy.meshgen.MaterialRegion2D property)</a>
 </li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.material">(vcfempy.meshgen.MeshEdge2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.material">(vcfempy.meshgen.PolyElement2D property)</a>
 </li>
       </ul></li>
@@ -265,6 +271,8 @@
 </li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.mesh">(vcfempy.meshgen.MaterialRegion2D property)</a>
 </li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.mesh">(vcfempy.meshgen.MeshEdge2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.mesh">(vcfempy.meshgen.PolyElement2D property)</a>
 </li>
       </ul></li>
@@ -273,6 +281,8 @@
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.mesh_edges">mesh_edges (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.mesh_valid">mesh_valid (vcfempy.meshgen.PolyMesh2D property)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D">MeshEdge2D (class in vcfempy.meshgen)</a>
 </li>
       <li>
     module
@@ -297,6 +307,8 @@
 
       <ul>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.name">(vcfempy.meshgen.MaterialRegion2D property)</a>
+</li>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.name">(vcfempy.meshgen.MeshEdge2D property)</a>
 </li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.name">(vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
@@ -346,6 +358,8 @@
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.num_vertices">num_vertices (vcfempy.meshgen.MaterialRegion2D property)</a>
 
       <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.num_vertices">(vcfempy.meshgen.MeshEdge2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_vertices">(vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       </ul></li>
@@ -358,6 +372,8 @@
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.plot">plot() (vcfempy.meshgen.MaterialRegion2D method)</a>
 
       <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.plot">(vcfempy.meshgen.MeshEdge2D method)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.plot">(vcfempy.meshgen.PolyElement2D method)</a>
 </li>
       </ul></li>
@@ -423,12 +439,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.remove_boundary_vertices">remove_boundary_vertices() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.remove_material_region">remove_material_region() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.remove_vertices">remove_vertices() (vcfempy.meshgen.MaterialRegion2D method)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.remove_mesh_edge">remove_mesh_edge() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.remove_vertices">remove_vertices() (vcfempy.meshgen.MaterialRegion2D method)</a>
+
+      <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.remove_vertices">(vcfempy.meshgen.MeshEdge2D method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -494,6 +516,8 @@
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.vertices">vertices (vcfempy.meshgen.MaterialRegion2D property)</a>
 
       <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MeshEdge2D.vertices">(vcfempy.meshgen.MeshEdge2D property)</a>
+</li>
         <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.vertices">(vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       </ul></li>
