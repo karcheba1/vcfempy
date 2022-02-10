@@ -55,17 +55,17 @@ class PolyMesh2D():
     >>> # initialize a mesh, no initial input provided
     >>> # (mainly for testing: reset _meshes_created counter)
     >>> import vcfempy.meshgen
-    >>> vcfempy.meshgen.PolyMesh2D._meshes_created = 0
+    >>> vcfempy.meshgen.PolyMesh2D._num_created = 0
     >>> msh = vcfempy.meshgen.PolyMesh2D()
     >>> print(msh.name)
-    Untitled Mesh 0
+    Unnamed Mesh 0
     >>> print(msh.num_vertices)
     0
 
     >>> # initialize another mesh, no initial input
     >>> msh = vcfempy.meshgen.PolyMesh2D()
     >>> print(msh.name)
-    Untitled Mesh 1
+    Unnamed Mesh 1
 
     >>> # give the mesh a descriptive name and add some vertices to the mesh
     >>> msh.name = 'test mesh'
@@ -200,16 +200,16 @@ class PolyMesh2D():
     >>> plt.savefig('PolyMesh2D_simple_mesh_example.png')
     """
 
-    _meshes_created = 0
+    _num_created = 0
 
     def __init__(self, name=None, vertices=None, boundary_vertices=None,
                  mesh_edges=None, verbose_printing=False,
                  high_order_quadrature=False):
         # initialize name
         if name is None:
-            name = f'Untitled Mesh {PolyMesh2D._meshes_created}'
+            name = f'Unnamed Mesh {PolyMesh2D._num_created}'
         self.name = name
-        PolyMesh2D._meshes_created += 1
+        PolyMesh2D._num_created += 1
 
         # initialize vertices
         self._vertices = np.empty((0, 2))
@@ -258,10 +258,10 @@ class PolyMesh2D():
         --------
         >>> # create a blank mesh without a name (reset mesh counter)
         >>> import vcfempy.meshgen
-        >>> vcfempy.meshgen.PolyMesh2D._meshes_created = 0
+        >>> vcfempy.meshgen.PolyMesh2D._num_created = 0
         >>> msh = vcfempy.meshgen.PolyMesh2D()
         >>> print(msh.name)
-        Untitled Mesh 0
+        Unnamed Mesh 0
 
         >>> # setting the name
         >>> msh.name = 'Flow analysis mesh'
@@ -286,7 +286,7 @@ class PolyMesh2D():
         >>> # created (including those that were assigned an initial name)
         >>> msh = vcfempy.meshgen.PolyMesh2D()
         >>> print(msh.name)
-        Untitled Mesh 2
+        Unnamed Mesh 2
         """
         return self._name
 
@@ -336,7 +336,8 @@ class PolyMesh2D():
         Note
         ----
         The :a:`vertices` property is not intended to be directly mutable.
-        Instead, modify it using the :m:`add_vertices` method.
+        Instead, modify it using the :m:`add_vertices` and
+        :m:`delete_vertices` methods.
 
         Examples
         --------
@@ -356,6 +357,275 @@ class PolyMesh2D():
          [1. 0.]]
         """
         return self._vertices
+
+    def add_vertices(self, vertices):
+        """Add vertices to the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        vertices : `array_like`, shape = (2, ) | (n, 2)
+            A pair of coordinates or array of coordinate pairs to add to the
+            :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        TypeError
+            If **vertices** has no len() property (e.g. an `int`)
+        ValueError
+            If contents of **vertices** cannot be cast to `float`.
+            If **vertices** cannot be stacked with :a:`vertices` (e.g. due to
+            incompatible shape).
+
+        Examples
+        --------
+        >>> # create a mesh, passing initial vertex list
+        >>> import vcfempy.meshgen
+        >>> verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> msh = vcfempy.meshgen.PolyMesh2D(vertices=verts)
+        >>> print(msh.vertices)
+        [[0. 0.]
+         [0. 1.]
+         [1. 1.]
+         [1. 0.]]
+
+        >>> # add an individual vertex
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> print(msh.vertices)
+        [[0.  0. ]
+         [0.  1. ]
+         [1.  1. ]
+         [1.  0. ]
+         [1.5 0.5]]
+
+        >>> # add multiple vertices
+        >>> msh.add_vertices([[-0.5, 0.5], [0.5, 1.5]])
+        >>> print(msh.vertices)
+        [[ 0.   0. ]
+         [ 0.   1. ]
+         [ 1.   1. ]
+         [ 1.   0. ]
+         [ 1.5  0.5]
+         [-0.5  0.5]
+         [ 0.5  1.5]]
+
+        >>> # add nothing, in two different ways
+        >>> msh.add_vertices(None)
+        >>> msh.add_vertices([])
+        >>> print(msh.vertices)
+        [[ 0.   0. ]
+         [ 0.   1. ]
+         [ 1.   1. ]
+         [ 1.   0. ]
+         [ 1.5  0.5]
+         [-0.5  0.5]
+         [ 0.5  1.5]]
+
+        >>> # try to add some incompatible types/shapes
+        >>> msh.add_vertices(['one', 'two'])
+        Traceback (most recent call last):
+            ...
+        ValueError: could not convert string to float: 'one'
+        >>> msh.add_vertices(1)
+        Traceback (most recent call last):
+            ...
+        TypeError: object of type 'int' has no len()
+        >>> msh.add_vertices([1]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        >>> msh.add_vertices([1, 2, 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        """
+        if vertices is None or len(vertices) == 0:
+            return
+        vertices = np.array(vertices, dtype=float)
+        self._vertices = np.vstack([self.vertices, vertices])
+
+    def delete_vertices(self, del_verts):
+        """Remove vertices from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        del_verts : list[int]
+            List of indices of vertices to remove.
+
+        Raises
+        ------
+        TypeError
+            If elements in **del_verts** cannot be cast to `int`.
+        IndexError
+            If elements in **del_verts** are >= :a:`num_vertices` or are
+            < -:a:`num_vertices`.
+
+        Note
+        ----
+        Prior to removing vertices, an attempt is made to cast **del_verts**
+        to a flattened `numpy.array` of `int`. Duplicate indices are deleted,
+        including positive and negative indices that refer to the same
+        vertex. Each vertex removed will result in removal of that vertex
+        from :a:`boundary_vertices`, :a:`mesh_edges`, and
+        :a:`material_regions` and decrementing other vertex indices
+        accordingly.
+
+        Examples
+        --------
+        >>> # initialize a mesh and add/delete some vertices
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> print(msh.num_vertices)
+        4
+        >>> print(msh.boundary_vertices)
+        [0, 1, 2, 3]
+        >>> msh.delete_vertices(2)
+        >>> print(msh.num_vertices)
+        3
+        >>> print(msh.vertices)
+        [[0. 0.]
+         [0. 1.]
+         [1. 0.]]
+        >>> print(msh.boundary_vertices)
+        [0, 1, 2]
+        >>> print(msh.boundary_edges)
+        [[0, 1], [1, 2], [2, 0]]
+
+        >>> # add some vertices, material regions, and mesh edges
+        >>> # then delete vertices
+        >>> msh.add_vertices([[1, 1], [1.5, 0.5]])
+        >>> msh.insert_boundary_vertices(2, [3, 4])
+        >>> print(msh.vertices)
+        [[0.  0. ]
+         [0.  1. ]
+         [1.  0. ]
+         [1.  1. ]
+         [1.5 0.5]]
+        >>> print(msh.boundary_vertices)
+        [0, 1, 3, 4, 2]
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh,
+        ...                                       msh.boundary_vertices)
+        >>> msh.add_vertices([[0.1, 0.1], [0.8, 0.2], [0.1, 0.8], [0.8, 0.9]])
+        >>> msh.add_mesh_edges([[5, 6], [7, 8]])
+        >>> msh.delete_vertices([4, 6])
+        >>> print(msh.vertices)
+        [[0.  0. ]
+         [0.  1. ]
+         [1.  0. ]
+         [1.  1. ]
+         [0.1 0.1]
+         [0.1 0.8]
+         [0.8 0.9]]
+        >>> print(msh.boundary_vertices)
+        [0, 1, 3, 2]
+        >>> print(mr.vertices)
+        [0, 1, 3, 2]
+        >>> print(msh.boundary_edges)
+        [[0, 1], [1, 3], [3, 2], [2, 0]]
+        >>> print(msh.mesh_edges)
+        [[5, 6]]
+
+        >>> # generate a mesh, then delete a vertex
+        >>> msh.generate_mesh((2, 2))
+        >>> print(msh.num_elements)
+        5
+        >>> msh.delete_vertices(-1)
+        >>> print(msh.vertices)
+        [[0.  0. ]
+         [0.  1. ]
+         [1.  0. ]
+         [1.  1. ]
+         [0.1 0.1]
+         [0.1 0.8]]
+        >>> print(msh.boundary_vertices)
+        [0, 1, 3, 2]
+        >>> print(msh.boundary_edges)
+        [[0, 1], [1, 3], [3, 2], [2, 0]]
+        >>> print(msh.mesh_edges)
+        []
+        >>> print(msh.mesh_valid)
+        False
+        >>> print(msh.num_elements)
+        0
+
+        >>> # delete no vertices, in multiple ways
+        >>> msh.delete_vertices(None)
+        >>> msh.delete_vertices([])
+        >>> print(msh.num_vertices)
+        6
+
+        >>> # try to delete some invalid vertices
+        >>> msh.delete_vertices('one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> msh.delete_vertices(6)
+        Traceback (most recent call last):
+            ...
+        IndexError: at least one index out of range
+        >>> msh.delete_vertices(-7)
+        Traceback (most recent call last):
+            ...
+        IndexError: at least one index out of range
+        >>> msh.delete_vertices(
+        ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        """
+        # pre-process del_verts: flatten, check for invalid indices, and
+        # eliminate duplicates
+        if del_verts is None:
+            return
+        del_verts = np.array(del_verts, dtype=int, ndmin=1)
+        if len(del_verts) == 0:
+            return
+        del_verts = np.where(del_verts < 0,
+                             del_verts + self.num_vertices,
+                             del_verts)
+        del_verts = np.unique(del_verts)
+        if np.any(del_verts < 0) or np.any(del_verts >= self.num_vertices):
+            raise IndexError('at least one index out of range')
+
+        # delete the vertices
+        self._vertices = np.delete(self._vertices, del_verts, 0)
+
+        # remove vertices from boundary vertices, mesh edges, and
+        # material regions
+        remove_edges = []
+        for dv in del_verts:
+            if dv in self.boundary_vertices:
+                self.remove_boundary_vertices(dv)
+            for me in self.mesh_edges:
+                if dv in me:
+                    me.remove(dv)
+                if len(me) < 2:
+                    remove_edges.append(me)
+            for mr in self.material_regions:
+                if dv in mr.vertices:
+                    mr.remove_vertices(dv)
+        for re in remove_edges:
+            self.mesh_edges.remove(re)
+
+        # decrement remaining vertex indices
+        # go in reverse order so that multiple deletions are properly counted
+        for dv in del_verts[-1::-1]:
+            for k, bv in enumerate(self.boundary_vertices):
+                if bv > dv:
+                    self.boundary_vertices[k] -= 1
+            for me in self.mesh_edges:
+                for k, mv in enumerate(me):
+                    if mv > dv:
+                        me[k] -= 1
+            for mr in self.material_regions:
+                for k, mv in enumerate(mr.vertices):
+                    if mv > dv:
+                        mr.vertices[k] -= 1
+
+        # reset properties
+        self._generate_boundary_edges()
+        self.mesh_valid = False
 
     @property
     def num_boundary_vertices(self):
@@ -440,8 +710,10 @@ class PolyMesh2D():
         Note
         ----
         The :a:`boundary_edges` property is not intended to be directly
-        mutable. It is updated each time :a:`boundary_vertices` is changed,
-        so the number of :a:`boundary_edges` should always be
+        mutable. It is updated each time :a:`boundary_vertices` is changed by
+        a method such as :m:`insert_boundary_vertices`,
+        :m:`remove_boundary_vertices`, or :m:`pop_boundary_vertex`, so the
+        number of :a:`boundary_edges` should always be
         :a:`num_boundary_vertices` since the geometry is a closed polygon.
 
         Examples
@@ -472,6 +744,269 @@ class PolyMesh2D():
         [[0, 2], [2, 4], [4, 0]]
         """
         return self._boundary_edges
+
+    def insert_boundary_vertices(self, index, boundary_vertices):
+        """Insert one or more boundary vertex indices to the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        index : int
+            The index at which to insert the **boundary_vertices** into
+            :a:`boundary_vertices`.
+        boundary_vertices : int | list[int]
+            The list of vertex indices to add to :a:`boundary_vertices`.
+
+        Note
+        -----
+        Before inserting the values in **boundary_vertices**, an attempt is
+        made to cast to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        TypeError
+            If **index** cannot be interpreted as `int`.
+        ValueError
+            If **boundary_vertices** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **boundary_vertices** cannot be cast to `int`,
+            are already in :a:`boundary_vertices`, are negative, or are
+            >= :a:`num_vertices`.
+
+        Examples
+        --------
+        >>> # create mesh, add some vertices, and add boundary vertices
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> print(msh.boundary_vertices)
+        [0, 1, 2, 3]
+
+        >>> # add a single vertex and add it as a boundary vertex
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> msh.insert_boundary_vertices(index=3, boundary_vertices=4)
+        >>> print(msh.boundary_vertices)
+        [0, 1, 2, 4, 3]
+
+        >>> # add two more vertices and add multiply boundary vertices
+        >>> msh.add_vertices([[0.25, 1.25], [0.75, 1.25]])
+        >>> msh.insert_boundary_vertices(2, [5, 6])
+        >>> print(msh.boundary_vertices)
+        [0, 1, 5, 6, 2, 4, 3]
+
+        >>> # the list of boundary vertices need not be 1d
+        >>> # if not, it will be flattened
+        >>> msh.add_vertices([[-0.5, 0.1], [-0.75, 0.25],
+        ...                   [-0.75, 0.75], [-0.5, 0.9]])
+        >>> msh.insert_boundary_vertices(1, [[7, 8], [9, 10]])
+        >>> print(msh.boundary_vertices)
+        [0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]
+
+        >>> # add no boundary vertices, in two different ways
+        >>> msh.insert_boundary_vertices(0, None)
+        >>> msh.insert_boundary_vertices(0, [])
+        >>> print(msh.boundary_vertices)
+        [0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]
+
+        >>> # try to insert some invalid boundary vertices
+        >>> msh.insert_boundary_vertices(0, 'one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> msh.insert_boundary_vertices(0, 1)
+        Traceback (most recent call last):
+            ...
+        ValueError: 1 is already a boundary vertex
+        >>> msh.insert_boundary_vertices(0, 11)
+        Traceback (most recent call last):
+            ...
+        ValueError: vertex index 11 out of range
+        >>> msh.insert_boundary_vertices(0, -1)
+        Traceback (most recent call last):
+            ...
+        ValueError: vertex index -1 out of range
+        >>> msh.insert_boundary_vertices(
+        ...             0, [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        >>> msh.add_vertices([0.5, -0.5])
+        >>> msh.insert_boundary_vertices('one', 11)
+        Traceback (most recent call last):
+            ...
+        TypeError: 'str' object cannot be interpreted as an integer
+        """
+        if boundary_vertices is None:
+            return
+        boundary_vertices = np.array(boundary_vertices, dtype=int, ndmin=1)
+        if len(boundary_vertices) == 0:
+            return
+        boundary_vertices = np.flip(boundary_vertices.ravel())
+        for bv in boundary_vertices:
+            if bv in self.boundary_vertices:
+                raise ValueError(f'{bv} is already a boundary vertex')
+            if bv < 0 or bv >= self.num_vertices:
+                raise ValueError(f'vertex index {bv} out of range')
+            self.boundary_vertices.insert(index, int(bv))
+        self._generate_boundary_edges()
+        self.mesh_valid = False
+
+    def remove_boundary_vertices(self, remove_vertices):
+        """Remove one or more boundary vertex indices from the
+        :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        remove_vertices : int | list[int]
+            The vertex or list of vertices to remove from
+            :a:`boundary_vertices`.
+
+        Note
+        -----
+        Before removing the values in **remove_vertices**, an attempt will be
+        made to cast it to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        ValueError
+            If **remove_vertices** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **remove_vertices** cannot be cast to `int` or
+            are not in :a:`boundary_vertices`.
+
+        Examples
+        --------
+        >>> # create mesh, add some vertices, add/remove boundary vertices
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.remove_boundary_vertices(1)
+        >>> print(msh.boundary_vertices)
+        [0, 2, 3]
+
+        >>> # remove multiple boundary vertices
+        >>> msh.insert_boundary_vertices(0, 1)
+        >>> msh.remove_boundary_vertices([1, 3])
+        >>> print(msh.boundary_vertices)
+        [0, 2]
+
+        >>> # the list of boundary vertices to remove need not be 1d
+        >>> # if not, it will be flattened
+        >>> msh.insert_boundary_vertices(1, 1)
+        >>> msh.insert_boundary_vertices(3, 3)
+        >>> msh.remove_boundary_vertices([[0, 1], [2, 3]])
+        >>> print(msh.boundary_vertices)
+        []
+
+        >>> # remove no boundary vertices, in two different ways
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.remove_boundary_vertices(None)
+        >>> msh.remove_boundary_vertices([])
+        >>> print(msh.boundary_vertices)
+        [0, 1, 2, 3]
+
+        >>> # try to remove some invalid boundary vertices
+        >>> msh.remove_boundary_vertices('one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> msh.remove_boundary_vertices(4)
+        Traceback (most recent call last):
+            ...
+        ValueError: list.remove(x): x not in list
+        >>> msh.remove_boundary_vertices(
+        ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        """
+        if remove_vertices is None:
+            return
+        remove_vertices = np.array(remove_vertices, dtype=int, ndmin=1)
+        if len(remove_vertices) == 0:
+            return
+        remove_vertices = remove_vertices.ravel()
+        for rv in remove_vertices:
+            self.boundary_vertices.remove(rv)
+        self._generate_boundary_edges()
+        self.mesh_valid = False
+
+    def pop_boundary_vertex(self, pop_index=-1):
+        """Pop a boundary vertex at a given index of :a:`boundary_vertices`
+        from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        pop_index : int, optional, default=-1
+            The index at which to remove the boundary vertex.
+
+        Returns
+        -------
+        `int`
+            The value of the boundary vertex that was removed.
+
+        Raises
+        ------
+        TypeError
+            If **pop_index** cannot be cast to `int`.
+        IndexError
+            If **pop_index** is not a valid index into
+            :a:`boundary_vertices`.
+
+        Examples
+        --------
+        >>> # create mesh, add some vertices, add/remove boundary vertices
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.pop_boundary_vertex()
+        3
+        >>> print(msh.boundary_vertices)
+        [0, 1, 2]
+
+        >>> # remove a boundary vertex from the middle
+        >>> msh.insert_boundary_vertices(0, 3)
+        >>> msh.pop_boundary_vertex(1)
+        0
+        >>> print(msh.boundary_vertices)
+        [3, 1, 2]
+
+        >>> # try to remove some invalid boundary vertices
+        >>> msh.pop_boundary_vertex('one')
+        Traceback (most recent call last):
+            ...
+        TypeError: 'str' object cannot be interpreted as an integer
+        >>> msh.pop_boundary_vertex(4)
+        Traceback (most recent call last):
+            ...
+        IndexError: pop index out of range
+        >>> msh.remove_boundary_vertices([1, 2, 3])
+        >>> msh.pop_boundary_vertex()
+        Traceback (most recent call last):
+            ...
+        IndexError: pop from empty list
+        """
+        ind = self.boundary_vertices.pop(pop_index)
+        self._generate_boundary_edges()
+        self.mesh_valid = False
+        return ind
+
+    def _generate_boundary_edges(self):
+        """Generate boundary edge pairs from :m:`boundary_vertices`.
+
+        Note
+        ----
+        This is a (private) helper function, called by other methods such as
+        :m:`insert_boundary_vertices`, :m:`remove_boundary_vertices`, and
+        :m:`pop_boundary_vertex` whenever :m:`boundary_vertices` changes. It
+        should not normally be necessary to call this explicitly.
+        """
+        self._boundary_edges = [[self.boundary_vertices[k],
+                                 self.boundary_vertices[(k+1)
+                                 % self.num_boundary_vertices]]
+                                for k in range(self.num_boundary_vertices)]
 
     @property
     def num_material_regions(self):
@@ -587,6 +1122,119 @@ class PolyMesh2D():
         [4, 1, 2, 5]
         """
         return self._material_regions
+
+    def add_material_region(self, material_region):
+        """Add a :c:`MaterialRegion2D` to the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        material_region : :c:`MaterialRegion2D`
+            :c:`MaterialRegion2D` to add to the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        TypeError
+            If **material_region** is not a :c:`MaterialRegion2D`.
+        ValueError
+            If **material_region** is already in :a:`material_regions` or
+            does not have this :c:`PolyMesh2D` as its parent.
+
+        Note
+        ----
+        It is not normally necessary to call :m:`add_material_region` when
+        creating a new :c:`MaterialRegion2D` since it will add itself to the
+        parent :c:`PolyMesh2D` by default. This is only necessary if the
+        :c:`MaterialRegion2D` was created with **add_parent** = ``False`` or
+        if the :c:`MaterialRegion2D` was previously removed from the
+        :c:`PolyMesh2D` using :m:`remove_material_region`.
+
+        Examples
+        --------
+        >>> # create a mesh and a material region, this adds the material
+        >>> # region by default
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> print(mr.mesh.name)
+        test mesh
+        >>> print(mr in msh.material_regions)
+        True
+
+        >>> # create another material region, but do not add it to the mesh
+        >>> mr_new = vcfempy.meshgen.MaterialRegion2D(msh, add_parent=False)
+        >>> print(mr_new.mesh.name)
+        test mesh
+        >>> print(mr_new in msh.material_regions)
+        False
+
+        >>> # add the new material region to its parent mesh
+        >>> msh.add_material_region(mr_new)
+        >>> print(mr_new in msh.material_regions)
+        True
+
+        >>> # try to add invalid material regions
+        >>> msh.add_material_region(1)
+        Traceback (most recent call last):
+            ...
+        TypeError: material region not vcfempy.meshgen.MaterialRegion2D
+        >>> msh.add_material_region(mr)
+        Traceback (most recent call last):
+            ...
+        ValueError: material region already in list
+        >>> new_msh = vcfempy.meshgen.PolyMesh2D()
+        >>> mr_new = vcfempy.meshgen.MaterialRegion2D(new_msh)
+        >>> msh.add_material_region(mr_new)
+        Traceback (most recent call last):
+            ...
+        ValueError: material region does not have self as mesh
+        """
+        if not isinstance(material_region, MaterialRegion2D):
+            raise TypeError('material region not '
+                            + 'vcfempy.meshgen.MaterialRegion2D')
+        if material_region in self.material_regions:
+            raise ValueError('material region already in list')
+        if material_region.mesh is not self:
+            raise ValueError('material region does not have self as mesh')
+        self.material_regions.append(material_region)
+        self.mesh_valid = False
+
+    def remove_material_region(self, material_region):
+        """Remove a :c:`MaterialRegion2D` from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        material_region : :c:`MaterialRegion2D`
+            :c:`MaterialRegion2D` to remove from the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        ValueError
+            If **material_region** is not in :a:`material_regions`.
+
+        Note
+        ----
+        When removing a material region from the :c:`PolyMesh2D`, the
+        :a:`MaterialRegion2D.mesh` is not changed, and it can be added again
+        using :m:`add_material_region` if desired.
+
+        Examples
+        --------
+        >>> # create a mesh and a material region, then remove it
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> msh.remove_material_region(mr)
+        >>> print(msh.material_regions)
+        []
+
+        >>> # try to remove a material region that is not in the mesh
+        >>> msh.remove_material_region(mr)
+        Traceback (most recent call last):
+            ...
+        ValueError: list.remove(x): x not in list
+        """
+        self.material_regions.remove(material_region)
+        self.mesh_valid = False
 
     @property
     def num_mesh_edges(self):
@@ -705,6 +1353,92 @@ class PolyMesh2D():
         <BLANKLINE>
         """
         return self._mesh_edges
+
+    def add_mesh_edges(self, mesh_edges):
+        """ Add mesh edges to PolyMesh2D.
+
+        Parameters
+        ----------
+        mesh_edges : list[int] | list[list[int]]
+            Lists of vertex indices defining edges to be maintained
+            in mesh generation
+
+        Returns
+        -------
+        None
+
+        Raises
+        ------
+        TypeError
+            type(mesh_edges) not in [NoneType, list]
+            type(mesh_edges[k]) not in [int, numpy.int32, list]
+            if mesh_edges is list of list of ints:
+                type(mesh_edges[k][j]) not in [int, numpy.int32]
+        ValueError
+            if mesh_edges is list of ints:
+                len(mesh_edges) != 2
+                mesh_edges[k] >= self.num_vertices
+            if mesh_edges is list of list of ints:
+                len(mesh_edges[k]) != 2
+                mesh_edges[k][j] >= self.num_vertices
+
+        Examples
+        --------
+        """
+        # basic type check of mesh_edges
+        if type(mesh_edges) not in [type(None), list]:
+            raise TypeError('type(mesh_edges) not in [NoneType, list]')
+        # catch null case where mesh_edges is None or an empty list
+        if mesh_edges is None or len(mesh_edges) == 0:
+            pass
+        # mesh_edges is a list[int]
+        # Note: if here, we know that mesh_edges is a non-empty list
+        elif type(mesh_edges[0]) in [int, np.int32]:
+            # check that mesh_edges has the right length
+            if len(mesh_edges) != 2:
+                raise ValueError('mesh_edges given as list[int], '
+                                 + 'but len(mesh_edges) != 2')
+            # check that all items in mesh_edges are ints
+            # and values are < self.num_vertices
+            for v in mesh_edges:
+                if type(v) not in [int, np.int32]:
+                    raise TypeError('mesh_edges given as list[int], '
+                                    + 'but type of contents not all '
+                                    + 'in [int, numpy.int32]')
+                if v >= self.num_vertices:
+                    raise ValueError('mesh_edges given as list[int], '
+                                     + 'but contains values >= num_vertices')
+            # if here, mesh_edges is a valid list[int]
+            # append it to the list of mesh edges
+            # and invalidate the mesh
+            self.mesh_edges.append([int(k) for k in mesh_edges])
+            self.mesh_valid = False
+        # mesh_edges is a list[list[int]]
+        else:
+            # check that all mesh edges are lists of len == 2
+            # and contain ints < self.num_vertices
+            for edge in mesh_edges:
+                if type(edge) is not list:
+                    raise TypeError('mesh_edges given as list[list[int]], '
+                                    + 'but type of some contents is not list')
+                if len(edge) != 2:
+                    raise ValueError('mesh_edges given as list[list[int]], '
+                                     + 'but some edges have len != 2')
+                for v in edge:
+                    if type(v) not in [int, np.int32]:
+                        raise TypeError('mesh_edges given as list[list[int]], '
+                                        + 'but type of some vertices not in '
+                                        + '[int, numpy.int32]')
+                    if v >= self.num_vertices:
+                        raise ValueError('mesh_edges given as list[list[int]],'
+                                         + ' but some vertices '
+                                         + '>= num_vertices')
+            # if here, mesh_edges is a valid list of list of ints
+            # append each list to the list of material regions
+            # and invalidate the mesh
+            for edge in mesh_edges:
+                self.mesh_edges.append([int(k) for k in edge])
+            self.mesh_valid = False
 
     @property
     def points(self):
@@ -1015,7 +1749,7 @@ class PolyMesh2D():
 
         Returns
         -------
-        list[int]
+        `list[int]`
             The number of nodes in each element in the :c:`PolyMesh2D`.
 
         Note
@@ -1961,882 +2695,6 @@ self.nodes is empty
         for e in self.elements:
             e.invalidate_properties()
 
-    @property
-    def verbose_printing(self):
-        """Flag for whether :m:`__str__` will print verbose mesh information
-        for the :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        flag : bool_like
-            The new value of the :a:`verbose_printing` flag.
-
-        Returns
-        -------
-        `bool`
-            The value of the :a:`verbose_printing` flag.
-
-        Raises
-        ------
-        `ValueError`
-            If the value of **flag** cannot be converted to a `bool`.
-
-        Note
-        ----
-        `str` values that can be cast to `float` are considered ``True``-like
-        if non-zero and ``False``-like if zero. If the `str` cannot be cast
-        to `float`, then the values 'y', 'yes', 't', 'true', and 'on' (case
-        insensitive) are converted to ``True`` and the values 'n', 'no', 'f',
-        'false', and 'off' are converted to ``False``. Other `str` values
-        raise a `ValueError`.
-
-        Examples
-        --------
-        >>> # initialize a mesh with no initial information provided
-        >>> import vcfempy.meshgen
-        >>> import vcfempy.materials
-        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
-        >>> print(msh)
-        vcfempy.meshgen.PolyMesh2D 'test mesh'
-        Number of Vertices = 0
-        Number of Boundary Vertices = 0
-        Number of Material Regions = 0
-        Number of Mesh Edges = 0
-        Verbose Printing = False
-        High Order Quadrature = False
-        Mesh Generated = False
-
-        >>> # add some vertices and boundary vertices to the mesh
-        >>> # no mesh generated yet
-        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
-        >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
-        >>> msh.add_vertices(new_verts)
-        >>> msh.insert_boundary_vertices(0, bnd_verts)
-        >>> print(msh)
-        vcfempy.meshgen.PolyMesh2D 'test mesh'
-        Number of Vertices = 4
-        Number of Boundary Vertices = 4
-        Number of Material Regions = 0
-        Number of Mesh Edges = 0
-        Verbose Printing = False
-        High Order Quadrature = False
-        Mesh Generated = False
-
-        >>> # set verbose printing flag
-        >>> msh.verbose_printing = True
-        >>> print(msh)
-        vcfempy.meshgen.PolyMesh2D 'test mesh'
-        Number of Vertices = 4
-        Number of Boundary Vertices = 4
-        Number of Material Regions = 0
-        Number of Mesh Edges = 0
-        Verbose Printing = True
-        High Order Quadrature = False
-        Mesh Generated = False
-        <BLANKLINE>
-        Vertices
-        [[0. 0.]
-         [0. 1.]
-         [1. 1.]
-         [1. 0.]]
-        <BLANKLINE>
-        Boundary Vertices
-        [0, 1, 2, 3]
-        <BLANKLINE>
-        Boundary Edges
-        [[0, 1], [1, 2], [2, 3], [3, 0]]
-
-        >>> # turn off verbose printing and add some vertices
-        >>> # and two material regions
-        >>> msh.verbose_printing = 'off'
-        >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
-        >>> rock = vcfempy.materials.Material('rock')
-        >>> sand = vcfempy.materials.Material('sand')
-        >>> rock_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
-        ...     vertices=[0, 4, 5, 3], name='rock region', material=rock)
-        >>> sand_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
-        ...     vertices=[4, 1, 2, 5], name='sand region', material=sand)
-        >>> print(msh)
-        vcfempy.meshgen.PolyMesh2D 'test mesh'
-        Number of Vertices = 6
-        Number of Boundary Vertices = 4
-        Number of Material Regions = 2
-        Number of Mesh Edges = 0
-        Verbose Printing = False
-        High Order Quadrature = False
-        Mesh Generated = False
-
-        >>> # turn verbose printing back on and generate the mesh
-        >>> msh.verbose_printing = 'yes'
-        >>> msh.generate_mesh((2, 2))
-        >>> print(msh)
-        vcfempy.meshgen.PolyMesh2D 'test mesh'
-        Number of Vertices = 6
-        Number of Boundary Vertices = 4
-        Number of Material Regions = 2
-        Number of Mesh Edges = 0
-        Verbose Printing = True
-        High Order Quadrature = False
-        Mesh Generated = True
-        Number of Nodes = 10
-        Number of Elements = 4
-        Number of Interface Elements = 5
-        Number of Boundary Elements = 8
-        <BLANKLINE>
-        Vertices
-        [[0.  0. ]
-         [0.  1. ]
-         [1.  1. ]
-         [1.  0. ]
-         [0.  0.5]
-         [1.  0.5]]
-        <BLANKLINE>
-        Boundary Vertices
-        [0, 1, 2, 3]
-        <BLANKLINE>
-        Boundary Edges
-        [[0, 1], [1, 2], [2, 3], [3, 0]]
-        <BLANKLINE>
-        Material Region: rock region, Material: rock
-        [0, 4, 5, 3]
-        <BLANKLINE>
-        Material Region: sand region, Material: sand
-        [4, 1, 2, 5]
-        <BLANKLINE>
-        Nodes
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
-        <BLANKLINE>
-        Element Nodes, Areas, Points, Centroids, Materials
-        [9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], \
-[0.32251082 0.24323593], rock
-        [8, 7, 6, 9], 0.19921875, [0.875 0.25 ], \
-[0.82352941 0.26838235], rock
-        [2, 5, 1, 3], 0.19921875, [0.125 0.75 ], \
-[0.17647059 0.73161765], sand
-        [6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], \
-[0.67748918 0.75676407], sand
-        <BLANKLINE>
-        Interface Element Nodes and Neighbors
-        [2, 5], [2, 3]
-        [2, 3], [2, 0]
-        [2, 6], [3, 0]
-        [6, 7], [3, 1]
-        [6, 9], [1, 0]
-        <BLANKLINE>
-        Boundary Element Nodes and Neighbors
-        [1, 3], 2
-        [0, 3], 0
-        [4, 5], 3
-        [1, 5], 2
-        [4, 7], 3
-        [8, 9], 1
-        [0, 9], 0
-        [7, 8], 1
-
-        >>> # attempting to set verbose_printing
-        >>> # to a non-truth-like str value
-        >>> msh.verbose_printing = 'dslk'
-        Traceback (most recent call last):
-        ...
-        ValueError: invalid truth value 'dslk'
-        """
-        return self._verbose_printing
-
-    @verbose_printing.setter
-    def verbose_printing(self, flag):
-        # try to cast flag to bool
-        # will raise a ValueError if this does not work
-        if isinstance(flag, (str, np.str_)):
-            try:
-                flag = float(flag)
-            except ValueError:
-                flag = distutils.util.strtobool(flag)
-        self._verbose_printing = bool(flag)
-
-    def __str__(self):
-        # print header indicating basic information
-        mesh_string = (f"{__name__}.{type(self).__name__} '{self.name}'\n"
-                       + 'Number of Vertices = '
-                       + f'{self.num_vertices}\n'
-                       + 'Number of Boundary Vertices = '
-                       + f'{self.num_boundary_vertices}\n'
-                       + 'Number of Material Regions = '
-                       + f'{self.num_material_regions}\n'
-                       + 'Number of Mesh Edges = '
-                       + f'{self.num_mesh_edges}\n'
-                       + f'Verbose Printing = {self.verbose_printing}\n'
-                       + 'High Order Quadrature = '
-                       + f'{self.high_order_quadrature}\n'
-                       + f'Mesh Generated = {self.mesh_valid}')
-
-        # if mesh has been generated, print basic mesh information
-        if self.mesh_valid:
-            mesh_string += ('\nNumber of Nodes = '
-                            + f'{self.num_nodes}\n'
-                            + 'Number of Elements = '
-                            + f'{self.num_elements}\n'
-                            + 'Number of Interface Elements = '
-                            + f'{self.num_interface_elements}\n'
-                            + 'Number of Boundary Elements = '
-                            + f'{self.num_boundary_elements}')
-
-        # check for verbose printing flag, return now if False
-        if not self.verbose_printing:
-            return mesh_string
-
-        # otherwise, if verbose printing is True, continue printing
-        # detailed mesh information
-        if self.num_vertices:
-            mesh_string += f'\n\nVertices\n{self.vertices}'
-        if self.num_boundary_vertices:
-            mesh_string += f'\n\nBoundary Vertices\n{self.boundary_vertices}'
-            mesh_string += f'\n\nBoundary Edges\n{self.boundary_edges}'
-        if self.num_material_regions:
-            for mr in self.material_regions:
-                mesh_string += f'\n\nMaterial Region: {mr.name}, '
-                mesh_string += f'Material: {mr.material.name}'
-                mesh_string += f'\n{mr.vertices}'
-        if self.num_mesh_edges:
-            mesh_string += '\n\nMesh Edges'
-            for e in self.mesh_edges:
-                mesh_string += '\n{e}'
-        if self.num_nodes:
-            mesh_string += f'\n\nNodes\n{self.nodes}'
-        if self.num_elements:
-            mesh_string += ('\n\nElement Nodes, Areas, Points, Centroids, '
-                            + 'Materials')
-            for e, p in zip(self.elements, self.points):
-                mesh_string += (f'\n{e.nodes}, {e.area}, {p}, {e.centroid}, '
-                                + f'{e.material.name}')
-        if self.num_interface_elements:
-            mesh_string += '\n\nInterface Element Nodes and Neighbors'
-            for e in self.interface_elements:
-                en = [self.elements.index(n) for n in e.neighbors]
-                mesh_string += f'\n{e.nodes}, {en}'
-        if self.num_boundary_elements:
-            mesh_string += '\n\nBoundary Element Nodes and Neighbors'
-            for e in self.boundary_elements:
-                en = self.elements.index(e.neighbor)
-                mesh_string += f'\n{e.nodes}, {en}'
-        return mesh_string
-
-    def __repr__(self):
-        return (f"<{__name__}.{type(self).__name__} object '{self.name}' at "
-                + f"{hex(id(self))}>")
-
-    def add_vertices(self, vertices):
-        """Add vertices to the :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        vertices : `array_like`, shape = (2, ) | (n, 2)
-            A pair of coordinates or array of coordinate pairs to add to the
-            :c:`PolyMesh2D`.
-
-        Raises
-        ------
-        TypeError
-            If **vertices** has no len() property (e.g. an `int`)
-        ValueError
-            If contents of **vertices** cannot be cast to `float`.
-            If **vertices** cannot be stacked with :a:`vertices` (e.g. due to
-            incompatible shape).
-
-        Examples
-        --------
-        >>> # create a mesh, passing initial vertex list
-        >>> import vcfempy.meshgen
-        >>> verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
-        >>> msh = vcfempy.meshgen.PolyMesh2D(vertices=verts)
-        >>> print(msh.vertices)
-        [[0. 0.]
-         [0. 1.]
-         [1. 1.]
-         [1. 0.]]
-
-        >>> # add an individual vertex
-        >>> msh.add_vertices([1.5, 0.5])
-        >>> print(msh.vertices)
-        [[0.  0. ]
-         [0.  1. ]
-         [1.  1. ]
-         [1.  0. ]
-         [1.5 0.5]]
-
-        >>> # add multiple vertices
-        >>> msh.add_vertices([[-0.5, 0.5], [0.5, 1.5]])
-        >>> print(msh.vertices)
-        [[ 0.   0. ]
-         [ 0.   1. ]
-         [ 1.   1. ]
-         [ 1.   0. ]
-         [ 1.5  0.5]
-         [-0.5  0.5]
-         [ 0.5  1.5]]
-
-        >>> # add nothing, in two different ways
-        >>> msh.add_vertices(None)
-        >>> msh.add_vertices([])
-        >>> print(msh.vertices)
-        [[ 0.   0. ]
-         [ 0.   1. ]
-         [ 1.   1. ]
-         [ 1.   0. ]
-         [ 1.5  0.5]
-         [-0.5  0.5]
-         [ 0.5  1.5]]
-
-        >>> # try to add some incompatible types/shapes
-        >>> msh.add_vertices(['one', 'two'])
-        Traceback (most recent call last):
-            ...
-        ValueError: could not convert string to float: 'one'
-        >>> msh.add_vertices(1)
-        Traceback (most recent call last):
-            ...
-        TypeError: object of type 'int' has no len()
-        >>> msh.add_vertices([1]) #doctest: +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        ValueError: ...
-        >>> msh.add_vertices([1, 2, 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        ValueError: ...
-        """
-        if vertices is None or len(vertices) == 0:
-            return
-        vertices = np.array(vertices, dtype=float)
-        self._vertices = np.vstack([self.vertices, vertices])
-
-    def delete_vertices(self, del_verts):
-        """Remove vertices from the :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        del_verts : list[int]
-            List of indices of vertices to remove.
-
-        Raises
-        ------
-        TypeError
-            If elements in **del_verts** cannot be cast to `int`.
-        IndexError
-            If elements in **del_verts** are >= :a:`num_vertices` or are
-            < -:a:`num_vertices`.
-
-        Note
-        ----
-        Prior to removing vertices, an attempt is made to cast **del_verts**
-        to a flattened `numpy.array` of `int`. Duplicate indices are deleted,
-        including positive and negative indices that refer to the same
-        vertex. Each vertex removed will result in removal of that vertex
-        from :a:`boundary_vertices`, :a:`mesh_edges`, and
-        :a:`material_regions` and decrementing other vertex indices
-        accordingly.
-
-        Examples
-        --------
-        """
-        # pre-process del_verts: flatten, check for invalid indices, and
-        # eliminate duplicates
-        if del_verts is None:
-            return
-        del_verts = np.array(del_verts, dtype=int, ndmin=1)
-        if len(del_verts) == 0:
-            return
-        del_verts = np.where(del_verts < 0,
-                             del_verts + self.num_vertices,
-                             del_verts)
-        del_verts = np.unique(del_verts)
-        if np.any(del_verts < 0) or np.any(del_verts >= self.num_vertices):
-            raise IndexError('at least one index out of range')
-
-        # delete the vertices
-        self._vertices = np.delete(self._vertices, del_verts, 0)
-
-        # remove vertices from boundary vertices, mesh edges, and
-        # material regions
-        for dv in del_verts:
-            if dv in self.boundary_vertices:
-                self.remove_boundary_vertices(dv)
-            for me in self.mesh_edges:
-                if dv in me:
-                    me.remove(dv)
-            for mr in self.material_regions:
-                pass
-
-    def insert_boundary_vertices(self, index, boundary_vertices):
-        """Insert one or more boundary vertex indices to the :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        index : int
-            The index at which to insert the **boundary_vertices** into
-            :a:`boundary_vertices`.
-        boundary_vertices : int | list[int]
-            The list of vertex indices to add to :a:`boundary_vertices`.
-
-        Note
-        -----
-        Before inserting the values in **boundary_vertices**, an attempt is
-        made to cast to a flattened `numpy.ndarray` of `int`.
-
-        Raises
-        ------
-        TypeError
-            If **index** cannot be interpreted as `int`.
-        ValueError
-            If **boundary_vertices** is not `array_like`, such as a jagged
-            `list[list[int]]`.
-            If any values in **boundary_vertices** cannot be cast to `int`,
-            are already in :a:`boundary_vertices`, are negative, or are
-            >= :a:`num_vertices`.
-
-        Examples
-        --------
-        >>> # create mesh, add some vertices, and add boundary vertices
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> print(msh.boundary_vertices)
-        [0, 1, 2, 3]
-
-        >>> # add a single vertex and add it as a boundary vertex
-        >>> msh.add_vertices([1.5, 0.5])
-        >>> msh.insert_boundary_vertices(index=3, boundary_vertices=4)
-        >>> print(msh.boundary_vertices)
-        [0, 1, 2, 4, 3]
-
-        >>> # add two more vertices and add multiply boundary vertices
-        >>> msh.add_vertices([[0.25, 1.25], [0.75, 1.25]])
-        >>> msh.insert_boundary_vertices(2, [5, 6])
-        >>> print(msh.boundary_vertices)
-        [0, 1, 5, 6, 2, 4, 3]
-
-        >>> # the list of boundary vertices need not be 1d
-        >>> # if not, it will be flattened
-        >>> msh.add_vertices([[-0.5, 0.1], [-0.75, 0.25],
-        ...                   [-0.75, 0.75], [-0.5, 0.9]])
-        >>> msh.insert_boundary_vertices(1, [[7, 8], [9, 10]])
-        >>> print(msh.boundary_vertices)
-        [0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]
-
-        >>> # add no boundary vertices, in two different ways
-        >>> msh.insert_boundary_vertices(0, None)
-        >>> msh.insert_boundary_vertices(0, [])
-        >>> print(msh.boundary_vertices)
-        [0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]
-
-        >>> # try to insert some invalid boundary vertices
-        >>> msh.insert_boundary_vertices(0, 'one')
-        Traceback (most recent call last):
-            ...
-        ValueError: invalid literal for int() with base 10: 'one'
-        >>> msh.insert_boundary_vertices(0, 1)
-        Traceback (most recent call last):
-            ...
-        ValueError: 1 is already a boundary vertex
-        >>> msh.insert_boundary_vertices(0, 11)
-        Traceback (most recent call last):
-            ...
-        ValueError: vertex index 11 out of range
-        >>> msh.insert_boundary_vertices(0, -1)
-        Traceback (most recent call last):
-            ...
-        ValueError: vertex index -1 out of range
-        >>> msh.insert_boundary_vertices(
-        ...             0, [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        ValueError: ...
-        >>> msh.add_vertices([0.5, -0.5])
-        >>> msh.insert_boundary_vertices('one', 11)
-        Traceback (most recent call last):
-            ...
-        TypeError: 'str' object cannot be interpreted as an integer
-        """
-        if boundary_vertices is None:
-            return
-        boundary_vertices = np.array(boundary_vertices, dtype=int, ndmin=1)
-        if len(boundary_vertices) == 0:
-            return
-        boundary_vertices = np.flip(boundary_vertices.ravel())
-        for bv in boundary_vertices:
-            if bv in self.boundary_vertices:
-                raise ValueError(f'{bv} is already a boundary vertex')
-            if bv < 0 or bv >= self.num_vertices:
-                raise ValueError(f'vertex index {bv} out of range')
-            self.boundary_vertices.insert(index, int(bv))
-        self._generate_boundary_edges()
-        self.mesh_valid = False
-
-    def remove_boundary_vertices(self, remove_vertices):
-        """Remove one or more boundary vertex indices from the
-        :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        remove_vertices : int | list[int]
-            The vertex or list of vertices to remove from
-            :a:`boundary_vertices`.
-
-        Note
-        -----
-        Before removing the values in **remove_vertices**, an attempt will be
-        made to cast it to a flattened `numpy.ndarray` of `int`.
-
-        Raises
-        ------
-        ValueError
-            If **remove_vertices** is not `array_like`, such as a jagged
-            `list[list[int]]`.
-            If any values in **remove_vertices** cannot be cast to `int` or
-            are not in :a:`boundary_vertices`.
-
-        Examples
-        --------
-        >>> # create mesh, add some vertices, add/remove boundary vertices
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.remove_boundary_vertices(1)
-        >>> print(msh.boundary_vertices)
-        [0, 2, 3]
-
-        >>> # remove multiple boundary vertices
-        >>> msh.insert_boundary_vertices(0, 1)
-        >>> msh.remove_boundary_vertices([1, 3])
-        >>> print(msh.boundary_vertices)
-        [0, 2]
-
-        >>> # the list of boundary vertices to remove need not be 1d
-        >>> # if not, it will be flattened
-        >>> msh.insert_boundary_vertices(1, 1)
-        >>> msh.insert_boundary_vertices(3, 3)
-        >>> msh.remove_boundary_vertices([[0, 1], [2, 3]])
-        >>> print(msh.boundary_vertices)
-        []
-
-        >>> # remove no boundary vertices, in two different ways
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.remove_boundary_vertices(None)
-        >>> msh.remove_boundary_vertices([])
-        >>> print(msh.boundary_vertices)
-        [0, 1, 2, 3]
-
-        >>> # try to remove some invalid boundary vertices
-        >>> msh.remove_boundary_vertices('one')
-        Traceback (most recent call last):
-            ...
-        ValueError: invalid literal for int() with base 10: 'one'
-        >>> msh.remove_boundary_vertices(4)
-        Traceback (most recent call last):
-            ...
-        ValueError: list.remove(x): x not in list
-        >>> msh.remove_boundary_vertices(
-        ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
-        Traceback (most recent call last):
-            ...
-        ValueError: ...
-        """
-        if remove_vertices is None:
-            return
-        remove_vertices = np.array(remove_vertices, dtype=int, ndmin=1)
-        if len(remove_vertices) == 0:
-            return
-        remove_vertices = remove_vertices.ravel()
-        for rv in remove_vertices:
-            self.boundary_vertices.remove(rv)
-        self._generate_boundary_edges()
-        self.mesh_valid = False
-
-    def pop_boundary_vertex(self, pop_index=-1):
-        """Pop a boundary vertex at a given index of :a:`boundary_vertices`
-        from the :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        pop_index : int, optional, default=-1
-            The index at which to remove the boundary vertex.
-
-        Returns
-        -------
-        `int`
-            The value of the boundary vertex that was removed.
-
-        Raises
-        ------
-        TypeError
-            If **pop_index** cannot be cast to `int`.
-        IndexError
-            If **pop_index** is not a valid index into
-            :a:`boundary_vertices`.
-
-        Examples
-        --------
-        >>> # create mesh, add some vertices, add/remove boundary vertices
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.pop_boundary_vertex()
-        3
-        >>> print(msh.boundary_vertices)
-        [0, 1, 2]
-
-        >>> # remove a boundary vertex from the middle
-        >>> msh.insert_boundary_vertices(0, 3)
-        >>> msh.pop_boundary_vertex(1)
-        0
-        >>> print(msh.boundary_vertices)
-        [3, 1, 2]
-
-        >>> # try to remove some invalid boundary vertices
-        >>> msh.pop_boundary_vertex('one')
-        Traceback (most recent call last):
-            ...
-        TypeError: 'str' object cannot be interpreted as an integer
-        >>> msh.pop_boundary_vertex(4)
-        Traceback (most recent call last):
-            ...
-        IndexError: pop index out of range
-        >>> msh.remove_boundary_vertices([1, 2, 3])
-        >>> msh.pop_boundary_vertex()
-        Traceback (most recent call last):
-            ...
-        IndexError: pop from empty list
-        """
-        ind = self.boundary_vertices.pop(pop_index)
-        self._generate_boundary_edges()
-        self.mesh_valid = False
-        return ind
-
-    def _generate_boundary_edges(self):
-        """Generate boundary edge pairs from :m:`boundary_vertices`.
-
-        Note
-        ----
-        This is a (private) helper function, called by other methods such as
-        :m:`insert_boundary_vertices`, :m:`remove_boundary_vertices`, and
-        :m:`pop_boundary_vertex` whenever :m:`boundary_vertices` changes. It
-        should not normally be necessary to call this explicitly.
-        """
-        self._boundary_edges = [[self.boundary_vertices[k],
-                                 self.boundary_vertices[(k+1)
-                                 % self.num_boundary_vertices]]
-                                for k in range(self.num_boundary_vertices)]
-
-    def add_material_region(self, material_region):
-        """Add a :c:`MaterialRegion2D` to the :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        material_region : :c:`MaterialRegion2D`
-            :c:`MaterialRegion2D` to add to the :c:`PolyMesh2D`.
-
-        Raises
-        ------
-        TypeError
-            If **material_region** is not a :c:`MaterialRegion2D`.
-        ValueError
-            If **material_region** is already in :a:`material_regions` or
-            does not have this :c:`PolyMesh2D` as its parent.
-
-        Note
-        ----
-        It is not normally necessary to call :m:`add_material_region` when
-        creating a new :c:`MaterialRegion2D` since it will add itself to the
-        parent :c:`PolyMesh2D` by default. This is only necessary if the
-        :c:`MaterialRegion2D` was created with **add_parent** = ``False`` or
-        if the :c:`MaterialRegion2D` was previously removed from the
-        :c:`PolyMesh2D` using :m:`remove_material_region`.
-
-        Examples
-        --------
-        >>> # create a mesh and a material region, this adds the material
-        >>> # region by default
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
-        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
-        >>> print(mr.mesh.name)
-        test mesh
-        >>> print(mr in msh.material_regions)
-        True
-
-        >>> # create another material region, but do not add it to the mesh
-        >>> mr_new = vcfempy.meshgen.MaterialRegion2D(msh, add_parent=False)
-        >>> print(mr_new.mesh.name)
-        test mesh
-        >>> print(mr_new in msh.material_regions)
-        False
-
-        >>> # add the new material region to its parent mesh
-        >>> msh.add_material_region(mr_new)
-        >>> print(mr_new in msh.material_regions)
-        True
-
-        >>> # try to add invalid material regions
-        >>> msh.add_material_region(1)
-        Traceback (most recent call last):
-            ...
-        TypeError: material region not vcfempy.meshgen.MaterialRegion2D
-        >>> msh.add_material_region(mr)
-        Traceback (most recent call last):
-            ...
-        ValueError: material region already in list
-        >>> new_msh = vcfempy.meshgen.PolyMesh2D()
-        >>> mr_new = vcfempy.meshgen.MaterialRegion2D(new_msh)
-        >>> msh.add_material_region(mr_new)
-        Traceback (most recent call last):
-            ...
-        ValueError: material region does not have self as mesh
-        """
-        if not isinstance(material_region, MaterialRegion2D):
-            raise TypeError('material region not '
-                            + 'vcfempy.meshgen.MaterialRegion2D')
-        if material_region in self.material_regions:
-            raise ValueError('material region already in list')
-        if material_region.mesh is not self:
-            raise ValueError('material region does not have self as mesh')
-        self.material_regions.append(material_region)
-        self.mesh_valid = False
-
-    def remove_material_region(self, material_region):
-        """Remove a :c:`MaterialRegion2D` from the :c:`PolyMesh2D`.
-
-        Parameters
-        ----------
-        material_region : :c:`MaterialRegion2D`
-            :c:`MaterialRegion2D` to remove from the :c:`PolyMesh2D`.
-
-        Raises
-        ------
-        ValueError
-            If **material_region** is not in :a:`material_regions`.
-
-        Note
-        ----
-        When removing a material region from the :c:`PolyMesh2D`, the
-        :a:`MaterialRegion2D.mesh` is not changed, and it can be added again
-        using :m:`add_material_region` if desired.
-
-        Examples
-        --------
-        >>> # create a mesh and a material region, then remove it
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
-        >>> msh.remove_material_region(mr)
-        >>> print(msh.material_regions)
-        []
-
-        >>> # try to remove a material region that is not in the mesh
-        >>> msh.remove_material_region(mr)
-        Traceback (most recent call last):
-            ...
-        ValueError: list.remove(x): x not in list
-        """
-        self.material_regions.remove(material_region)
-        self.mesh_valid = False
-
-    def add_mesh_edges(self, mesh_edges):
-        """ Add mesh edges to PolyMesh2D.
-
-        Parameters
-        ----------
-        mesh_edges : list[int] | list[list[int]]
-            Lists of vertex indices defining edges to be maintained
-            in mesh generation
-
-        Returns
-        -------
-        None
-
-        Raises
-        ------
-        TypeError
-            type(mesh_edges) not in [NoneType, list]
-            type(mesh_edges[k]) not in [int, numpy.int32, list]
-            if mesh_edges is list of list of ints:
-                type(mesh_edges[k][j]) not in [int, numpy.int32]
-        ValueError
-            if mesh_edges is list of ints:
-                len(mesh_edges) != 2
-                mesh_edges[k] >= self.num_vertices
-            if mesh_edges is list of list of ints:
-                len(mesh_edges[k]) != 2
-                mesh_edges[k][j] >= self.num_vertices
-
-        Examples
-        --------
-        """
-        # basic type check of mesh_edges
-        if type(mesh_edges) not in [type(None), list]:
-            raise TypeError('type(mesh_edges) not in [NoneType, list]')
-        # catch null case where mesh_edges is None or an empty list
-        if mesh_edges is None or len(mesh_edges) == 0:
-            pass
-        # mesh_edges is a list[int]
-        # Note: if here, we know that mesh_edges is a non-empty list
-        elif type(mesh_edges[0]) in [int, np.int32]:
-            # check that mesh_edges has the right length
-            if len(mesh_edges) != 2:
-                raise ValueError('mesh_edges given as list[int], '
-                                 + 'but len(mesh_edges) != 2')
-            # check that all items in mesh_edges are ints
-            # and values are < self.num_vertices
-            for v in mesh_edges:
-                if type(v) not in [int, np.int32]:
-                    raise TypeError('mesh_edges given as list[int], '
-                                    + 'but type of contents not all '
-                                    + 'in [int, numpy.int32]')
-                if v >= self.num_vertices:
-                    raise ValueError('mesh_edges given as list[int], '
-                                     + 'but contains values >= num_vertices')
-            # if here, mesh_edges is a valid list[int]
-            # append it to the list of mesh edges
-            # and invalidate the mesh
-            self.mesh_edges.append([int(k) for k in mesh_edges])
-            self.mesh_valid = False
-        # mesh_edges is a list[list[int]]
-        else:
-            # check that all mesh edges are lists of len == 2
-            # and contain ints < self.num_vertices
-            for edge in mesh_edges:
-                if type(edge) is not list:
-                    raise TypeError('mesh_edges given as list[list[int]], '
-                                    + 'but type of some contents is not list')
-                if len(edge) != 2:
-                    raise ValueError('mesh_edges given as list[list[int]], '
-                                     + 'but some edges have len != 2')
-                for v in edge:
-                    if type(v) not in [int, np.int32]:
-                        raise TypeError('mesh_edges given as list[list[int]], '
-                                        + 'but type of some vertices not in '
-                                        + '[int, numpy.int32]')
-                    if v >= self.num_vertices:
-                        raise ValueError('mesh_edges given as list[list[int]],'
-                                         + ' but some vertices '
-                                         + '>= num_vertices')
-            # if here, mesh_edges is a valid list of list of ints
-            # append each list to the list of material regions
-            # and invalidate the mesh
-            for edge in mesh_edges:
-                self.mesh_edges.append([int(k) for k in edge])
-            self.mesh_valid = False
-
     def generate_mesh(self, grid_size=[10, 10], alpha_rand=0.0,
                       verbose_plot=False):
         """ Generate polygonal mesh. """
@@ -3229,6 +3087,278 @@ self.nodes is empty
             self.plot_mesh(ax)
             ax.plot(self.points[:, 0], self.points[:, 1], 'or')
             plt.savefig('mesh6.png')
+
+    @property
+    def verbose_printing(self):
+        """Flag for whether :m:`__str__` will print verbose mesh information
+        for the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        flag : bool_like
+            The new value of the :a:`verbose_printing` flag.
+
+        Returns
+        -------
+        `bool`
+            The value of the :a:`verbose_printing` flag.
+
+        Raises
+        ------
+        `ValueError`
+            If the value of **flag** cannot be converted to a `bool`.
+
+        Note
+        ----
+        `str` values that can be cast to `float` are considered ``True``-like
+        if non-zero and ``False``-like if zero. If the `str` cannot be cast
+        to `float`, then the values 'y', 'yes', 't', 'true', and 'on' (case
+        insensitive) are converted to ``True`` and the values 'n', 'no', 'f',
+        'false', and 'off' are converted to ``False``. Other `str` values
+        raise a `ValueError`.
+
+        Examples
+        --------
+        >>> # initialize a mesh with no initial information provided
+        >>> import vcfempy.meshgen
+        >>> import vcfempy.materials
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D 'test mesh'
+        Number of Vertices = 0
+        Number of Boundary Vertices = 0
+        Number of Material Regions = 0
+        Number of Mesh Edges = 0
+        Verbose Printing = False
+        High Order Quadrature = False
+        Mesh Generated = False
+
+        >>> # add some vertices and boundary vertices to the mesh
+        >>> # no mesh generated yet
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, bnd_verts)
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D 'test mesh'
+        Number of Vertices = 4
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 0
+        Number of Mesh Edges = 0
+        Verbose Printing = False
+        High Order Quadrature = False
+        Mesh Generated = False
+
+        >>> # set verbose printing flag
+        >>> msh.verbose_printing = True
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D 'test mesh'
+        Number of Vertices = 4
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 0
+        Number of Mesh Edges = 0
+        Verbose Printing = True
+        High Order Quadrature = False
+        Mesh Generated = False
+        <BLANKLINE>
+        Vertices
+        [[0. 0.]
+         [0. 1.]
+         [1. 1.]
+         [1. 0.]]
+        <BLANKLINE>
+        Boundary Vertices
+        [0, 1, 2, 3]
+        <BLANKLINE>
+        Boundary Edges
+        [[0, 1], [1, 2], [2, 3], [3, 0]]
+
+        >>> # turn off verbose printing and add some vertices
+        >>> # and two material regions
+        >>> msh.verbose_printing = 'off'
+        >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
+        >>> rock = vcfempy.materials.Material('rock')
+        >>> sand = vcfempy.materials.Material('sand')
+        >>> rock_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
+        ...     vertices=[0, 4, 5, 3], name='rock region', material=rock)
+        >>> sand_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
+        ...     vertices=[4, 1, 2, 5], name='sand region', material=sand)
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D 'test mesh'
+        Number of Vertices = 6
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 2
+        Number of Mesh Edges = 0
+        Verbose Printing = False
+        High Order Quadrature = False
+        Mesh Generated = False
+
+        >>> # turn verbose printing back on and generate the mesh
+        >>> msh.verbose_printing = 'yes'
+        >>> msh.generate_mesh((2, 2))
+        >>> print(msh)
+        vcfempy.meshgen.PolyMesh2D 'test mesh'
+        Number of Vertices = 6
+        Number of Boundary Vertices = 4
+        Number of Material Regions = 2
+        Number of Mesh Edges = 0
+        Verbose Printing = True
+        High Order Quadrature = False
+        Mesh Generated = True
+        Number of Nodes = 10
+        Number of Elements = 4
+        Number of Interface Elements = 5
+        Number of Boundary Elements = 8
+        <BLANKLINE>
+        Vertices
+        [[0.  0. ]
+         [0.  1. ]
+         [1.  1. ]
+         [1.  0. ]
+         [0.  0.5]
+         [1.  0.5]]
+        <BLANKLINE>
+        Boundary Vertices
+        [0, 1, 2, 3]
+        <BLANKLINE>
+        Boundary Edges
+        [[0, 1], [1, 2], [2, 3], [3, 0]]
+        <BLANKLINE>
+        Material Region: rock region, Material: rock
+        [0, 4, 5, 3]
+        <BLANKLINE>
+        Material Region: sand region, Material: sand
+        [4, 1, 2, 5]
+        <BLANKLINE>
+        Nodes
+        [[0.     0.    ]
+         [0.     1.    ]
+         [0.375  0.5625]
+         [0.     0.375 ]
+         [1.     1.    ]
+         [0.375  1.    ]
+         [0.625  0.4375]
+         [1.     0.625 ]
+         [1.     0.    ]
+         [0.625  0.    ]]
+        <BLANKLINE>
+        Element Nodes, Areas, Points, Centroids, Materials
+        [9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], \
+[0.32251082 0.24323593], rock
+        [8, 7, 6, 9], 0.19921875, [0.875 0.25 ], \
+[0.82352941 0.26838235], rock
+        [2, 5, 1, 3], 0.19921875, [0.125 0.75 ], \
+[0.17647059 0.73161765], sand
+        [6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], \
+[0.67748918 0.75676407], sand
+        <BLANKLINE>
+        Interface Element Nodes and Neighbors
+        [2, 5], [2, 3]
+        [2, 3], [2, 0]
+        [2, 6], [3, 0]
+        [6, 7], [3, 1]
+        [6, 9], [1, 0]
+        <BLANKLINE>
+        Boundary Element Nodes and Neighbors
+        [1, 3], 2
+        [0, 3], 0
+        [4, 5], 3
+        [1, 5], 2
+        [4, 7], 3
+        [8, 9], 1
+        [0, 9], 0
+        [7, 8], 1
+
+        >>> # attempting to set verbose_printing
+        >>> # to a non-truth-like str value
+        >>> msh.verbose_printing = 'dslk'
+        Traceback (most recent call last):
+        ...
+        ValueError: invalid truth value 'dslk'
+        """
+        return self._verbose_printing
+
+    @verbose_printing.setter
+    def verbose_printing(self, flag):
+        # try to cast flag to bool
+        # will raise a ValueError if this does not work
+        if isinstance(flag, (str, np.str_)):
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
+        self._verbose_printing = bool(flag)
+
+    def __str__(self):
+        # print header indicating basic information
+        mesh_string = (f"{__name__}.{type(self).__name__} '{self.name}'\n"
+                       + 'Number of Vertices = '
+                       + f'{self.num_vertices}\n'
+                       + 'Number of Boundary Vertices = '
+                       + f'{self.num_boundary_vertices}\n'
+                       + 'Number of Material Regions = '
+                       + f'{self.num_material_regions}\n'
+                       + 'Number of Mesh Edges = '
+                       + f'{self.num_mesh_edges}\n'
+                       + f'Verbose Printing = {self.verbose_printing}\n'
+                       + 'High Order Quadrature = '
+                       + f'{self.high_order_quadrature}\n'
+                       + f'Mesh Generated = {self.mesh_valid}')
+
+        # if mesh has been generated, print basic mesh information
+        if self.mesh_valid:
+            mesh_string += ('\nNumber of Nodes = '
+                            + f'{self.num_nodes}\n'
+                            + 'Number of Elements = '
+                            + f'{self.num_elements}\n'
+                            + 'Number of Interface Elements = '
+                            + f'{self.num_interface_elements}\n'
+                            + 'Number of Boundary Elements = '
+                            + f'{self.num_boundary_elements}')
+
+        # check for verbose printing flag, return now if False
+        if not self.verbose_printing:
+            return mesh_string
+
+        # otherwise, if verbose printing is True, continue printing
+        # detailed mesh information
+        if self.num_vertices:
+            mesh_string += f'\n\nVertices\n{self.vertices}'
+        if self.num_boundary_vertices:
+            mesh_string += f'\n\nBoundary Vertices\n{self.boundary_vertices}'
+            mesh_string += f'\n\nBoundary Edges\n{self.boundary_edges}'
+        if self.num_material_regions:
+            for mr in self.material_regions:
+                mesh_string += f'\n\nMaterial Region: {mr.name}, '
+                mesh_string += f'Material: {mr.material.name}'
+                mesh_string += f'\n{mr.vertices}'
+        if self.num_mesh_edges:
+            mesh_string += '\n\nMesh Edges'
+            for e in self.mesh_edges:
+                mesh_string += '\n{e}'
+        if self.num_nodes:
+            mesh_string += f'\n\nNodes\n{self.nodes}'
+        if self.num_elements:
+            mesh_string += ('\n\nElement Nodes, Areas, Points, Centroids, '
+                            + 'Materials')
+            for e, p in zip(self.elements, self.points):
+                mesh_string += (f'\n{e.nodes}, {e.area}, {p}, {e.centroid}, '
+                                + f'{e.material.name}')
+        if self.num_interface_elements:
+            mesh_string += '\n\nInterface Element Nodes and Neighbors'
+            for e in self.interface_elements:
+                en = [self.elements.index(n) for n in e.neighbors]
+                mesh_string += f'\n{e.nodes}, {en}'
+        if self.num_boundary_elements:
+            mesh_string += '\n\nBoundary Element Nodes and Neighbors'
+            for e in self.boundary_elements:
+                en = self.elements.index(e.neighbor)
+                mesh_string += f'\n{e.nodes}, {en}'
+        return mesh_string
+
+    def __repr__(self):
+        return (f"<{__name__}.{type(self).__name__} object '{self.name}' at "
+                + f"{hex(id(self))}>")
 
     def plot_boundaries(self, ax=None, line_type='-k'):
         """ Plot out PolyMesh2D boundaries. """
