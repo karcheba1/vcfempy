@@ -38,14 +38,6 @@ class PolyMesh2D():
     boundary_vertices : int | list[int], optional
         Initial boundary vertex or list of boundary vertices to be added.
         Passed to :m:`insert_boundary_vertices`.
-    material_regions : `list[list[int]]` | `list` of :c:`MaterialRegion2D`, \
-*optional*
-        Initial list(s) of material region(s) to be added. Passed to
-        :m:`add_material_regions`.
-    materials : :c:`vcfempy.materials.Material` | `list` of \
-:c:`vcfempy.materials.Material`, *optional*
-        Initial list of material types for the :a:`material_regions`. Passed
-        to :m:`add_material_regions`.
     mesh_edges : list[int] | list[list[int]], optional
         Initial list(s) defining non-boundary edges to be preserved in the
         mesh generation. Passed to :m:`add_mesh_edges`.
@@ -100,15 +92,16 @@ class PolyMesh2D():
     >>> print(msh.boundary_edges)
     [[0, 1], [1, 2], [2, 3], [3, 0]]
 
-    >>> # create a material and material region and add them to the mesh
+    >>> # create a material and material region
     >>> import vcfempy.materials
     >>> m = vcfempy.materials.Material('rock')
-    >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, bnd_verts, m)
-    >>> msh.add_material_regions(mr)
+    >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, bnd_verts, m, 'rock region')
     >>> print(msh.num_material_regions)
     1
     >>> print(msh.material_regions[0].vertices)
     [0, 1, 2, 3]
+    >>> print(msh.material_regions[0].name)
+    rock region
     >>> print(msh.material_regions[0].material.name)
     rock
 
@@ -149,7 +142,7 @@ class PolyMesh2D():
     Boundary Edges
     [[0, 1], [1, 2], [2, 3], [3, 0]]
     <BLANKLINE>
-    Material Region 0, rock
+    Material Region: rock region, Material: rock
     [0, 1, 2, 3]
     <BLANKLINE>
     Nodes
@@ -210,8 +203,8 @@ class PolyMesh2D():
     _meshes_created = 0
 
     def __init__(self, name=None, vertices=None, boundary_vertices=None,
-                 material_regions=None, materials=None, mesh_edges=None,
-                 verbose_printing=False, high_order_quadrature=False):
+                 mesh_edges=None, verbose_printing=False,
+                 high_order_quadrature=False):
         # initialize name
         if name is None:
             name = f'Untitled Mesh {PolyMesh2D._meshes_created}'
@@ -235,7 +228,6 @@ class PolyMesh2D():
 
         # initialize material regions
         self._material_regions = []
-        self.add_material_regions(material_regions, materials)
 
         # initialize mesh edges
         self._mesh_edges = []
@@ -497,23 +489,22 @@ class PolyMesh2D():
         >>> # creating a mesh, no initial material_regions provided
         >>> import vcfempy.meshgen
         >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> print(msh.num_material_regions)
-        0
-
-        >>> # create some vertices and add them to the mesh
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1.5, 0.5], [1, 0]]
         >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
         >>> msh.add_vertices(new_verts)
         >>> msh.insert_boundary_vertices(0, bnd_verts)
+        >>> print(msh.num_material_regions)
+        0
 
-        >>> # create a new material and material region
-        >>> # and add them to the mesh
-        >>> import vcfempy.materials
-        >>> m = vcfempy.materials.Material('rock')
-        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, bnd_verts, m)
-        >>> msh.add_material_regions(mr)
+        >>> # create a new material region, it will be added to the mesh
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
         >>> print(msh.num_material_regions)
         1
+
+        >>> # remove the material region from the mesh
+        >>> msh.remove_material_region(mr)
+        >>> print(msh.num_material_regions)
+        0
         """
         return len(self.material_regions)
 
@@ -530,18 +521,16 @@ class PolyMesh2D():
         Note
         ----
         The list of :a:`material_regions` is not intended to be directly
-        mutable. Instead modify it using the :m:`add_material_regions`
-        method.
+        mutable. Instead modify it using the :m:`add_material_region` and
+        :m:`remove_material_region` methods. New :c:`MaterialRegion2D`
+        objects require a parent mesh to be set, and by default will be
+        added to that parent mesh.
 
         Examples
         --------
-        >>> # initiaize a mesh, no initial properties provided
+        >>> # initiaize a mesh, no material regions provided yet
         >>> import vcfempy.meshgen
         >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> print(msh.material_regions)
-        []
-
-        >>> # add some vertices to the mesh
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
         >>> msh.add_vertices(new_verts)
         >>> bnd_verts = [k for k, _ in enumerate(msh.vertices)]
@@ -551,6 +540,8 @@ class PolyMesh2D():
          [0. 1.]
          [1. 1.]
          [1. 0.]]
+        >>> print(msh.material_regions)
+        []
 
         >>> # add a material region to the mesh
         >>> # this material region fills the bottom half of the mesh
@@ -568,39 +559,32 @@ class PolyMesh2D():
         >>> mr_rock = vcfempy.meshgen.MaterialRegion2D(msh,
         ...                                            mr_rock_verts,
         ...                                            rock)
-        >>> msh.add_material_regions(mr_rock)
         >>> print(msh.num_material_regions)
         1
         >>> for mr in msh.material_regions:
         ...     print(mr.vertices)
         [0, 4, 5, 3]
 
-        >>> # add two more material regions
-        >>> # these are added by directly passing vertex indices
-        >>> # to the add_material_regions method
-        >>> msh.add_vertices([[0.5, 0.5], [0.5, 1]])
-        >>> print(msh.vertices)
-        [[0.  0. ]
-         [0.  1. ]
-         [1.  1. ]
-         [1.  0. ]
-         [0.  0.5]
-         [1.  0.5]
-         [0.5 0.5]
-         [0.5 1. ]]
+        >>> # add another material region filling the top half of the mesh
         >>> sand = vcfempy.materials.Material('sand')
-        >>> clay = vcfempy.materials.Material('clay')
-        >>> mr_sand_verts = [4, 1, 7, 6]
-        >>> mr_clay_verts = [6, 7, 2, 5]
-        >>> msh.add_material_regions([mr_sand_verts, mr_clay_verts],
-        ...                          [sand, clay])
+        >>> mr_sand_verts = [4, 1, 2, 5]
+        >>> mr_sand = vcfempy.meshgen.MaterialRegion2D(msh,
+        ...                                            mr_sand_verts,
+        ...                                            sand)
         >>> print(msh.num_material_regions)
-        3
+        2
         >>> for mr in msh.material_regions:
         ...     print(mr.vertices)
         [0, 4, 5, 3]
-        [4, 1, 7, 6]
-        [6, 7, 2, 5]
+        [4, 1, 2, 5]
+
+        >>> # remove a material region from the mesh
+        >>> msh.remove_material_region(mr_rock)
+        >>> print(msh.num_material_regions)
+        1
+        >>> for mr in msh.material_regions:
+        ...     print(mr.vertices)
+        [4, 1, 2, 5]
         """
         return self._material_regions
 
@@ -1089,29 +1073,24 @@ class PolyMesh2D():
 
         Examples
         --------
-        >>> # initialize a mesh, no initial information provided
+        >>> # initialize a mesh, no mesh generated yet, so list of element
+        >>> # materials is empty
         >>> import vcfempy.meshgen
+        >>> import vcfempy.materials
         >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> print(msh.element_materials)
-        []
-
-        >>> # add some vertices and boundary vertices to the mesh
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
         >>> msh.add_vertices(new_verts)
         >>> msh.insert_boundary_vertices(0, [k for k, _
         ...                                  in enumerate(msh.vertices)])
-        >>> # add some more vertices and create two materials and material
-        >>> # regions and add them to the mesh
-        >>> # the rock material region covers the bottom half of the mesh
-        >>> # and the sand material region covers the top half
-        >>> import vcfempy.materials
         >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
         >>> rock = vcfempy.materials.Material('rock')
         >>> sand = vcfempy.materials.Material('sand')
-        >>> msh.add_material_regions([[0, 4, 5, 3], [4, 1, 2, 5]],
-        ...                          [rock, sand])
-        >>> # still no materials assigned to elements
-        >>> # because the mesh has not been generated
+        >>> mr_rock = vcfempy.meshgen.MaterialRegion2D(msh,
+        ...                                            [0, 4, 5, 3],
+        ...                                            rock)
+        >>> mr_sand = vcfempy.meshgen.MaterialRegion2D(msh,
+        ...                                            [4, 1, 2, 5],
+        ...                                            sand)
         >>> print(msh.element_materials)
         []
 
@@ -2073,8 +2052,10 @@ self.nodes is empty
         >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
         >>> rock = vcfempy.materials.Material('rock')
         >>> sand = vcfempy.materials.Material('sand')
-        >>> msh.add_material_regions([[0, 4, 5, 3], [4, 1, 2, 5]],
-        ...                          [rock, sand])
+        >>> rock_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
+        ...     vertices=[0, 4, 5, 3], name='rock region', material=rock)
+        >>> sand_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
+        ...     vertices=[4, 1, 2, 5], name='sand region', material=sand)
         >>> print(msh)
         vcfempy.meshgen.PolyMesh2D 'test mesh'
         Number of Vertices = 6
@@ -2116,10 +2097,10 @@ self.nodes is empty
         Boundary Edges
         [[0, 1], [1, 2], [2, 3], [3, 0]]
         <BLANKLINE>
-        Material Region 0, rock
+        Material Region: rock region, Material: rock
         [0, 4, 5, 3]
         <BLANKLINE>
-        Material Region 1, sand
+        Material Region: sand region, Material: sand
         [4, 1, 2, 5]
         <BLANKLINE>
         Nodes
@@ -2220,8 +2201,9 @@ self.nodes is empty
             mesh_string += f'\n\nBoundary Vertices\n{self.boundary_vertices}'
             mesh_string += f'\n\nBoundary Edges\n{self.boundary_edges}'
         if self.num_material_regions:
-            for k, mr in enumerate(self.material_regions):
-                mesh_string += f'\n\nMaterial Region {k}, {mr.material.name}'
+            for mr in self.material_regions:
+                mesh_string += f'\n\nMaterial Region: {mr.name}, '
+                mesh_string += f'Material: {mr.material.name}'
                 mesh_string += f'\n{mr.vertices}'
         if self.num_mesh_edges:
             mesh_string += '\n\nMesh Edges'
@@ -2336,6 +2318,63 @@ self.nodes is empty
         vertices = np.array(vertices, dtype=float)
         self._vertices = np.vstack([self.vertices, vertices])
 
+    def delete_vertices(self, del_verts):
+        """Remove vertices from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        del_verts : list[int]
+            List of indices of vertices to remove.
+
+        Raises
+        ------
+        TypeError
+            If elements in **del_verts** cannot be cast to `int`.
+        IndexError
+            If elements in **del_verts** are >= :a:`num_vertices` or are
+            < -:a:`num_vertices`.
+
+        Note
+        ----
+        Prior to removing vertices, an attempt is made to cast **del_verts**
+        to a flattened `numpy.array` of `int`. Duplicate indices are deleted,
+        including positive and negative indices that refer to the same
+        vertex. Each vertex removed will result in removal of that vertex
+        from :a:`boundary_vertices`, :a:`mesh_edges`, and
+        :a:`material_regions` and decrementing other vertex indices
+        accordingly.
+
+        Examples
+        --------
+        """
+        # pre-process del_verts: flatten, check for invalid indices, and
+        # eliminate duplicates
+        if del_verts is None:
+            return
+        del_verts = np.array(del_verts, dtype=int, ndmin=1)
+        if len(del_verts) == 0:
+            return
+        del_verts = np.where(del_verts < 0,
+                             del_verts + self.num_vertices,
+                             del_verts)
+        del_verts = np.unique(del_verts)
+        if np.any(del_verts < 0) or np.any(del_verts >= self.num_vertices):
+            raise IndexError('at least one index out of range')
+
+        # delete the vertices
+        self._vertices = np.delete(self._vertices, del_verts, 0)
+
+        # remove vertices from boundary vertices, mesh edges, and
+        # material regions
+        for dv in del_verts:
+            if dv in self.boundary_vertices:
+                self.remove_boundary_vertices(dv)
+            for me in self.mesh_edges:
+                if dv in me:
+                    me.remove(dv)
+            for mr in self.material_regions:
+                pass
+
     def insert_boundary_vertices(self, index, boundary_vertices):
         """Insert one or more boundary vertex indices to the :c:`PolyMesh2D`.
 
@@ -2343,9 +2382,9 @@ self.nodes is empty
         ----------
         index : int
             The index at which to insert the **boundary_vertices** into
-            :m:`vertices`.
+            :a:`boundary_vertices`.
         boundary_vertices : int | list[int]
-            The list of vertex indices to add to :m:`vertices`.
+            The list of vertex indices to add to :a:`boundary_vertices`.
 
         Note
         -----
@@ -2515,6 +2554,8 @@ self.nodes is empty
         if remove_vertices is None:
             return
         remove_vertices = np.array(remove_vertices, dtype=int, ndmin=1)
+        if len(remove_vertices) == 0:
+            return
         remove_vertices = remove_vertices.ravel()
         for rv in remove_vertices:
             self.boundary_vertices.remove(rv)
@@ -2597,56 +2638,117 @@ self.nodes is empty
                                  % self.num_boundary_vertices]]
                                 for k in range(self.num_boundary_vertices)]
 
-    def add_material_regions(self, material_regions, materials=None):
-        """Add material regions to the :c:`PolyMesh2D`.
+    def add_material_region(self, material_region):
+        """Add a :c:`MaterialRegion2D` to the :c:`PolyMesh2D`.
 
         Parameters
         ----------
-        material_regions : `list` of [:c:`MaterialRegion2D` | `list[int]`]
-            List of material regions to add to the :c:`PolyMesh2D`. If
-            provided as `list[list[int]]` then each `list[int]` is passed to
-            :c:`MaterialRegion2D` along with the corresponding material from
-            **materials**.
-        materials : `list` of :c:`vcfempy.materials.Material`, optional
-            Materials corresponding to each material region to be added. This
-            is ignored if **material_regions** is provided as a `list` of
-            :c:`MaterialRegion2D`.
+        material_region : :c:`MaterialRegion2D`
+            :c:`MaterialRegion2D` to add to the :c:`PolyMesh2D`.
 
         Raises
         ------
+        TypeError
+            If **material_region** is not a :c:`MaterialRegion2D`.
+        ValueError
+            If **material_region** is already in :a:`material_regions` or
+            does not have this :c:`PolyMesh2D` as its parent.
+
+        Note
+        ----
+        It is not normally necessary to call :m:`add_material_region` when
+        creating a new :c:`MaterialRegion2D` since it will add itself to the
+        parent :c:`PolyMesh2D` by default. This is only necessary if the
+        :c:`MaterialRegion2D` was created with **add_parent** = ``False`` or
+        if the :c:`MaterialRegion2D` was previously removed from the
+        :c:`PolyMesh2D` using :m:`remove_material_region`.
 
         Examples
         --------
+        >>> # create a mesh and a material region, this adds the material
+        >>> # region by default
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> print(mr.mesh.name)
+        test mesh
+        >>> print(mr in msh.material_regions)
+        True
+
+        >>> # create another material region, but do not add it to the mesh
+        >>> mr_new = vcfempy.meshgen.MaterialRegion2D(msh, add_parent=False)
+        >>> print(mr_new.mesh.name)
+        test mesh
+        >>> print(mr_new in msh.material_regions)
+        False
+
+        >>> # add the new material region to its parent mesh
+        >>> msh.add_material_region(mr_new)
+        >>> print(mr_new in msh.material_regions)
+        True
+
+        >>> # try to add invalid material regions
+        >>> msh.add_material_region(1)
+        Traceback (most recent call last):
+            ...
+        TypeError: material region not vcfempy.meshgen.MaterialRegion2D
+        >>> msh.add_material_region(mr)
+        Traceback (most recent call last):
+            ...
+        ValueError: material region already in list
+        >>> new_msh = vcfempy.meshgen.PolyMesh2D()
+        >>> mr_new = vcfempy.meshgen.MaterialRegion2D(new_msh)
+        >>> msh.add_material_region(mr_new)
+        Traceback (most recent call last):
+            ...
+        ValueError: material region does not have self as mesh
         """
-        if material_regions is None:
-            return
-        if isinstance(material_regions, MaterialRegion2D):
-            if material_regions in self.material_regions:
-                raise ValueError('material region already in list')
-            self.material_regions.append(material_regions)
-            return
-        all_int = True
-        for k, mr in enumerate(material_regions):
-            if isinstance(mr, MaterialRegion2D):
-                all_int = False
-                if mr in self.material_regions:
-                    raise ValueError(f'material region {k} already in list')
-                self.material_regions.append(mr)
-            elif isinstance(mr, list):
-                all_int = False
-                if isinstance(materials, list):
-                    self.material_regions.append(
-                            MaterialRegion2D(self, mr, materials[k]))
-                else:
-                    self.material_regions.append(
-                            MaterialRegion2D(self, mr, materials))
-            elif not isinstance(mr, (int, np.integer)):
-                raise ValueError(f'material region {k} has invalid type')
-            elif not all_int:
-                raise ValueError(f'material region {k} provided as int')
-        if all_int:
-            self.material_regions.append(
-                   MaterialRegion2D(self, material_regions, materials))
+        if not isinstance(material_region, MaterialRegion2D):
+            raise TypeError('material region not '
+                            + 'vcfempy.meshgen.MaterialRegion2D')
+        if material_region in self.material_regions:
+            raise ValueError('material region already in list')
+        if material_region.mesh is not self:
+            raise ValueError('material region does not have self as mesh')
+        self.material_regions.append(material_region)
+        self.mesh_valid = False
+
+    def remove_material_region(self, material_region):
+        """Remove a :c:`MaterialRegion2D` from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        material_region : :c:`MaterialRegion2D`
+            :c:`MaterialRegion2D` to remove from the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        ValueError
+            If **material_region** is not in :a:`material_regions`.
+
+        Note
+        ----
+        When removing a material region from the :c:`PolyMesh2D`, the
+        :a:`MaterialRegion2D.mesh` is not changed, and it can be added again
+        using :m:`add_material_region` if desired.
+
+        Examples
+        --------
+        >>> # create a mesh and a material region, then remove it
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> msh.remove_material_region(mr)
+        >>> print(msh.material_regions)
+        []
+
+        >>> # try to remove a material region that is not in the mesh
+        >>> msh.remove_material_region(mr)
+        Traceback (most recent call last):
+            ...
+        ValueError: list.remove(x): x not in list
+        """
+        self.material_regions.remove(material_region)
         self.mesh_valid = False
 
     def add_mesh_edges(self, mesh_edges):
@@ -3206,8 +3308,21 @@ self.nodes is empty
 class MaterialRegion2D():
     """ A class for defining material regions and their attributes. """
 
-    def __init__(self, mesh, vertices=None, material=None):
-        self.mesh = mesh
+    _num_created = 0
+
+    def __init__(self, mesh, vertices=None, material=None, name=None,
+                 add_parent=True):
+        if not isinstance(mesh, PolyMesh2D):
+            raise TypeError('type(mesh) must be vcfempy.meshgen.PolyMesh2D')
+        self._mesh = mesh
+        if add_parent:
+            self.mesh.add_material_region(self)
+
+        if name is None:
+            name = ('Unnamed Material Region '
+                    + f'{MaterialRegion2D._num_created}')
+        self.name = name
+        MaterialRegion2D._num_created += 1
 
         self._vertices = []
         self.insert_vertices(0, vertices)
@@ -3215,7 +3330,130 @@ class MaterialRegion2D():
         self.material = material
 
     @property
+    def name(self):
+        """A descriptive name for the :c:`MaterialRegion2D`.
+
+        Parameters
+        ----------
+        name : str
+            The name of the :c:`MaterialRegion2D`. Will be cast to `str`
+            regardless of type.
+
+        Returns
+        -------
+        `str`
+            The :a:`name` of the :c:`MaterialRegion2D`.
+
+        Examples
+        --------
+        >>> # create a blank material region without a name (reset counter)
+        >>> import vcfempy.meshgen
+        >>> vcfempy.meshgen.MaterialRegion2D._num_created = 0
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> print(mr.name)
+        Unnamed Material Region 0
+
+        >>> # setting the name
+        >>> mr.name = 'Rock region'
+        >>> print(mr.name)
+        Rock region
+
+        >>> # changing the name property to non-str
+        >>> # will be cast to str
+        >>> mr.name = 1
+        >>> print(mr.name)
+        1
+        >>> print(type(mr.name).__name__)
+        str
+
+        >>> # initialize a material region with a name
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(mesh=msh, name='new region')
+        >>> print(mr.name)
+        new region
+
+        >>> # initialize another material region without a name
+        >>> # notice that the "Unnamed" counter increases for every region
+        >>> # created (including those that were assigned an initial name)
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> print(mr.name)
+        Unnamed Material Region 2
+        """
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        self._name = str(name)
+
+    @property
+    def mesh(self):
+        """The parent :c:`PolyMesh2D` of the :c:`MaterialRegion2D`.
+
+        Returns
+        -------
+        :c:`PolyMesh2D`
+            The parent mesh object
+
+        Note
+        ----
+        This property is immutable to ensure connection between a
+        :c:`PolyMesh2D` and a :c:`MaterialRegion2D`.
+
+        Examples
+        --------
+        >>> # create a mesh and a material region
+        >>> # note that creating the material region requires a parent mesh
+        >>> # and the material region will add itself to the list of parent
+        >>> # mesh material regions by default
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> print(mr.mesh.name)
+        test mesh
+        >>> print(mr in msh.material_regions)
+        True
+
+        >>> # try to set parent mesh (immutable)
+        >>> new_mesh = vcfempy.meshgen.PolyMesh2D()
+        >>> mr.mesh = new_mesh
+        Traceback (most recent call last):
+            ...
+        AttributeError: can't set attribute
+        """
+        return self._mesh
+
+    @property
     def num_vertices(self):
+        """Number of vertices defining the :c:`MaterialRegion2D` geometry.
+
+        Returns
+        -------
+        `int`
+            The number of :a:`vertices` in the :c:`PolyMesh2D`.
+
+        Examples
+        --------
+        >>> # creating a material region, no initial vertices provided
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> print(mr.num_vertices)
+        0
+
+        >>> # creating a material region, providing initial vertices
+        >>> # these are indices referencing vertices in the parent mesh
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> msh.add_vertices(new_verts)
+        >>> mr.insert_vertices(0, [k for k, _ in enumerate(new_verts)])
+        >>> print(mr.num_vertices)
+        4
+
+        >>> # add a vertex and check num_vertices
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> mr.insert_vertices(3, 4)
+        >>> print(msh.num_vertices)
+        5
+        """
         return len(self.vertices)
 
     @property
@@ -3223,69 +3461,199 @@ class MaterialRegion2D():
         return self._vertices
 
     @property
-    def mesh(self):
-        return self._mesh
-
-    @mesh.setter
-    def mesh(self, mesh):
-        if type(mesh) not in [type(None), PolyMesh2D]:
-            raise TypeError('type(mesh) not in [NoneType, '
-                            + 'vcfempy.meshgen.PolyMesh2D]')
-        self._mesh = mesh
-
-    @property
     def material(self):
         return self._material
 
     @material.setter
     def material(self, material):
-        if type(material) not in [type(None), mtl.Material]:
+        if not isinstance(material, (type(None), mtl.Material)):
             raise TypeError('type(material) not in [NoneType, '
                             + 'vcfempy.materials.Material]')
-        # change the material type of the material region
-        # invalidate parent mesh since existing mesh would have
-        # incorrect material assigned to elements
         self._material = material
         self.mesh.mesh_valid = False
 
-    def insert_vertices(self, i, vertices):
-        # basic type check of vertices
-        if type(vertices) not in [type(None), int, np.int32, list]:
-            raise TypeError('type(vertices) not in [NoneType, int, '
-                            + 'numpy.int32, list]')
+    def insert_vertices(self, index, vertices):
+        """Insert one or more vertex indices to the :c:`MaterialRegion2D`.
 
-        # catch case of single vertex
-        if type(vertices) in [int, np.int32]:
-            vertices = [vertices]
+        Parameters
+        ----------
+        index : int
+            The index at which to insert the **vertices** into :a:`vertices`.
+        vertices : int | list[int]
+            The list of vertex indices to add to :a:`vertices`.
 
-        # if vertices given as None or empty list, return early
-        # Note: if here, we know that vertices is either None or a list
-        #       (i.e. not int) because of earlier type check and first if block
-        # in this case, we can skip re-processing the mesh since it
-        # is still valid
-        elif vertices is None or len(vertices) == 0:
+        Note
+        -----
+        Before inserting the values in **vertices**, an attempt is made to
+        cast to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        TypeError
+            If **index** cannot be interpreted as `int`.
+        ValueError
+            If **vertices** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **vertices** cannot be cast to `int`, are
+            already in :a:`vertices`, are negative, or are
+            >= :a:`mesh.num_vertices`.
+
+        Examples
+        --------
+        >>> # create mesh and material region, add some vertices
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> mr.insert_vertices(0, [0, 1, 2, 3])
+        >>> print(mr.vertices)
+        [0, 1, 2, 3]
+
+        >>> # add a single vertex and add it to the material region
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> mr.insert_vertices(index=3, vertices=4)
+        >>> print(mr.vertices)
+        [0, 1, 2, 4, 3]
+
+        >>> # add two more vertices and add them to the material region
+        >>> msh.add_vertices([[0.25, 1.25], [0.75, 1.25]])
+        >>> mr.insert_vertices(2, [5, 6])
+        >>> print(mr.vertices)
+        [0, 1, 5, 6, 2, 4, 3]
+
+        >>> # the list of boundary vertices need not be 1d
+        >>> # if not, it will be flattened
+        >>> msh.add_vertices([[-0.5, 0.1], [-0.75, 0.25],
+        ...                   [-0.75, 0.75], [-0.5, 0.9]])
+        >>> mr.insert_vertices(1, [[7, 8], [9, 10]])
+        >>> print(mr.vertices)
+        [0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]
+
+        >>> # add no vertices, in two different ways
+        >>> mr.insert_vertices(0, None)
+        >>> mr.insert_vertices(0, [])
+        >>> print(mr.vertices)
+        [0, 7, 8, 9, 10, 1, 5, 6, 2, 4, 3]
+
+        >>> # try to insert some invalid vertices
+        >>> mr.insert_vertices(0, 'one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> mr.insert_vertices(0, 1)
+        Traceback (most recent call last):
+            ...
+        ValueError: 1 is already a vertex
+        >>> mr.insert_vertices(0, 11)
+        Traceback (most recent call last):
+            ...
+        ValueError: vertex index 11 out of range
+        >>> mr.insert_vertices(0, -1)
+        Traceback (most recent call last):
+            ...
+        ValueError: vertex index -1 out of range
+        >>> mr.insert_vertices(
+        ...             0, [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        >>> msh.add_vertices([0.5, -0.5])
+        >>> mr.insert_vertices('one', 11)
+        Traceback (most recent call last):
+            ...
+        TypeError: 'str' object cannot be interpreted as an integer
+        """
+        if vertices is None:
             return
-
-        # vertices is a non-empty list
-        # Note: we know this because of earlier type check on vertices
-
-        # check contents of vertices
+        vertices = np.array(vertices, dtype=int, ndmin=1)
+        if len(vertices) == 0:
+            return
+        vertices = np.flip(vertices.ravel())
         for v in vertices:
-            # check type is integer
-            if type(v) not in [int, np.int32]:
-                raise TypeError('type of vertices contents not in [int, '
-                                + 'numpy.int32]')
-            # check value of vertex is less than number of vertices
-            if v >= self.mesh.num_vertices:
-                raise ValueError('vertices values must all be less than '
-                                 + 'number of vertices in the parent mesh')
+            if v in self.vertices:
+                raise ValueError(f'{v} is already a vertex')
+            if v < 0 or v >= self.mesh.num_vertices:
+                raise ValueError(f'vertex index {v} out of range')
+            self.vertices.insert(index, int(v))
+        self.mesh_valid = False
 
-        # insert vertices
-        # Note: if here, we know that vertices is a valid list of ints
-        # reset the mesh
-        vertices.reverse()
-        for k in vertices:
-            self.vertices.insert(i, int(k))
+    def remove_vertices(self, remove_vertices):
+        """Remove one or more vertex indices from the :c:`MaterialRegion2D`.
+
+        Parameters
+        ----------
+        remove_vertices : int | list[int]
+            The vertex or list of vertices to remove from :a:`vertices`.
+
+        Note
+        -----
+        Before removing the values in **remove_vertices**, an attempt will be
+        made to cast it to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        ValueError
+            If **remove_vertices** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **remove_vertices** cannot be cast to `int` or
+            are not in :a:`vertices`.
+
+        Examples
+        --------
+        >>> # create mesh and material region, add/remove some vertices
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh)
+        >>> mr.insert_vertices(0, [0, 1, 2, 3])
+        >>> mr.remove_vertices(1)
+        >>> print(mr.vertices)
+        [0, 2, 3]
+
+        >>> # remove multiple vertices
+        >>> mr.insert_vertices(0, 1)
+        >>> mr.remove_vertices([1, 3])
+        >>> print(mr.vertices)
+        [0, 2]
+
+        >>> # the list of vertices to remove need not be 1d
+        >>> # if not, it will be flattened
+        >>> mr.insert_vertices(1, 1)
+        >>> mr.insert_vertices(3, 3)
+        >>> mr.remove_vertices([[0, 1], [2, 3]])
+        >>> print(mr.vertices)
+        []
+
+        >>> # remove no vertices, in two different ways
+        >>> mr.insert_vertices(0, [0, 1, 2, 3])
+        >>> mr.remove_vertices(None)
+        >>> mr.remove_vertices([])
+        >>> print(mr.vertices)
+        [0, 1, 2, 3]
+
+        >>> # try to remove some invalid vertices
+        >>> mr.remove_vertices('one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> mr.remove_vertices(4)
+        Traceback (most recent call last):
+            ...
+        ValueError: list.remove(x): x not in list
+        >>> mr.remove_vertices(
+        ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        """
+        if remove_vertices is None:
+            return
+        remove_vertices = np.array(remove_vertices, dtype=int, ndmin=1)
+        if len(remove_vertices) == 0:
+            return
+        remove_vertices = remove_vertices.ravel()
+        for rv in remove_vertices:
+            self.vertices.remove(rv)
         self.mesh.mesh_valid = False
 
     def plot(self, ax=None, fill=True, line_type='-k'):

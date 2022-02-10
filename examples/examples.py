@@ -19,7 +19,7 @@ def rectangular_mesh():
     print('*** Simple rectangular domain:\n')
 
     # initialize the mesh object
-    rect_mesh = msh.PolyMesh2D()
+    rect_mesh = msh.PolyMesh2D('Rectangular Mesh')
 
     # add main corner vertices
     rect_mesh.add_vertices([[0, 0], [0, 20], [0, 40.],
@@ -30,16 +30,11 @@ def rectangular_mesh():
     rect_mesh.insert_boundary_vertices(0, [k for k
                                            in range(rect_mesh.num_vertices)])
 
-    print(rect_mesh.boundary_vertices)
     # add material types and regions
     # Note: here we create a MaterialRegion2D object and
     #       then add it to the mesh
     rock = mtl.Material('rock', color='xkcd:stone')
-    rock_region = msh.MaterialRegion2D(rect_mesh,
-                                       [k for k
-                                        in rect_mesh.boundary_vertices],
-                                       rock)
-    rect_mesh.add_material_regions(rock_region)
+    msh.MaterialRegion2D(rect_mesh, rect_mesh.boundary_vertices, rock)
 
     # generate mesh and print properties
     # Note: here [16,32] is the grid size for mesh seed points
@@ -117,7 +112,7 @@ def dam_mesh():
     print('*** Dam with multiple material regions:\n')
 
     # initialize the mesh object
-    dam_mesh = msh.PolyMesh2D()
+    dam_mesh = msh.PolyMesh2D('Dam Mesh')
 
     # add boundary vertices
     # Note: here we show that vertices can be passed as single coordinate pairs
@@ -137,15 +132,10 @@ def dam_mesh():
     clay = mtl.Material('clay', color='xkcd:clay')
 
     # add material regions
-    # Note: here we test three different ways to pass input to
-    #       add_material_regions
-    #       list of lists of vertices and list of material types
-    #       list of vertices and single material type
-    #       MaterialRegion2D object
-    dam_mesh.add_material_regions([[0, 6, 1, 5]], [gravel])
-    dam_mesh.add_material_regions([2, 3, 4], gravel)
-    clay_region = msh.MaterialRegion2D(dam_mesh, [1, 2, 4, 5], clay)
-    dam_mesh.add_material_regions(clay_region)
+    # Note: new material regions are added to their parent mesh by default
+    msh.MaterialRegion2D(dam_mesh, [0, 6, 1, 5], gravel)
+    msh.MaterialRegion2D(dam_mesh, [2, 3, 4], gravel)
+    msh.MaterialRegion2D(dam_mesh, [1, 2, 4, 5], clay)
 
     # add edges to be preserved in mesh generation
     # Note: the left edge of the clay region will be a "soft" edge
@@ -211,7 +201,7 @@ def tunnel_mesh():
     print('*** Symmetric tunnel with concave boundary:\n')
 
     # initialize the mesh object
-    tunnel_mesh = msh.PolyMesh2D()
+    tunnel_mesh = msh.PolyMesh2D('Tunnel Mesh')
 
     # add main corners
     # Note: we also insert a vertex in the middle of a straight section of
@@ -229,9 +219,7 @@ def tunnel_mesh():
 
     # add material types and regions
     rock = mtl.Material('rock', color='xkcd:greenish')
-    tunnel_mesh.add_material_regions([k for k
-                                      in range(tunnel_mesh.num_vertices)],
-                                     rock)
+    msh.MaterialRegion2D(tunnel_mesh, tunnel_mesh.boundary_vertices, rock)
 
     # add mesh edges
     # Note: mesh edges need not be at material region boundaries
