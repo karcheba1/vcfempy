@@ -103,13 +103,15 @@ class PolyMesh2D():
     rock
 
     >>> # generate a simple mesh and check some mesh statistics
-    >>> msh.generate_mesh((2, 2))
+    >>> msh.mesh_scale = 0.4
+    >>> msh.add_seed_points([0.5, 0.5])
+    >>> msh.generate_mesh()
     >>> print(msh.num_nodes)
-    10
+    16
     >>> print(msh.num_elements)
-    4
+    9
     >>> print(msh.num_nodes_per_element)
-    [5, 4, 4, 5]
+    [4, 4, 4, 4, 4, 4, 4, 4, 4]
 
     >>> # print out detailed mesh information
     >>> msh.verbose_printing = True
@@ -122,10 +124,10 @@ class PolyMesh2D():
     Verbose Printing = True
     High Order Quadrature = False
     Mesh Generated = True
-    Number of Nodes = 10
-    Number of Elements = 4
-    Number of Interface Elements = 5
-    Number of Boundary Elements = 8
+    Number of Nodes = 16
+    Number of Elements = 9
+    Number of Interface Elements = 12
+    Number of Boundary Elements = 12
     <BLANKLINE>
     Vertices
     [[0. 0.]
@@ -143,43 +145,61 @@ class PolyMesh2D():
     [0, 1, 2, 3]
     <BLANKLINE>
     Nodes
-    [[0.     0.    ]
-     [0.     1.    ]
-     [0.375  0.5625]
-     [0.     0.375 ]
-     [1.     1.    ]
-     [0.375  1.    ]
-     [0.625  0.4375]
-     [1.     0.625 ]
-     [1.     0.    ]
-     [0.625  0.    ]]
+    [[-2.77555756e-17  1.00000000e+00]
+     [ 3.50000000e-01  1.00000000e+00]
+     [ 0.00000000e+00  2.77555756e-17]
+     [ 3.50000000e-01  2.77555756e-17]
+     [ 1.00000000e+00  1.00000000e+00]
+     [ 6.50000000e-01  1.00000000e+00]
+     [ 6.50000000e-01  6.50000000e-01]
+     [ 1.00000000e+00  6.50000000e-01]
+     [ 1.00000000e+00 -2.77555756e-17]
+     [ 6.50000000e-01 -2.77555756e-17]
+     [ 6.50000000e-01  3.50000000e-01]
+     [ 1.00000000e+00  3.50000000e-01]
+     [ 2.77555756e-17  6.50000000e-01]
+     [ 2.77555756e-17  3.50000000e-01]
+     [ 3.50000000e-01  6.50000000e-01]
+     [ 3.50000000e-01  3.50000000e-01]]
     <BLANKLINE>
     Element Nodes, Areas, Points, Centroids, Materials
-    [9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], \
-[0.32251082 0.24323593], rock
-    [8, 7, 6, 9], 0.19921875, [0.875 0.25 ], \
-[0.82352941 0.26838235], rock
-    [2, 5, 1, 3], 0.19921875, [0.125 0.75 ], \
-[0.17647059 0.73161765], rock
-    [6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], \
-[0.67748918 0.75676407], rock
+    [15, 14, 6, 10], -0.09000000000000002, [0.5 0.5], [0.5 0.5], rock
+    [15, 3, 2, 13], -0.12249999999999998, [0.2 0.2], [0.175 0.175], rock
+    [12, 0, 1, 14], -0.12249999999999998, [0.2 0.8], [0.175 0.825], rock
+    [7, 4, 5, 6], 0.12250000000000003, [0.8 0.8], [0.825 0.825], rock
+    [11, 8, 9, 10], -0.1225, [0.8 0.2], [0.825 0.175], rock
+    [15, 13, 12, 14], -0.10499999999999998, [0.2 0.5], [0.175 0.5  ], rock
+    [5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], rock
+    [10, 6, 7, 11], -0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock
+    [3, 15, 10, 9], -0.105, [0.5 0.2], [0.5   0.175], rock
     <BLANKLINE>
     Interface Element Nodes and Neighbors
-    [2, 5], [2, 3]
-    [2, 3], [2, 0]
-    [2, 6], [3, 0]
-    [6, 7], [3, 1]
-    [6, 9], [1, 0]
+    [5, 6], [3, 6]
+    [6, 7], [3, 7]
+    [9, 10], [4, 8]
+    [10, 11], [4, 7]
+    [6, 10], [7, 0]
+    [12, 14], [5, 2]
+    [13, 15], [5, 1]
+    [14, 15], [5, 0]
+    [1, 14], [2, 6]
+    [3, 15], [1, 8]
+    [6, 14], [0, 6]
+    [10, 15], [0, 8]
     <BLANKLINE>
     Boundary Element Nodes and Neighbors
-    [1, 3], 2
-    [0, 3], 0
+    [0, 1], 2
+    [2, 3], 1
     [4, 5], 3
-    [1, 5], 2
     [4, 7], 3
-    [8, 9], 1
-    [0, 9], 0
-    [7, 8], 1
+    [1, 5], 6
+    [8, 9], 4
+    [8, 11], 4
+    [7, 11], 7
+    [3, 9], 8
+    [12, 13], 5
+    [0, 12], 2
+    [2, 13], 1
 
     >>> # plot the mesh and save an image
     >>> import matplotlib.pyplot as plt
@@ -231,6 +251,11 @@ class PolyMesh2D():
         #      high order quadrature in all elements
         self.verbose_printing = verbose_printing
         self.high_order_quadrature = high_order_quadrature
+
+        # intialize mesh properties
+        self._mesh_scale = None
+        self.mesh_rand = 0.0
+        self._seed_points = np.empty((0, 2))
 
     @property
     def name(self):
@@ -526,9 +551,11 @@ class PolyMesh2D():
         [5, 6]
 
         >>> # generate a mesh, then delete a vertex
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_elements)
-        5
+        9
         >>> msh.delete_vertices(-1)
         >>> print(msh.vertices)
         [[0.  0. ]
@@ -1470,6 +1497,41 @@ class PolyMesh2D():
         self.mesh_valid = False
 
     @property
+    def num_seed_points(self):
+        return len(self.seed_points)
+
+    @property
+    def seed_points(self):
+        return self._seed_points
+
+    def add_seed_points(self, seed_points):
+        if seed_points is None or len(seed_points) == 0:
+            return
+        seed_points = np.array(seed_points, dtype=float)
+        self._seed_points = np.vstack([self.seed_points, seed_points])
+        self.mesh_valid = False
+
+    def delete_seed_points(self, del_points):
+        # pre-process del_points: flatten, check for invalid indices, and
+        # eliminate duplicates
+        if del_points is None:
+            return
+        del_points = np.array(del_points, dtype=int, ndmin=1)
+        if len(del_points) == 0:
+            return
+        del_points = np.where(del_points < 0,
+                              del_points + self.num_seed_points,
+                              del_points)
+        del_points = np.unique(del_points)
+        if (np.any(del_points < 0)
+                or np.any(del_points >= self.num_seed_points)):
+            raise IndexError('at least one index out of range')
+
+        # delete the points and invalidate the mesh
+        self._seed_points = np.delete(self._seed_points, del_points, 0)
+        self.mesh_valid = False
+
+    @property
     def points(self):
         """Array of seed point coordinates for mesh generation of the
         :c:`PolyMesh2D`.
@@ -1502,16 +1564,23 @@ class PolyMesh2D():
         >>> print(msh.points)
         []
 
-        >>> # generate a very simple mesh
+        >>> # generate a simple mesh
         >>> # note: num_elements == len(msh.points)
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_elements)
-        4
+        9
         >>> print(msh.points)
-        [[0.375 0.25 ]
-         [0.875 0.25 ]
-         [0.125 0.75 ]
-         [0.625 0.75 ]]
+        [[0.5 0.5]
+         [0.2 0.2]
+         [0.2 0.8]
+         [0.8 0.8]
+         [0.8 0.2]
+         [0.2 0.5]
+         [0.5 0.8]
+         [0.8 0.5]
+         [0.5 0.2]]
 
         >>> # explicitly resetting the mesh clears the seed points
         >>> msh.mesh_valid = False
@@ -1521,14 +1590,19 @@ class PolyMesh2D():
         []
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> print(msh.num_elements)
-        4
+        9
         >>> print(msh.points)
-        [[0.375 0.25 ]
-         [0.875 0.25 ]
-         [0.125 0.75 ]
-         [0.625 0.75 ]]
+        [[0.5 0.5]
+         [0.2 0.2]
+         [0.2 0.8]
+         [0.8 0.8]
+         [0.8 0.2]
+         [0.2 0.5]
+         [0.5 0.8]
+         [0.8 0.5]
+         [0.5 0.2]]
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1560,9 +1634,11 @@ class PolyMesh2D():
         0
 
         >>> # generate a simple mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_nodes)
-        10
+        16
 
         >>> # explicitly resetting the mesh clears the nodes
         >>> msh.mesh_valid = False
@@ -1570,9 +1646,9 @@ class PolyMesh2D():
         0
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> print(msh.num_nodes)
-        10
+        16
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1614,18 +1690,26 @@ class PolyMesh2D():
         []
 
         >>> # generate a simple mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.nodes)
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
+        [[-2.77555756e-17  1.00000000e+00]
+         [ 3.50000000e-01  1.00000000e+00]
+         [ 0.00000000e+00  2.77555756e-17]
+         [ 3.50000000e-01  2.77555756e-17]
+         [ 1.00000000e+00  1.00000000e+00]
+         [ 6.50000000e-01  1.00000000e+00]
+         [ 6.50000000e-01  6.50000000e-01]
+         [ 1.00000000e+00  6.50000000e-01]
+         [ 1.00000000e+00 -2.77555756e-17]
+         [ 6.50000000e-01 -2.77555756e-17]
+         [ 6.50000000e-01  3.50000000e-01]
+         [ 1.00000000e+00  3.50000000e-01]
+         [ 2.77555756e-17  6.50000000e-01]
+         [ 2.77555756e-17  3.50000000e-01]
+         [ 3.50000000e-01  6.50000000e-01]
+         [ 3.50000000e-01  3.50000000e-01]]
 
         >>> # explicitly resetting the mesh clears the nodes
         >>> msh.mesh_valid = False
@@ -1633,18 +1717,24 @@ class PolyMesh2D():
         []
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> print(msh.nodes)
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
+        [[-2.77555756e-17  1.00000000e+00]
+         [ 3.50000000e-01  1.00000000e+00]
+         [ 0.00000000e+00  2.77555756e-17]
+         [ 3.50000000e-01  2.77555756e-17]
+         [ 1.00000000e+00  1.00000000e+00]
+         [ 6.50000000e-01  1.00000000e+00]
+         [ 6.50000000e-01  6.50000000e-01]
+         [ 1.00000000e+00  6.50000000e-01]
+         [ 1.00000000e+00 -2.77555756e-17]
+         [ 6.50000000e-01 -2.77555756e-17]
+         [ 6.50000000e-01  3.50000000e-01]
+         [ 1.00000000e+00  3.50000000e-01]
+         [ 2.77555756e-17  6.50000000e-01]
+         [ 2.77555756e-17  3.50000000e-01]
+         [ 3.50000000e-01  6.50000000e-01]
+         [ 3.50000000e-01  3.50000000e-01]]
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1677,9 +1767,11 @@ class PolyMesh2D():
         0
 
         >>> # generate a simple mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_elements)
-        4
+        9
 
         >>> # explicitly resetting the mesh clears the elements
         >>> msh.mesh_valid = False
@@ -1687,9 +1779,9 @@ class PolyMesh2D():
         0
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> print(msh.num_elements)
-        4
+        9
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1730,24 +1822,37 @@ class PolyMesh2D():
         []
 
         >>> # generate a simple mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.nodes)
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
+        [[-2.77555756e-17  1.00000000e+00]
+         [ 3.50000000e-01  1.00000000e+00]
+         [ 0.00000000e+00  2.77555756e-17]
+         [ 3.50000000e-01  2.77555756e-17]
+         [ 1.00000000e+00  1.00000000e+00]
+         [ 6.50000000e-01  1.00000000e+00]
+         [ 6.50000000e-01  6.50000000e-01]
+         [ 1.00000000e+00  6.50000000e-01]
+         [ 1.00000000e+00 -2.77555756e-17]
+         [ 6.50000000e-01 -2.77555756e-17]
+         [ 6.50000000e-01  3.50000000e-01]
+         [ 1.00000000e+00  3.50000000e-01]
+         [ 2.77555756e-17  6.50000000e-01]
+         [ 2.77555756e-17  3.50000000e-01]
+         [ 3.50000000e-01  6.50000000e-01]
+         [ 3.50000000e-01  3.50000000e-01]]
         >>> for e in msh.elements:
         ...     print(e.nodes)
-        [9, 0, 3, 2, 6]
-        [8, 7, 6, 9]
-        [2, 5, 1, 3]
-        [6, 2, 5, 4, 7]
+        [15, 14, 6, 10]
+        [15, 3, 2, 13]
+        [12, 0, 1, 14]
+        [7, 4, 5, 6]
+        [11, 8, 9, 10]
+        [15, 13, 12, 14]
+        [5, 1, 14, 6]
+        [10, 6, 7, 11]
+        [3, 15, 10, 9]
 
         >>> # explicitly resetting the mesh clears the elements
         >>> msh.mesh_valid = False
@@ -1755,13 +1860,18 @@ class PolyMesh2D():
         []
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> for e in msh.elements:
         ...     print(e.nodes)
-        [9, 0, 3, 2, 6]
-        [8, 7, 6, 9]
-        [2, 5, 1, 3]
-        [6, 2, 5, 4, 7]
+        [15, 14, 6, 10]
+        [15, 3, 2, 13]
+        [12, 0, 1, 14]
+        [7, 4, 5, 6]
+        [11, 8, 9, 10]
+        [15, 13, 12, 14]
+        [5, 1, 14, 6]
+        [10, 6, 7, 11]
+        [3, 15, 10, 9]
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1801,15 +1911,22 @@ class PolyMesh2D():
         ...                                  in enumerate(msh.vertices)])
 
         >>> # generate a simple mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> for e in msh.elements:
         ...     print(e.nodes)
-        [9, 0, 3, 2, 6]
-        [8, 7, 6, 9]
-        [2, 5, 1, 3]
-        [6, 2, 5, 4, 7]
+        [15, 14, 6, 10]
+        [15, 3, 2, 13]
+        [12, 0, 1, 14]
+        [7, 4, 5, 6]
+        [11, 8, 9, 10]
+        [15, 13, 12, 14]
+        [5, 1, 14, 6]
+        [10, 6, 7, 11]
+        [3, 15, 10, 9]
         >>> print(msh.num_nodes_per_element)
-        [5, 4, 4, 5]
+        [4, 4, 4, 4, 4, 4, 4, 4, 4]
 
         >>> # changing the boundary geometry clears the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1838,6 +1955,10 @@ class PolyMesh2D():
         --------
         >>> # initialize a mesh, no mesh generated yet, so list of element
         >>> # materials is empty
+        >>> # material regions can be overlapping and need not be entirely
+        >>> # inside the boundaries; to ensure all elements get assigned
+        >>> # materials, it is better to make the regions overlap, with
+        >>> # later assigned materials overwriting earlier
         >>> import vcfempy.meshgen
         >>> import vcfempy.materials
         >>> msh = vcfempy.meshgen.PolyMesh2D()
@@ -1849,7 +1970,7 @@ class PolyMesh2D():
         >>> rock = vcfempy.materials.Material('rock')
         >>> sand = vcfempy.materials.Material('sand')
         >>> mr_rock = vcfempy.meshgen.MaterialRegion2D(msh,
-        ...                                            [0, 4, 5, 3],
+        ...                                            [0, 1, 2, 3],
         ...                                            rock)
         >>> mr_sand = vcfempy.meshgen.MaterialRegion2D(msh,
         ...                                            [4, 1, 2, 5],
@@ -1859,13 +1980,20 @@ class PolyMesh2D():
 
         >>> # generate a simple mesh
         >>> # now materials will be assigned to elements
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> for m in msh.element_materials:
         ...     print(m.name)
         rock
         rock
         sand
         sand
+        rock
+        rock
+        sand
+        rock
+        rock
 
         >>> # changing the boundary geometry clears the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -1904,9 +2032,12 @@ class PolyMesh2D():
 
         >>> # generate a simple mesh
         >>> # now element areas can be calculated
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.element_areas)
-        [-0.30078125  0.19921875  0.19921875 -0.30078125]
+        [-0.09   -0.1225 -0.1225  0.1225 -0.1225 -0.105   \
+0.105  -0.105  -0.105 ]
 
         >>> # notice that element areas sum to the area of the boundary
         >>> import numpy as np
@@ -1952,12 +2083,19 @@ class PolyMesh2D():
 
         >>> # generate a simple mesh
         >>> # now element centroids can be calculated
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.element_centroids)
-        [[0.32251082 0.24323593]
-         [0.82352941 0.26838235]
-         [0.17647059 0.73161765]
-         [0.67748918 0.75676407]]
+        [[0.5   0.5  ]
+         [0.175 0.175]
+         [0.175 0.825]
+         [0.825 0.825]
+         [0.825 0.175]
+         [0.175 0.5  ]
+         [0.5   0.825]
+         [0.825 0.5  ]
+         [0.5   0.175]]
 
         >>> # changing the boundary geometry clears the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -2010,58 +2148,111 @@ class PolyMesh2D():
         >>> # now element quadrature points can be generated
         >>> # notice that the quadrature points are listed in a local
         >>> # coordinate system relative to the element centroid
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> for k, qp in enumerate(msh.element_quad_points):
         ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
         ...     print(qp)
         ...     print()
-        Element 0 quad points, nq0 = 11
-        [[ 0.22686688 -0.18242695]
-         [-0.24188312 -0.18242695]
-         [-0.24188312  0.09882305]
-         [ 0.03936688  0.23944805]
-         [ 0.22686688  0.14569805]
-         [-0.00500541 -0.12161797]
-         [-0.16125541 -0.02786797]
-         [-0.06750541  0.11275703]
-         [ 0.08874459  0.12838203]
-         [ 0.15124459 -0.01224297]
-         [ 0.          0.        ]]
+        Element 0 quad points, nq0 = 9
+        [[-1.12500000e-01 -1.12500000e-01]
+         [-1.12500000e-01  1.12500000e-01]
+         [ 1.12500000e-01  1.12500000e-01]
+         [ 1.12500000e-01 -1.12500000e-01]
+         [-7.50000000e-02 -1.11022302e-16]
+         [-1.11022302e-16  7.50000000e-02]
+         [ 7.50000000e-02 -1.11022302e-16]
+         [-1.11022302e-16 -7.50000000e-02]
+         [ 0.00000000e+00  0.00000000e+00]]
         <BLANKLINE>
         Element 1 quad points, nq1 = 9
-        [[ 0.13235294 -0.20128676]
-         [ 0.13235294  0.26746324]
-         [-0.14889706  0.12683824]
-         [-0.14889706 -0.20128676]
-         [ 0.08823529  0.02205882]
-         [-0.00551471  0.13143382]
-         [-0.09926471 -0.02481618]
-         [-0.00551471 -0.13419118]
-         [ 0.          0.        ]]
+        [[ 1.31250000e-01  1.31250000e-01]
+         [ 1.31250000e-01 -1.31250000e-01]
+         [-1.31250000e-01 -1.31250000e-01]
+         [-1.31250000e-01  1.31250000e-01]
+         [ 8.75000000e-02  0.00000000e+00]
+         [ 0.00000000e+00 -8.75000000e-02]
+         [-8.75000000e-02  1.85037171e-17]
+         [ 0.00000000e+00  8.75000000e-02]
+         [ 0.00000000e+00  0.00000000e+00]]
         <BLANKLINE>
         Element 2 quad points, nq2 = 9
-        [[ 0.14889706 -0.12683824]
-         [ 0.14889706  0.20128676]
-         [-0.13235294  0.20128676]
-         [-0.13235294 -0.26746324]
-         [ 0.09926471  0.02481618]
-         [ 0.00551471  0.13419118]
-         [-0.08823529 -0.02205882]
-         [ 0.00551471 -0.13143382]
-         [ 0.          0.        ]]
+        [[-1.31250000e-01 -1.31250000e-01]
+         [-1.31250000e-01  1.31250000e-01]
+         [ 1.31250000e-01  1.31250000e-01]
+         [ 1.31250000e-01 -1.31250000e-01]
+         [-8.75000000e-02  2.77555756e-17]
+         [-3.70074342e-17  8.75000000e-02]
+         [ 8.75000000e-02  2.77555756e-17]
+         [-1.85037171e-17 -8.75000000e-02]
+         [ 0.00000000e+00  0.00000000e+00]]
         <BLANKLINE>
-        Element 3 quad points, nq3 = 11
-        [[-0.03936688 -0.23944805]
-         [-0.22686688 -0.14569805]
-         [-0.22686688  0.18242695]
-         [ 0.24188312  0.18242695]
-         [ 0.24188312 -0.09882305]
-         [-0.08874459 -0.12838203]
-         [-0.15124459  0.01224297]
-         [ 0.00500541  0.12161797]
-         [ 0.16125541  0.02786797]
-         [ 0.06750541 -0.11275703]
-         [ 0.          0.        ]]
+        Element 3 quad points, nq3 = 9
+        [[ 1.31250000e-01 -1.31250000e-01]
+         [ 1.31250000e-01  1.31250000e-01]
+         [-1.31250000e-01  1.31250000e-01]
+         [-1.31250000e-01 -1.31250000e-01]
+         [ 8.75000000e-02  8.32667268e-17]
+         [-5.55111512e-17  8.75000000e-02]
+         [-8.75000000e-02  8.32667268e-17]
+         [-2.77555756e-17 -8.75000000e-02]
+         [ 0.00000000e+00  0.00000000e+00]]
+        <BLANKLINE>
+        Element 4 quad points, nq4 = 9
+        [[ 1.31250000e-01  1.31250000e-01]
+         [ 1.31250000e-01 -1.31250000e-01]
+         [-1.31250000e-01 -1.31250000e-01]
+         [-1.31250000e-01  1.31250000e-01]
+         [ 8.75000000e-02 -9.25185854e-18]
+         [ 8.32667268e-17 -8.75000000e-02]
+         [-8.75000000e-02 -9.25185854e-18]
+         [ 8.32667268e-17  8.75000000e-02]
+         [ 0.00000000e+00  0.00000000e+00]]
+        <BLANKLINE>
+        Element 5 quad points, nq5 = 9
+        [[ 1.31250000e-01 -1.12500000e-01]
+         [-1.31250000e-01 -1.12500000e-01]
+         [-1.31250000e-01  1.12500000e-01]
+         [ 1.31250000e-01  1.12500000e-01]
+         [ 0.00000000e+00 -7.50000000e-02]
+         [-8.75000000e-02  1.38777878e-17]
+         [ 0.00000000e+00  7.50000000e-02]
+         [ 8.75000000e-02  0.00000000e+00]
+         [ 0.00000000e+00  0.00000000e+00]]
+        <BLANKLINE>
+        Element 6 quad points, nq6 = 9
+        [[ 1.12500000e-01  1.31250000e-01]
+         [-1.12500000e-01  1.31250000e-01]
+         [-1.12500000e-01 -1.31250000e-01]
+         [ 1.12500000e-01 -1.31250000e-01]
+         [ 2.77555756e-17  8.75000000e-02]
+         [-7.50000000e-02 -2.77555756e-17]
+         [ 5.55111512e-17 -8.75000000e-02]
+         [ 7.50000000e-02 -2.77555756e-17]
+         [ 0.00000000e+00  0.00000000e+00]]
+        <BLANKLINE>
+        Element 7 quad points, nq7 = 9
+        [[-1.31250000e-01 -1.12500000e-01]
+         [-1.31250000e-01  1.12500000e-01]
+         [ 1.31250000e-01  1.12500000e-01]
+         [ 1.31250000e-01 -1.12500000e-01]
+         [-8.75000000e-02  8.32667268e-17]
+         [ 1.38777878e-16  7.50000000e-02]
+         [ 8.75000000e-02  8.32667268e-17]
+         [ 1.38777878e-16 -7.50000000e-02]
+         [ 0.00000000e+00  0.00000000e+00]]
+        <BLANKLINE>
+        Element 8 quad points, nq8 = 9
+        [[-1.12500000e-01 -1.31250000e-01]
+         [-1.12500000e-01  1.31250000e-01]
+         [ 1.12500000e-01  1.31250000e-01]
+         [ 1.12500000e-01 -1.31250000e-01]
+         [-7.50000000e-02  0.00000000e+00]
+         [-5.55111512e-17  8.75000000e-02]
+         [ 7.50000000e-02 -1.85037171e-17]
+         [-5.55111512e-17 -8.75000000e-02]
+         [ 0.00000000e+00  0.00000000e+00]]
         <BLANKLINE>
 
         >>> # changing the boundary geometry clears the mesh
@@ -2115,26 +2306,48 @@ class PolyMesh2D():
         >>> # now element quadrature points can be generated
         >>> # notice that the quadrature points are listed in a local
         >>> # coordinate system relative to the element centroid
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> for k, qw in enumerate(msh.element_quad_weights):
         ...     print(f'Element {k} quad weights, nq{k} = {len(qw)}')
         ...     print(qw)
         ...     print()
-        Element 0 quad weights, nq0 = 11
-        [0.13700319 0.12979995 0.0987549  0.09296443 0.0915012  0.08627986
-         0.08054059 0.07032208 0.07068559 0.07720864 0.06493957]
+        Element 0 quad weights, nq0 = 9
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
         <BLANKLINE>
         Element 1 quad weights, nq1 = 9
-        [0.13313931 0.13313931 0.11431492 0.11431492 0.11160285 0.09836819
-         0.10036614 0.09836819 0.09638618]
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
         <BLANKLINE>
         Element 2 quad weights, nq2 = 9
-        [0.11431492 0.11431492 0.13313931 0.13313931 0.10036614 0.09836819
-         0.11160285 0.09836819 0.09638618]
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
         <BLANKLINE>
-        Element 3 quad weights, nq3 = 11
-        [0.09296443 0.0915012  0.13700319 0.12979995 0.0987549  0.07068559
-         0.07720864 0.08627986 0.08054059 0.07032208 0.06493957]
+        Element 3 quad weights, nq3 = 9
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
+        <BLANKLINE>
+        Element 4 quad weights, nq4 = 9
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
+        <BLANKLINE>
+        Element 5 quad weights, nq5 = 9
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
+        <BLANKLINE>
+        Element 6 quad weights, nq6 = 9
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
+        <BLANKLINE>
+        Element 7 quad weights, nq7 = 9
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
+        <BLANKLINE>
+        Element 8 quad weights, nq8 = 9
+        [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
+         0.10083037 0.10083037 0.09371293]
         <BLANKLINE>
 
         >>> # changing the boundary geometry clears the mesh
@@ -2168,9 +2381,11 @@ class PolyMesh2D():
         0
 
         >>> # generate a simple mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_interface_elements)
-        5
+        12
 
         >>> # explicitly resetting the mesh clears the interface elements
         >>> msh.mesh_valid = False
@@ -2178,9 +2393,9 @@ class PolyMesh2D():
         0
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> print(msh.num_interface_elements)
-        5
+        12
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -2217,58 +2432,93 @@ class PolyMesh2D():
         >>> # and the neighbor element indices are all < msh.num_elements
         >>> # also note that interface elements all include at least one
         >>> # node that is not on the boundary
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_nodes)
-        10
+        16
         >>> print(msh.nodes)
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
+        [[-2.77555756e-17  1.00000000e+00]
+         [ 3.50000000e-01  1.00000000e+00]
+         [ 0.00000000e+00  2.77555756e-17]
+         [ 3.50000000e-01  2.77555756e-17]
+         [ 1.00000000e+00  1.00000000e+00]
+         [ 6.50000000e-01  1.00000000e+00]
+         [ 6.50000000e-01  6.50000000e-01]
+         [ 1.00000000e+00  6.50000000e-01]
+         [ 1.00000000e+00 -2.77555756e-17]
+         [ 6.50000000e-01 -2.77555756e-17]
+         [ 6.50000000e-01  3.50000000e-01]
+         [ 1.00000000e+00  3.50000000e-01]
+         [ 2.77555756e-17  6.50000000e-01]
+         [ 2.77555756e-17  3.50000000e-01]
+         [ 3.50000000e-01  6.50000000e-01]
+         [ 3.50000000e-01  3.50000000e-01]]
         >>> for e in msh.interface_elements:
         ...     print(e.nodes)
-        [2, 5]
-        [2, 3]
-        [2, 6]
+        [5, 6]
         [6, 7]
-        [6, 9]
+        [9, 10]
+        [10, 11]
+        [6, 10]
+        [12, 14]
+        [13, 15]
+        [14, 15]
+        [1, 14]
+        [3, 15]
+        [6, 14]
+        [10, 15]
         >>> print(msh.num_elements)
-        4
+        9
         >>> for e in msh.interface_elements:
         ...     print([msh.elements.index(n) for n in e.neighbors])
-        [2, 3]
-        [2, 0]
-        [3, 0]
-        [3, 1]
-        [1, 0]
-
+        [3, 6]
+        [3, 7]
+        [4, 8]
+        [4, 7]
+        [7, 0]
+        [5, 2]
+        [5, 1]
+        [5, 0]
+        [2, 6]
+        [1, 8]
+        [0, 6]
+        [0, 8]
         >>> # explicitly resetting the mesh clears the interface elements
         >>> msh.mesh_valid = False
         >>> print(msh.interface_elements)
         []
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> for e in msh.interface_elements:
         ...     print(e.nodes)
-        [2, 5]
-        [2, 3]
-        [2, 6]
+        [5, 6]
         [6, 7]
-        [6, 9]
+        [9, 10]
+        [10, 11]
+        [6, 10]
+        [12, 14]
+        [13, 15]
+        [14, 15]
+        [1, 14]
+        [3, 15]
+        [6, 14]
+        [10, 15]
         >>> for e in msh.interface_elements:
         ...     print([msh.elements.index(n) for n in e.neighbors])
-        [2, 3]
-        [2, 0]
-        [3, 0]
-        [3, 1]
-        [1, 0]
+        [3, 6]
+        [3, 7]
+        [4, 8]
+        [4, 7]
+        [7, 0]
+        [5, 2]
+        [5, 1]
+        [5, 0]
+        [2, 6]
+        [1, 8]
+        [0, 6]
+        [0, 8]
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -2301,9 +2551,11 @@ class PolyMesh2D():
         0
 
         >>> # generate a simple mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_boundary_elements)
-        8
+        12
 
         >>> # explicitly resetting the mesh clears the interface elements
         >>> msh.mesh_valid = False
@@ -2311,9 +2563,9 @@ class PolyMesh2D():
         0
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> print(msh.num_boundary_elements)
-        8
+        12
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -2350,35 +2602,47 @@ class PolyMesh2D():
         >>> # and the neighbor element indices are all < msh.num_elements
         >>> # also note that boundary elements all have both nodes on the
         >>> # analysis boundaries
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.num_nodes)
-        10
+        16
         >>> print(msh.nodes)
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
+        [[-2.77555756e-17  1.00000000e+00]
+         [ 3.50000000e-01  1.00000000e+00]
+         [ 0.00000000e+00  2.77555756e-17]
+         [ 3.50000000e-01  2.77555756e-17]
+         [ 1.00000000e+00  1.00000000e+00]
+         [ 6.50000000e-01  1.00000000e+00]
+         [ 6.50000000e-01  6.50000000e-01]
+         [ 1.00000000e+00  6.50000000e-01]
+         [ 1.00000000e+00 -2.77555756e-17]
+         [ 6.50000000e-01 -2.77555756e-17]
+         [ 6.50000000e-01  3.50000000e-01]
+         [ 1.00000000e+00  3.50000000e-01]
+         [ 2.77555756e-17  6.50000000e-01]
+         [ 2.77555756e-17  3.50000000e-01]
+         [ 3.50000000e-01  6.50000000e-01]
+         [ 3.50000000e-01  3.50000000e-01]]
         >>> for e in msh.boundary_elements:
         ...     print(e.nodes)
-        [1, 3]
-        [0, 3]
+        [0, 1]
+        [2, 3]
         [4, 5]
-        [1, 5]
         [4, 7]
+        [1, 5]
         [8, 9]
-        [0, 9]
-        [7, 8]
+        [8, 11]
+        [7, 11]
+        [3, 9]
+        [12, 13]
+        [0, 12]
+        [2, 13]
         >>> print(msh.num_elements)
-        4
+        9
         >>> print([msh.elements.index(e.neighbor)
         ...        for e in msh.boundary_elements])
-        [2, 0, 3, 2, 3, 1, 0, 1]
+        [2, 1, 3, 3, 6, 4, 4, 7, 8, 5, 2, 1]
 
         >>> # explicitly resetting the mesh clears the boundary elements
         >>> msh.mesh_valid = False
@@ -2386,20 +2650,24 @@ class PolyMesh2D():
         []
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> for e in msh.boundary_elements:
         ...     print(e.nodes)
-        [1, 3]
-        [0, 3]
+        [0, 1]
+        [2, 3]
         [4, 5]
-        [1, 5]
         [4, 7]
+        [1, 5]
         [8, 9]
-        [0, 9]
-        [7, 8]
+        [8, 11]
+        [7, 11]
+        [3, 9]
+        [12, 13]
+        [0, 12]
+        [2, 13]
         >>> print([msh.elements.index(e.neighbor)
         ...        for e in msh.boundary_elements])
-        [2, 0, 3, 2, 3, 1, 0, 1]
+        [2, 1, 3, 3, 6, 4, 4, 7, 8, 5, 2, 1]
 
         >>> # adding a boundary vertex also resets the mesh
         >>> msh.add_vertices([1.5, 0.5])
@@ -2460,11 +2728,13 @@ class PolyMesh2D():
         False
 
         >>> # generate a simple mesh, which sets mesh_valid as a side effect
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.mesh_valid)
         True
         >>> print(msh.num_elements)
-        4
+        9
 
         >>> # explicitly resetting the mesh with a bool value
         >>> msh.mesh_valid = False
@@ -2474,7 +2744,7 @@ class PolyMesh2D():
         0
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.generate_mesh()
         >>> print(msh.mesh_valid)
         True
 
@@ -2591,38 +2861,39 @@ self.nodes is empty
 
         >>> # generate a simple mesh
         >>> # elements will use minimum order quadrature
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> for k, qp in enumerate(msh.element_quad_points):
         ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
         ...     print(qp)
         ...     print() # doctest: +ELLIPSIS
-        Element 0 quad points, nq0 = 11
-        [[ 0.22686688 -0.18242695]
-         [-0.24188312 -0.18242695]
+        Element 0 quad points, nq0 = 9
         ...
-         [ 0.15124459 -0.01224297]
-         [ 0.          0.        ]]
         <BLANKLINE>
         Element 1 quad points, nq1 = 9
-        [[ 0.13235294 -0.20128676]
-         [ 0.13235294  0.26746324]
         ...
-         [-0.00551471 -0.13419118]
-         [ 0.          0.        ]]
         <BLANKLINE>
         Element 2 quad points, nq2 = 9
-        [[ 0.14889706 -0.12683824]
-         [ 0.14889706  0.20128676]
         ...
-         [ 0.00551471 -0.13143382]
-         [ 0.          0.        ]]
         <BLANKLINE>
-        Element 3 quad points, nq3 = 11
-        [[-0.03936688 -0.23944805]
-         [-0.22686688 -0.14569805]
+        Element 3 quad points, nq3 = 9
         ...
-         [ 0.06750541 -0.11275703]
-         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 4 quad points, nq4 = 9
+        ...
+        <BLANKLINE>
+        Element 5 quad points, nq5 = 9
+        ...
+        <BLANKLINE>
+        Element 6 quad points, nq6 = 9
+        ...
+        <BLANKLINE>
+        Element 7 quad points, nq7 = 9
+        ...
+        <BLANKLINE>
+        Element 8 quad points, nq8 = 9
+        ...
         <BLANKLINE>
 
         >>> # switch to high order quadrature
@@ -2634,33 +2905,32 @@ self.nodes is empty
         ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
         ...     print(qp)
         ...     print() # doctest: +ELLIPSIS
-        Element 0 quad points, nq0 = 21
-        [[ 0.2571158  -0.20675054]
-         [-0.2741342  -0.20675054]
+        Element 0 quad points, nq0 = 17
         ...
-         [ 0.10284632 -0.00832522]
-         [ 0.          0.        ]]
         <BLANKLINE>
         Element 1 quad points, nq1 = 17
-        [[ 0.15     -0.228125]
-         [ 0.15      0.303125]
         ...
-         [-0.00375  -0.09125 ]
-         [ 0.        0.      ]]
         <BLANKLINE>
         Element 2 quad points, nq2 = 17
-        [[ 0.16875  -0.14375 ]
-         [ 0.16875   0.228125]
         ...
-         [ 0.00375  -0.089375]
-         [ 0.        0.      ]]
         <BLANKLINE>
-        Element 3 quad points, nq3 = 21
-        [[-0.0446158  -0.27137446]
-         [-0.2571158  -0.16512446]
+        Element 3 quad points, nq3 = 17
         ...
-         [ 0.04590368 -0.07667478]
-         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 4 quad points, nq4 = 17
+        ...
+        <BLANKLINE>
+        Element 5 quad points, nq5 = 17
+        ...
+        <BLANKLINE>
+        Element 6 quad points, nq6 = 17
+        ...
+        <BLANKLINE>
+        Element 7 quad points, nq7 = 17
+        ...
+        <BLANKLINE>
+        Element 8 quad points, nq8 = 17
+        ...
         <BLANKLINE>
 
         >>> # switch back to low order quadrature
@@ -2672,33 +2942,32 @@ self.nodes is empty
         ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
         ...     print(qp)
         ...     print() # doctest: +ELLIPSIS
-        Element 0 quad points, nq0 = 11
-        [[ 0.22686688 -0.18242695]
-         [-0.24188312 -0.18242695]
+        Element 0 quad points, nq0 = 9
         ...
-         [ 0.15124459 -0.01224297]
-         [ 0.          0.        ]]
         <BLANKLINE>
         Element 1 quad points, nq1 = 9
-        [[ 0.13235294 -0.20128676]
-         [ 0.13235294  0.26746324]
         ...
-         [-0.00551471 -0.13419118]
-         [ 0.          0.        ]]
         <BLANKLINE>
         Element 2 quad points, nq2 = 9
-        [[ 0.14889706 -0.12683824]
-         [ 0.14889706  0.20128676]
         ...
-         [ 0.00551471 -0.13143382]
-         [ 0.          0.        ]]
         <BLANKLINE>
-        Element 3 quad points, nq3 = 11
-        [[-0.03936688 -0.23944805]
-         [-0.22686688 -0.14569805]
+        Element 3 quad points, nq3 = 9
         ...
-         [ 0.06750541 -0.11275703]
-         [ 0.          0.        ]]
+        <BLANKLINE>
+        Element 4 quad points, nq4 = 9
+        ...
+        <BLANKLINE>
+        Element 5 quad points, nq5 = 9
+        ...
+        <BLANKLINE>
+        Element 6 quad points, nq6 = 9
+        ...
+        <BLANKLINE>
+        Element 7 quad points, nq7 = 9
+        ...
+        <BLANKLINE>
+        Element 8 quad points, nq8 = 9
+        ...
         <BLANKLINE>
 
         >>> # attempting to set high_order_quadrature
@@ -2724,362 +2993,314 @@ self.nodes is empty
         for e in self.elements:
             e.invalidate_properties()
 
-    def generate_mesh(self, grid_size=[10, 10], alpha_rand=0.0,
-                      verbose_plot=False):
-        """ Generate polygonal mesh. """
-        # generate seed points within boundary
+    @property
+    def mesh_scale(self):
+        return self._mesh_scale
 
-        # set size of grid and degree of randomness
-        # total number of points is nx*ny
-        nx = grid_size[0]
-        ny = grid_size[1]
+    @mesh_scale.setter
+    def mesh_scale(self, val):
+        self._mesh_scale = float(val)
 
-        # get size parameters for grid
-        Lx = np.max(self.vertices[self.boundary_vertices, 0]) \
-            - np.min(self.vertices[self.boundary_vertices, 0])
-        Ly = np.max(self._vertices[self.boundary_vertices, 1]) \
-            - np.min(self.vertices[self.boundary_vertices, 1])
-        dx = Lx/nx
-        dy = Ly/ny
-        d_scale = 0.5 * np.linalg.norm([dx, dy])
+    @property
+    def mesh_rand(self):
+        return self._mesh_rand
 
-        # generate regular grid
-        xc = np.linspace(np.min(self.vertices[self.boundary_vertices, 0])
-                         + dx/2,
-                         np.max(self.vertices[self.boundary_vertices, 0])
-                         - dx/2, nx)
-        yc = np.linspace(np.min(self.vertices[self.boundary_vertices, 1])
-                         + dy/2,
-                         np.max(self.vertices[self.boundary_vertices, 1])
-                         - dy/2, ny)
-        xc, yc = np.meshgrid(xc, yc)
+    @mesh_rand.setter
+    def mesh_rand(self, val):
+        val = float(val)
+        if val < 0.0 or val >= 1.0:
+            raise ValueError(f'mesh_rand {val} invalid, should be in [0., 1.)')
+        self._mesh_rand = val
 
-        # shift points for hexagonal grid
-        for k in range(xc.shape[0]):
-            if k % 2:
-                xc[k, :] -= 0.25*dx
+    def _check_edge_scale(self, edge_verts):
+        d_scale = self.mesh_scale
+        for k, v0 in enumerate(self.vertices[edge_verts[:-1]]):
+            dd = self.vertices[edge_verts[k+1]] - v0
+            dd = 0.4 * np.linalg.norm(dd)
+            if dd < d_scale:
+                d_scale = dd
+        return d_scale
+
+    def _delete_points_near_edge(self, edge_verts, d_scale):
+        # no vertices, do not do anything
+        if len(edge_verts) == 0:
+            return
+        # single vertex, just delete points within d_scale
+        elif len(edge_verts) == 1:
+            v = self.vertices[edge_verts[0]]
+            keep_points = np.ones(len(self.points), dtype=bool)
+            for j, p in enumerate(self.points):
+                d = np.linalg.norm(v - p)
+                if d < d_scale:
+                    keep_points[j] = False
+            self._points = self.points[keep_points]
+            return
+        # multiple vertices, delete points near each segment
+        dv_min = -d_scale
+        dd_max = +d_scale
+        for k, v in enumerate(self.vertices[edge_verts[:-1]]):
+            tt = self.vertices[edge_verts[k+1]] - v
+            tt_len = np.linalg.norm(tt)
+            tt /= tt_len
+            dv_max = tt_len + d_scale
+            keep_points = np.ones(len(self.points), dtype=bool)
+            for j, p in enumerate(self.points):
+                vp = p - v
+                pp = v + np.dot(vp, tt) * tt
+                dd = np.linalg.norm(p - pp)
+                dv = np.sign(np.dot(pp - v, tt)) * np.linalg.norm(pp - v)
+                if dd < dd_max and dv >= dv_min and dv <= dv_max:
+                    keep_points[j] = False
+            self._points = self.points[keep_points]
+
+    def _create_edge_points(self, edge_verts, closed=False):
+        # no vertices, do not do anything
+        if len(edge_verts) == 0:
+            return
+        # single vertex, just insert points near the vertex
+        elif len(edge_verts) == 1:
+            v = self.vertices[edge_verts[0]]
+            d_scale = self._check_edge_scale(edge_verts)
+            self._delete_points_near_edge(edge_verts, d_scale)
+            self._points = np.vstack([self.points,
+                                      v + 0.5 * d_scale * np.array([-1, -1]),
+                                      v + 0.5 * d_scale * np.array([-1, +1]),
+                                      v + 0.5 * d_scale * np.array([+1, -1]),
+                                      v + 0.5 * d_scale * np.array([+1, +1])])
+            return
+        # multiple vertices, create reflections along each segment
+        top_points = np.empty((0, 2))
+        bot_points = np.empty((0, 2))
+        ref_points = np.empty((0, 2))
+
+        # ensure local d_scale is small enough for edge vertex spacing
+        check_verts = edge_verts + [edge_verts[0]] if closed else edge_verts
+        d_scale = self._check_edge_scale(check_verts)
+
+        # eliminate points near the edge
+        self._delete_points_near_edge(check_verts, d_scale)
+
+        # insert points around the edge
+        num_verts = len(edge_verts)
+        for k, v in enumerate(self.vertices[edge_verts]):
+            # first vertex, not closed, insert points before and after
+            if not closed and k == 0:
+                vp1 = self.vertices[edge_verts[k+1]]
+                tt1, nn1 = get_unit_tangent_normal(v, vp1)
+                top_points = np.vstack([top_points,
+                                        v + 0.5 * d_scale * (-tt1 - nn1),
+                                        v + 0.5 * d_scale * (+tt1 - nn1)])
+                bot_points = np.vstack([bot_points,
+                                        v + 0.5 * d_scale * (-tt1 + nn1),
+                                        v + 0.5 * d_scale * (+tt1 + nn1)])
+            # last vertex, not closed, insert points before and after
+            # also reflect points before
+            elif not closed and k == num_verts - 1:
+                vm1 = self.vertices[edge_verts[k-1]]
+                tt0, nn0 = tt1, nn1
+                # insert points behind
+                top_points = np.vstack([top_points,
+                                        v + 0.5 * d_scale * (-tt0 - nn0)])
+                bot_points = np.vstack([bot_points,
+                                        v + 0.5 * d_scale * (-tt0 + nn0)])
+                # reflect points behind
+                new_ref_points = get_edge_reflection_points(
+                                    bot_points[-2],
+                                    bot_points[-1],
+                                    vm1, tt0, d_scale, self.mesh_rand)
+                ref_points = np.vstack([ref_points, new_ref_points])
+                # insert points ahead
+                top_points = np.vstack([top_points,
+                                        v + 0.5 * d_scale * (+tt0 - nn0)])
+                bot_points = np.vstack([bot_points,
+                                        v + 0.5 * d_scale * (+tt0 + nn0)])
+            # middle vertex (or first/last vertex of a closed edge)
             else:
-                xc[k, :] += 0.25*dx
+                vm1 = self.vertices[edge_verts[k-1]]
+                vp1 = self.vertices[edge_verts[(k+1) % num_verts]]
+                tt0, nn0 = get_unit_tangent_normal(vm1, v)
+                tt1, nn1 = get_unit_tangent_normal(v, vp1)
+                tt_cross = np.cross(-tt0, tt1)
 
-        # reshape grid into list of points
-        self._points = np.vstack([xc.ravel(), yc.ravel()]).T
+                # straight vertex
+                if np.abs(tt_cross) < 1.e-8:
+                    # insert points behind
+                    top_points = np.vstack([top_points,
+                                            v + 0.5 * d_scale * (-tt1 - nn1)])
+                    bot_points = np.vstack([bot_points,
+                                            v + 0.5 * d_scale * (-tt1 + nn1)])
+                    # reflect points behind
+                    if k > 0:
+                        new_ref_points = get_edge_reflection_points(
+                                            bot_points[-2],
+                                            bot_points[-1],
+                                            vm1, tt0, d_scale, self.mesh_rand)
+                        ref_points = np.vstack([ref_points, new_ref_points])
+                    # insert points ahead
+                    top_points = np.vstack([top_points,
+                                            v + 0.5 * d_scale * (+tt1 - nn1)])
+                    bot_points = np.vstack([bot_points,
+                                            v + 0.5 * d_scale * (+tt1 + nn1)])
+                    # reflect points ahead
+                    if k == num_verts - 1:
+                        new_ref_points = get_edge_reflection_points(
+                                            top_points[-1],
+                                            top_points[0],
+                                            v, tt1, d_scale, self.mesh_rand)
+                # non-straight vertex
+                else:
+                    # find intersection point on concave side
+                    vv = 0.5 * (-tt0 + tt1)
+                    vv_len = np.linalg.norm(vv)
+                    vv /= vv_len
+                    ss = 0.5 * d_scale * np.cross(nn0, tt0) / np.cross(vv, tt0)
 
-        if verbose_plot:
-            plt.figure()
-            ax = self.plot_boundaries()
-            ax.plot(self.points[:, 0], self.points[:, 1], 'or')
-            plt.savefig('mesh0.png')
+                    # concave vertex, insert bot_point, reflect x2 top_points
+                    if tt_cross > 0:
+                        new_point = v + ss * vv
+                        bot_points = np.vstack([bot_points, new_point])
+                        new_top_points = [
+                                reflect_point_across_edge(new_point, vm1, tt0),
+                                reflect_point_across_edge(new_point, v, tt1)]
+                        top_points = np.vstack([top_points, new_top_points])
+                        # reflect points behind
+                        if k > 0:
+                            new_ref_points = get_edge_reflection_points(
+                                    bot_points[-2],
+                                    bot_points[-1],
+                                    vm1, tt0, d_scale, self.mesh_rand)
+                            ref_points = np.vstack([ref_points,
+                                                    new_ref_points])
+                    # convex vertex, insert top_point, reflect x2 bot_points
+                    else:
+                        new_point = v - ss * vv
+                        top_points = np.vstack([top_points, new_point])
+                        new_bot_points = [
+                                reflect_point_across_edge(new_point, vm1, tt0),
+                                reflect_point_across_edge(new_point, v, tt1)]
+                        bot_points = np.vstack([bot_points, new_bot_points])
+                        # reflect points behind
+                        if k > 0:
+                            new_ref_points = get_edge_reflection_points(
+                                    top_points[-2],
+                                    top_points[-1],
+                                    vm1, tt0, d_scale, self.mesh_rand)
+                            ref_points = np.vstack([ref_points,
+                                                    new_ref_points])
+                    # reflect points ahead
+                    if k == num_verts - 1:
+                        new_ref_points = get_edge_reflection_points(
+                                top_points[-1],
+                                top_points[0],
+                                v, tt1, d_scale, self.mesh_rand)
+                        ref_points = np.vstack([ref_points, new_ref_points])
+        # update global mesh points
+        self._points = np.vstack([self.points,
+                                  top_points, bot_points, ref_points])
 
-        # randomly shift seed points
-        xc_shift = alpha_rand*dx*(2*np.random.random([xc.size, 1]) - 1)
-        yc_shift = alpha_rand*dy*(2*np.random.random([yc.size, 1]) - 1)
-        self.points[:, 0] += xc_shift[:, 0]
-        self.points[:, 1] += yc_shift[:, 0]
+    def generate_mesh(self):
+        """ Generate polygonal mesh. """
+        # if seed points provided, initialize points with those
+        self._points = np.array(self.seed_points)
+
+        # if no seed points, generate seed points on a regular grid
+        if not len(self.points):
+            xmin = (np.min(self.vertices[self.boundary_vertices, 0])
+                    - 2 * self.mesh_scale)
+            xmax = (np.max(self.vertices[self.boundary_vertices, 0])
+                    + 2 * self.mesh_scale)
+            ymin = (np.min(self.vertices[self.boundary_vertices, 1])
+                    - 2 * self.mesh_scale)
+            ymax = (np.max(self.vertices[self.boundary_vertices, 1])
+                    + 2 * self.mesh_scale)
+
+            # get dimensions and number of points for regular grid
+            Lx = xmax - xmin
+            Ly = ymax - ymin
+            nx = int(np.round(Lx / self.mesh_scale)) + 1
+            ny = int(np.round(Ly / self.mesh_scale)) + 1
+
+            # generate regular grid
+            xc = np.linspace(xmin, xmax, nx)
+            yc = np.linspace(ymin, ymax, ny)
+            xc, yc = np.meshgrid(xc, yc)
+
+            # shift points for hexagonal grid
+            for k, _ in enumerate(xc):
+                if k % 2:
+                    xc[k, :] -= 0.25 * self.mesh_scale
+                else:
+                    xc[k, :] += 0.25 * self.mesh_scale
+
+            # reshape grid into list of points
+            self._points = np.vstack([self.points,
+                                      np.vstack([xc.ravel(), yc.ravel()]).T])
+
+            # randomly shift seed points
+            if self.mesh_rand:
+                rand_shift = (self.mesh_rand * self.mesh_scale
+                              * (2. * np.random.random((xc.size, 2)) - 1.))
+                self._points += rand_shift
+
+        # generate points for mesh edges
+        for edge in self.mesh_edges:
+            self._create_edge_points(edge.vertices)
 
         # eliminate points that are outside the boundaries
         bpath = path.Path(self.vertices[self.boundary_vertices])
         in_bnd = bpath.contains_points(self.points)
         self._points = self.points[in_bnd]
 
-        if verbose_plot:
-            ax.clear()
-            self.plot_boundaries(ax)
-            ax.plot(self.points[:, 0], self.points[:, 1], 'or')
-            plt.savefig('mesh1.png')
+        # generate points for outer boundary
+        self._create_edge_points(self.boundary_vertices, True)
 
-        # remove existing points near mesh edges
-        # and add reflected points along mesh edges to capture them
-        # in the mesh
-        de_min = -d_scale
-        for edge in self.mesh_edges:
-            # skip mesh edges with invalid number of points
-            # TODO: handle polyline mesh edges
-            if edge.num_vertices < 2:
-                continue
-
-            # get vertices
-            e0 = self.vertices[edge.vertices[0]]
-            e1 = self.vertices[edge.vertices[1]]
-            ee = e1 - e0
-            ee_len = np.linalg.norm(ee)
-            de_max = ee_len + d_scale
-
-            # find points near the edge for deletion
-            keep_points = np.bool_(np.ones(len(self.points)))
-            for j, p in enumerate(self.points):
-                # find projection of the point onto the edge
-                ep = p-e0
-                pp = e0 + (np.dot(ep, ee) / np.dot(ee, ee)) * ee
-                # check if point is close to the edge
-                # and within the length of the edge
-                # +/- d_scale
-                d = np.linalg.norm(p-pp)
-                de = np.sign(np.dot(pp-e0, ee)) * np.linalg.norm(pp-e0)
-                if d < 0.5*d_scale and de >= de_min and de <= de_max:
-                    keep_points[j] = False
-            # delete points near the edge
-            self._points = self.points[keep_points]
-
-            # get unit vector in direction of edge and point step size
-            # Note: Add 1 to number of points because 2 points will be added
-            #       a half step off each end of the mesh edge to preserve the
-            #       vertices at the ends
-            ee_hat = ee / ee_len
-            nn_hat = np.array([ee_hat[1], -ee_hat[0]])
-            num_points = int(np.round(ee_len / d_scale)) + 1
-            de = (ee_len + d_scale) / num_points
-
-            # make list of points to add along edge
-            # and add them to the overall point list
-            new_points = []
-            dp_list = np.linspace(-0.5*de, ee_len+0.5*de, num_points)
-            for dp in dp_list:
-                # add points on both sides of the edge
-                new_points.append(e0 + dp*ee_hat + 0.25*d_scale*nn_hat)
-                new_points.append(e0 + dp*ee_hat - 0.25*d_scale*nn_hat)
-            self._points = np.vstack([self.points, new_points])
+        # generate Voronoi diagram
+        vor = Voronoi(self.points)
 
         # eliminate points that are outside the boundaries
+        points_to_keep = np.arange(len(self.points))
         in_bnd = bpath.contains_points(self.points)
         self._points = self.points[in_bnd]
+        points_to_keep = points_to_keep[in_bnd]
 
-        if verbose_plot:
-            ax.clear()
-            self.plot_boundaries(ax)
-            ax.plot(self.points[:, 0], self.points[:, 1], 'or')
-            plt.savefig('mesh2.png')
+        # get elements to keep
+        point_elements = np.array(vor.point_region, dtype=int)
+        point_elements = point_elements[in_bnd]
+        elements = []
+        for pe in point_elements:
+            elements.append(vor.regions[pe])
 
-        # add points to ensure boundary vertices are
-        # captured in the mesh
-        # Note: the added points differ depending on
-        #       whether the vertex is convex, concave, or straight
-        for k, edge in enumerate(self.boundary_edges):
-            # get previous edge
-            prv_edge = self.boundary_edges[k-1]
-
-            # get boundary vertices
-            bm1 = self.vertices[prv_edge[0]]
-            b0 = self.vertices[edge[0]]
-            bp1 = self.vertices[edge[1]]
-
-            # get unit vectors in direction of adjacent edges
-            bbf = bp1-b0
-            bbr = bm1-b0
-            d_bbf = np.linalg.norm(bbf)
-            d_bbr = np.linalg.norm(bbr)
-            bbf = bbf / d_bbf
-            bbr = bbr / d_bbr
-
-            # get unit vectors in direction normal to
-            # perpendicular bisector of the vertex
-            # Note: at convex or straight vertex, pp_hat is inward pointing
-            #       at concave vertex, pp_hat is outward pointing
-            pp_hat = bbf+bbr
-
-            # check length of pp_hat, if non-zero normalize
-            if np.linalg.norm(pp_hat) > 1.e-8:
-                pp_hat = pp_hat / np.linalg.norm(pp_hat)
-            # if length of pp_hat is zero, edge is straight
-            # make pp_hat inward pointing normal
-            else:
-                pp_hat = np.array([bbf[1], -bbf[0]])
-            # get tangential unit vector, normal to pp_hat
-            vv_hat = np.array([pp_hat[1], -pp_hat[0]])
-
-            # check for straight edge
-            bbr_bbf_crs = np.cross(bbr, bbf)
-            if np.abs(bbr_bbf_crs) < 1.e-8:
-                # get local scale, in case adjacent edges are short
-                d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
-
-                # delete points near vertex b0
-                keep_points = np.bool_(np.ones(len(self.points)))
-                for j, p in enumerate(self.points):
-                    if np.linalg.norm(p-b0) < d_scale_loc:
-                        keep_points[j] = False
-                self._points = self.points[keep_points]
-
-                # create two new points near concave vertex
-                new_points = [b0 + d_scale_loc*(0.4*pp_hat + 0.8*vv_hat),
-                              b0 + d_scale_loc*(0.4*pp_hat - 0.8*vv_hat)]
-                self._points = np.vstack([self.points, new_points])
-
-            # check for concave vertex
-            elif bbr_bbf_crs < 0:
-                # get local scale, in case adjacent edges are short
-                d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
-
-                # delete points near vertex b0
-                keep_points = np.bool_(np.ones(len(self.points)))
-                for j, p in enumerate(self.points):
-                    if np.linalg.norm(p-b0) < d_scale_loc:
-                        keep_points[j] = False
-                self._points = self.points[keep_points]
-
-                # create two new points near concave vertex
-                new_points = [b0 + 0.8*d_scale_loc*vv_hat,
-                              b0 - 0.8*d_scale_loc*vv_hat]
-                self._points = np.vstack([self.points, new_points])
-
-            # otherwise, it is a convex vertex
-            # check if adjacent edges are short
-            elif d_bbf < d_scale or d_bbr < d_scale:
-                # get local scale, in case adjacent edges are short
-                d_scale_loc = np.min([d_scale, d_bbf, d_bbr])
-
-                # delete points near vertex b0
-                keep_points = np.bool_(np.ones(len(self.points)))
-                for j, p in enumerate(self.points):
-                    if np.linalg.norm(p-b0) < d_scale_loc:
-                        keep_points[j] = False
-                self._points = self.points[keep_points]
-
-                # create new point near convex vertex
-                # adjacent to a short boundary edge
-                new_points = [b0 + 0.8*d_scale_loc*pp_hat]
-                self._points = np.vstack([self.points, new_points])
-
-        if verbose_plot:
-            ax.clear()
-            self.plot_boundaries(ax)
-            ax.plot(self.points[:, 0], self.points[:, 1], 'or')
-            plt.savefig('mesh3.png')
-
-        # eliminate points that are outside the boundaries
-        in_bnd = bpath.contains_points(self.points)
-        self._points = self.points[in_bnd]
-
-        if verbose_plot:
-            ax.clear()
-            self.plot_boundaries(ax)
-            ax.plot(self.points[:, 0], self.points[:, 1], 'or')
-            plt.savefig('mesh4.png')
-
-        # reflect seed points about boundaries
-        # this ensures a voronoi diagram with ridges along each boundary
-        dmax = np.min([4.0*d_scale, Lx, Ly])
-        reflected_points = []
-        for p in self.points:
-            for k, edge in enumerate(self.boundary_edges):
-                # get previous and next edges
-                prv_edge = self.boundary_edges[k-1]
-                nxt_edge = self.boundary_edges[(k+1)
-                                               % self.num_boundary_vertices]
-
-                # get boundary vertices
-                bm1 = self.vertices[prv_edge[0]]
-                b0 = self.vertices[edge[0]]
-                b1 = self.vertices[edge[1]]
-                b2 = self.vertices[nxt_edge[1]]
-
-                # set flags for convex vertices
-                bbr0 = (bm1-b0) / np.linalg.norm(bm1-b0)
-                bbf0 = (b1-b0) / np.linalg.norm(b1-b0)
-                is_cvx0 = (np.cross(bbr0, bbf0) > 0)
-                bbr1 = (b0-b1) / np.linalg.norm(b0-b1)
-                bbf1 = (b2-b1) / np.linalg.norm(b2-b1)
-                is_cvx1 = (np.cross(bbr1, bbf1) > 0)
-
-                # project point onto boundary
-                # bp = b0 + |a|cos(theta)*bhat
-                #    = b0 + |a|cos(theta)*b / |b|
-                #    = b0 + |a||b|cos(theta)*b / (|b||b|)
-                #    = b0 + (a.b / b.b)*b
-                # bhat = b / |b|
-                # a.b = |a||b|cos(theta)
-                # b.b = |b||b|
-                bb = b1-b0
-                bp = p-b0
-                pp = b0 + (np.dot(bp, bb) / np.dot(bb, bb)) * bb
-                dp = pp-p
-                d = np.linalg.norm(dp)
-
-                # get outward normal of current edge
-                nhat = np.array([-bb[1], bb[0]]) / np.linalg.norm(bb)
-
-                # check distance to boundary, and direction of dp
-                # only reflect points within dmax of boundary segment
-                # and where dp points outward
-                if d < dmax and np.dot(dp, nhat) > 0:
-                    # check whether vertices are convex
-                    # Note: always reflect if vertices are convex
-                    #       but at concave vertices only reflect if
-                    #       the projected point pp is within the segment
-                    db = pp-b0
-                    db = np.sign(np.dot(db, bb)) * np.linalg.norm(db) \
-                        / np.linalg.norm(bb)
-                    if (is_cvx0 or db >= 0.0) and (is_cvx1 or db <= 1.0):
-                        reflected_points.append(p + 2*dp)
-        # convert reflected points list to array
-        reflected_points = np.array(reflected_points)
-
-        if verbose_plot:
-            ax.clear()
-            self.plot_boundaries(ax)
-            ax.plot(self.points[:, 0], self.points[:, 1], 'or')
-            ax.plot(reflected_points[:, 0], reflected_points[:, 1], 'xr')
-            plt.savefig('mesh5.png')
-
-        # create Voronoi diagram of seed points
-        all_points = np.vstack([self.points, reflected_points])
-        vor = Voronoi(all_points)
-
-        # get list of Voronoi regions inside the boundary
-        npoint = len(self.points)
-        point_region = vor.point_region[:npoint]
-
-        # compile list of elements to keep
-        # Note: this is a temporary variable,
-        #       element objects will be created later
-        element_nodes = []
-        for k in point_region:
-            element_nodes.append(vor.regions[k])
-
-        # compile list of vertices to keep
-        nodes_to_keep = set()
-        for e in element_nodes:
-            for k in e:
-                nodes_to_keep.add(k)
-        nodes_to_keep = list(nodes_to_keep)
-
-        # obtain vertices
-        nodes = []
-        for k in nodes_to_keep:
-            nodes.append(vor.vertices[k])
-        self._nodes = np.array(nodes)
-
-        # obtain ridge information to keep
-        # Note: these are lists indicating neighbouring elements
-        #       and the edges between elements
-        element_neighbors = []
+        # get edges to keep
         element_edges = []
+        element_neighbors = []
+        element_dict = {n: k for k, n in enumerate(points_to_keep)}
         for rp, rv in zip(vor.ridge_points, vor.ridge_vertices):
-
-            # check if ridge contains at least one point inside the boundary
-            if rp[0] < npoint or rp[1] < npoint:
-
-                # save the ridge
-                # if either ridge point was outside the boundary,
-                # change it to -1
-                element_neighbors.append([rp[0]
-                                          if rp[0] < npoint else -1,
-                                          rp[1]
-                                          if rp[1] < npoint else -1])
-                # save the ridge vertices
+            if in_bnd[rp[0]] or in_bnd[rp[1]]:
                 element_edges.append(rv)
+                element_neighbors.append([element_dict[rp[0]]
+                                          if in_bnd[rp[0]] else -1,
+                                          element_dict[rp[1]]
+                                          if in_bnd[rp[1]] else -1])
+
+        # get nodes to keep
+        nodes_to_keep = []
+        for e in elements:
+            nodes_to_keep += e
+        nodes_to_keep = np.unique(nodes_to_keep)
+        self._nodes = vor.vertices[nodes_to_keep]
 
         # convert node indices to reduced set of those kept in/on boundary
         node_dict = {n: k for k, n in enumerate(nodes_to_keep)}
-        for k, e in enumerate(element_nodes):
-            for j, v in enumerate(element_nodes[k]):
-                element_nodes[k][j] = node_dict[element_nodes[k][j]]
-        for k, e in enumerate(element_edges):
-            for j, v in enumerate(element_edges[k]):
-                element_edges[k][j] = node_dict[element_edges[k][j]]
+        for k, el in enumerate(elements):
+            for j, n in enumerate(el):
+                elements[k][j] = node_dict[n]
+        for k, ee in enumerate(element_edges):
+            for j, n in enumerate(ee):
+                element_edges[k][j] = node_dict[n]
 
         # determine material type of each element
         m0 = mtl.Material('NULL')
-        element_materials = [m0 for k, _ in enumerate(element_nodes)]
+        element_materials = [m0 for k, _ in enumerate(elements)]
         element_materials = np.array(element_materials)
         for mr in self.material_regions:
             bpath = path.Path(self.vertices[mr.vertices, :])
@@ -3088,7 +3309,7 @@ self.nodes is empty
 
         # create list of elements
         self._elements = []
-        for e, m in zip(element_nodes, element_materials):
+        for e, m in zip(elements, element_materials):
             # create a new element and add it to the list of elements
             # Note: here, the first argument self initializes the element
             #       with a reference to the current mesh as its parent mesh
@@ -3099,8 +3320,8 @@ self.nodes is empty
         self._boundary_elements = []
         for ee, en in zip(element_edges, element_neighbors):
             # check for boundary element
-            if en[0] == -1 or en[1] == -1:
-                neighbor = (self.elements[en[1]] if en[0] == -1
+            if en[0] < 0 or en[1] < 0:
+                neighbor = (self.elements[en[1]] if en[0] < 0
                             else self.elements[en[0]])
                 self.boundary_elements.append(
                         BoundaryElement2D(self, ee, neighbor))
@@ -3115,12 +3336,6 @@ self.nodes is empty
         # set mesh valid
         # Note: the setter will perform checks for mesh validity
         self.mesh_valid = True
-
-        if verbose_plot:
-            ax.clear()
-            self.plot_mesh(ax)
-            ax.plot(self.points[:, 0], self.points[:, 1], 'or')
-            plt.savefig('mesh6.png')
 
     @property
     def verbose_printing(self):
@@ -3214,7 +3429,7 @@ self.nodes is empty
         >>> rock = vcfempy.materials.Material('rock')
         >>> sand = vcfempy.materials.Material('sand')
         >>> rock_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
-        ...     vertices=[0, 4, 5, 3], name='rock region', material=rock)
+        ...     vertices=[0, 1, 2, 3], name='rock region', material=rock)
         >>> sand_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
         ...     vertices=[4, 1, 2, 5], name='sand region', material=sand)
         >>> print(msh)
@@ -3229,7 +3444,9 @@ self.nodes is empty
 
         >>> # turn verbose printing back on and generate the mesh
         >>> msh.verbose_printing = 'yes'
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh)
         vcfempy.meshgen.PolyMesh2D 'test mesh'
         Number of Vertices = 6
@@ -3239,10 +3456,10 @@ self.nodes is empty
         Verbose Printing = True
         High Order Quadrature = False
         Mesh Generated = True
-        Number of Nodes = 10
-        Number of Elements = 4
-        Number of Interface Elements = 5
-        Number of Boundary Elements = 8
+        Number of Nodes = 16
+        Number of Elements = 9
+        Number of Interface Elements = 12
+        Number of Boundary Elements = 12
         <BLANKLINE>
         Vertices
         [[0.  0. ]
@@ -3259,49 +3476,67 @@ self.nodes is empty
         [[0, 1], [1, 2], [2, 3], [3, 0]]
         <BLANKLINE>
         Material Region: rock region, Material: rock
-        [0, 4, 5, 3]
+        [0, 1, 2, 3]
         <BLANKLINE>
         Material Region: sand region, Material: sand
         [4, 1, 2, 5]
         <BLANKLINE>
         Nodes
-        [[0.     0.    ]
-         [0.     1.    ]
-         [0.375  0.5625]
-         [0.     0.375 ]
-         [1.     1.    ]
-         [0.375  1.    ]
-         [0.625  0.4375]
-         [1.     0.625 ]
-         [1.     0.    ]
-         [0.625  0.    ]]
+        [[-2.77555756e-17  1.00000000e+00]
+         [ 3.50000000e-01  1.00000000e+00]
+         [ 0.00000000e+00  2.77555756e-17]
+         [ 3.50000000e-01  2.77555756e-17]
+         [ 1.00000000e+00  1.00000000e+00]
+         [ 6.50000000e-01  1.00000000e+00]
+         [ 6.50000000e-01  6.50000000e-01]
+         [ 1.00000000e+00  6.50000000e-01]
+         [ 1.00000000e+00 -2.77555756e-17]
+         [ 6.50000000e-01 -2.77555756e-17]
+         [ 6.50000000e-01  3.50000000e-01]
+         [ 1.00000000e+00  3.50000000e-01]
+         [ 2.77555756e-17  6.50000000e-01]
+         [ 2.77555756e-17  3.50000000e-01]
+         [ 3.50000000e-01  6.50000000e-01]
+         [ 3.50000000e-01  3.50000000e-01]]
         <BLANKLINE>
         Element Nodes, Areas, Points, Centroids, Materials
-        [9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], \
-[0.32251082 0.24323593], rock
-        [8, 7, 6, 9], 0.19921875, [0.875 0.25 ], \
-[0.82352941 0.26838235], rock
-        [2, 5, 1, 3], 0.19921875, [0.125 0.75 ], \
-[0.17647059 0.73161765], sand
-        [6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], \
-[0.67748918 0.75676407], sand
+        [15, 14, 6, 10], -0.09000000000000002, [0.5 0.5], [0.5 0.5], rock
+        [15, 3, 2, 13], -0.12249999999999998, [0.2 0.2], [0.175 0.175], rock
+        [12, 0, 1, 14], -0.12249999999999998, [0.2 0.8], [0.175 0.825], sand
+        [7, 4, 5, 6], 0.12250000000000003, [0.8 0.8], [0.825 0.825], sand
+        [11, 8, 9, 10], -0.1225, [0.8 0.2], [0.825 0.175], rock
+        [15, 13, 12, 14], -0.10499999999999998, [0.2 0.5], [0.175 0.5  ], rock
+        [5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], sand
+        [10, 6, 7, 11], -0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock
+        [3, 15, 10, 9], -0.105, [0.5 0.2], [0.5   0.175], rock
         <BLANKLINE>
         Interface Element Nodes and Neighbors
-        [2, 5], [2, 3]
-        [2, 3], [2, 0]
-        [2, 6], [3, 0]
-        [6, 7], [3, 1]
-        [6, 9], [1, 0]
+        [5, 6], [3, 6]
+        [6, 7], [3, 7]
+        [9, 10], [4, 8]
+        [10, 11], [4, 7]
+        [6, 10], [7, 0]
+        [12, 14], [5, 2]
+        [13, 15], [5, 1]
+        [14, 15], [5, 0]
+        [1, 14], [2, 6]
+        [3, 15], [1, 8]
+        [6, 14], [0, 6]
+        [10, 15], [0, 8]
         <BLANKLINE>
         Boundary Element Nodes and Neighbors
-        [1, 3], 2
-        [0, 3], 0
+        [0, 1], 2
+        [2, 3], 1
         [4, 5], 3
-        [1, 5], 2
         [4, 7], 3
-        [8, 9], 1
-        [0, 9], 0
-        [7, 8], 1
+        [1, 5], 6
+        [8, 9], 4
+        [8, 11], 4
+        [7, 11], 7
+        [3, 9], 8
+        [12, 13], 5
+        [0, 12], 2
+        [2, 13], 1
 
         >>> # attempting to set verbose_printing
         >>> # to a non-truth-like str value
@@ -3522,7 +3757,9 @@ class MaterialRegion2D():
 
     >>> # generate a mesh, then change material region material
     >>> # this clears the mesh
-    >>> msh.generate_mesh((2, 2))
+    >>> msh.mesh_scale = 0.4
+    >>> msh.add_seed_points([0.5, 0.5])
+    >>> msh.generate_mesh()
     >>> print(msh.mesh_valid)
     True
     >>> rock_region.material = None
@@ -3535,7 +3772,7 @@ class MaterialRegion2D():
     >>> # this also clears the mesh
     >>> # note that the material region need not be fully inside the
     >>> # mesh boundaries
-    >>> msh.generate_mesh((2, 2))
+    >>> msh.generate_mesh()
     >>> print(msh.mesh_valid)
     True
     >>> msh.add_vertices([0.5, 1.5])
@@ -3786,7 +4023,9 @@ class MaterialRegion2D():
         rock
 
         >>> # changing material type of a material region resets the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.mesh_valid)
         True
         >>> mr.material = None
@@ -4118,7 +4357,9 @@ class MeshEdge2D():
 
     >>> # generate a mesh, then change mesh edge material
     >>> # this clears the mesh
-    >>> msh.generate_mesh((2, 2))
+    >>> msh.mesh_scale = 0.4
+    >>> msh.add_seed_points([0.5, 0.5])
+    >>> msh.generate_mesh()
     >>> print(msh.mesh_valid)
     True
     >>> rock_joint.material = None
@@ -4129,7 +4370,7 @@ class MeshEdge2D():
 
     >>> # regenerate the mesh, then change the mesh edge vertices
     >>> # this also clears the mesh
-    >>> msh.generate_mesh((2, 2))
+    >>> msh.generate_mesh()
     >>> print(msh.mesh_valid)
     True
     >>> msh.add_vertices([0.5, 0.65])
@@ -4389,7 +4630,9 @@ class MeshEdge2D():
         sandy joint
 
         >>> # changing material type of an edge resets the mesh
-        >>> msh.generate_mesh((2, 2))
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
         >>> print(msh.mesh_valid)
         True
         >>> me.material = None
@@ -5720,3 +5963,34 @@ def polygon_centroid(x, area=None):
         cent += (v0+v1) * d
     cent /= (6. * area)
     return cent, area
+
+
+def get_unit_tangent_normal(v0, v1):
+    tt = v1 - v0
+    tt_len = np.linalg.norm(tt)
+    tt /= tt_len
+    nn = np.array([tt[1], -tt[0]])
+    return tt, nn
+
+
+def reflect_point_across_edge(p, v, tt):
+    vp = p - v
+    pp = v + np.dot(vp, tt) * tt
+    return (2 * pp - p)
+
+
+def get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
+    rr = rp1 - rp0
+    rr_len = np.linalg.norm(rr)
+    rr /= rr_len
+    num_points = int(np.round(rr_len / d_scale)) + 1
+    if num_points <= 2:
+        return np.empty((0, 2))
+    dr = np.linspace(0., rr_len, num_points)[1:-1]
+    dr += alpha_rand * d_scale * (2. * np.random.random(num_points - 2) - 1.)
+    ref_points = []
+    for ddrr in dr:
+        rp = rp0 + ddrr * rr
+        ref_points.append(rp)
+        ref_points.append(reflect_point_across_edge(rp, v, tt))
+    return np.array(ref_points)

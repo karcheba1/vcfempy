@@ -39,7 +39,9 @@ def rectangular_mesh():
     # generate mesh and print properties
     # Note: here [16,32] is the grid size for mesh seed points
     #       and 0.2 is the degree of random shifting
-    rect_mesh.generate_mesh([8, 16], 0.2)
+    rect_mesh.mesh_scale = 2.5
+    rect_mesh.mesh_rand = 0.2
+    rect_mesh.generate_mesh()
     print(rect_mesh)
 
     # plot histogram of number of nodes per element
@@ -118,7 +120,7 @@ def dam_mesh():
     # Note: here we show that vertices can be passed as single coordinate pairs
     #       or as lists of coordinate pairs
     #       numpy arrays can also be used
-    dam_mesh.add_vertices([[0, 0], [88.5, 65], [92.5, 65], [180, 0]])
+    dam_mesh.add_vertices([[0, 0], [84, 65], [92.5, 65], [180, 0]])
     dam_mesh.add_vertices([92.5, 0])
     dam_mesh.add_vertices([45, 0])
     dam_mesh.add_vertices([55, 30])
@@ -143,7 +145,9 @@ def dam_mesh():
     msh.MeshEdge2D(dam_mesh, [2, 4])
 
     # generate the mesh and print basic mesh properties
-    dam_mesh.generate_mesh([44, 16], 0.2)
+    dam_mesh.mesh_scale = 4.0
+    dam_mesh.mesh_rand = 0.2
+    dam_mesh.generate_mesh()
     print(dam_mesh)
 
     # plot histogram of number of nodes per element
@@ -178,8 +182,8 @@ def dam_mesh():
 
     # test area using generated quadrature
     int_test = np.zeros(1)
-    int_exp = np.array([0.5*55*30 + 0.5*(88.5-55)*(30+65)
-                        + (92.5-88.5)*65 + 0.5*65*(180-92.5)])
+    int_exp = np.array([0.5*55*30 + 0.5*(84-55)*(30+65)
+                        + (92.5-84)*65 + 0.5*65*(180-92.5)])
     for e in dam_mesh.elements:
         wq = e.quad_weights
         area = e.area
@@ -206,7 +210,7 @@ def tunnel_mesh():
     # add main corners
     # Note: we also insert a vertex in the middle of a straight section of
     #       boundary these can be added to aid in adding boundary conditions
-    tunnel_mesh.add_vertices([[0, 20.], [20, 20], [20, 0], [15, 0]])
+    tunnel_mesh.add_vertices([[0, 15.], [0, 20.], [20, 20], [20, 0], [15, 0]])
 
     # create circular arc (concave)
     theta = np.linspace(0, 0.5*np.pi, 20)
@@ -226,13 +230,19 @@ def tunnel_mesh():
     #       they can also be used to force element edge alignment
     #       (e.g. with joints in rock or existing planes of failure)
     nv = tunnel_mesh.num_vertices
-    tunnel_mesh.add_vertices([[2.5, 17.5], [10., 12.5], [12.5, 15.],
+    tunnel_mesh.add_vertices([[2.5, 17.5],
+                              [10., 12.5],
+                              [12.,  7.5],
+                              [ 8., 17.5],
+                              [12.5, 15.],
                               [17.5, 2.5]])
-    msh.MeshEdge2D(tunnel_mesh, [nv, nv+1])
-    msh.MeshEdge2D(tunnel_mesh, [nv+3, nv+2])
+    msh.MeshEdge2D(tunnel_mesh, [nv, nv+1, nv+2])
+    msh.MeshEdge2D(tunnel_mesh, [nv+5, nv+4, nv+3])
 
     # generate mesh and show properties
-    tunnel_mesh.generate_mesh([20, 20], 0.3)
+    tunnel_mesh.mesh_scale = 0.5
+    tunnel_mesh.mesh_rand = 0.3
+    tunnel_mesh.generate_mesh()
     print(tunnel_mesh)
 
     # plot histogram of number of nodes per element

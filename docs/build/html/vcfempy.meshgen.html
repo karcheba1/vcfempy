@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>vcfempy.meshgen module &mdash; VcFemPy 0.0.8 documentation</title>
+  <title>vcfempy.meshgen module &mdash; VcFemPy 0.0.9 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -177,13 +177,15 @@ Passed to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.insert
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh and check some mesh statistics</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
-<span class="go">10</span>
+<span class="go">16</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="p">)</span>
-<span class="go">[5, 4, 4, 5]</span>
+<span class="go">[4, 4, 4, 4, 4, 4, 4, 4, 4]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># print out detailed mesh information</span>
@@ -197,10 +199,10 @@ Passed to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.insert
 <span class="go">Verbose Printing = True</span>
 <span class="go">High Order Quadrature = False</span>
 <span class="go">Mesh Generated = True</span>
-<span class="go">Number of Nodes = 10</span>
-<span class="go">Number of Elements = 4</span>
-<span class="go">Number of Interface Elements = 5</span>
-<span class="go">Number of Boundary Elements = 8</span>
+<span class="go">Number of Nodes = 16</span>
+<span class="go">Number of Elements = 9</span>
+<span class="go">Number of Interface Elements = 12</span>
+<span class="go">Number of Boundary Elements = 12</span>
 
 <span class="go">Vertices</span>
 <span class="go">[[0. 0.]</span>
@@ -218,39 +220,61 @@ Passed to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.insert
 <span class="go">[0, 1, 2, 3]</span>
 
 <span class="go">Nodes</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
+<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
+<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
+<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
+<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 
 <span class="go">Element Nodes, Areas, Points, Centroids, Materials</span>
-<span class="go">[9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], [0.32251082 0.24323593], rock</span>
-<span class="go">[8, 7, 6, 9], 0.19921875, [0.875 0.25 ], [0.82352941 0.26838235], rock</span>
-<span class="go">[2, 5, 1, 3], 0.19921875, [0.125 0.75 ], [0.17647059 0.73161765], rock</span>
-<span class="go">[6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], [0.67748918 0.75676407], rock</span>
+<span class="go">[15, 14, 6, 10], -0.09000000000000002, [0.5 0.5], [0.5 0.5], rock</span>
+<span class="go">[15, 3, 2, 13], -0.12249999999999998, [0.2 0.2], [0.175 0.175], rock</span>
+<span class="go">[12, 0, 1, 14], -0.12249999999999998, [0.2 0.8], [0.175 0.825], rock</span>
+<span class="go">[7, 4, 5, 6], 0.12250000000000003, [0.8 0.8], [0.825 0.825], rock</span>
+<span class="go">[11, 8, 9, 10], -0.1225, [0.8 0.2], [0.825 0.175], rock</span>
+<span class="go">[15, 13, 12, 14], -0.10499999999999998, [0.2 0.5], [0.175 0.5  ], rock</span>
+<span class="go">[5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], rock</span>
+<span class="go">[10, 6, 7, 11], -0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock</span>
+<span class="go">[3, 15, 10, 9], -0.105, [0.5 0.2], [0.5   0.175], rock</span>
 
 <span class="go">Interface Element Nodes and Neighbors</span>
-<span class="go">[2, 5], [2, 3]</span>
-<span class="go">[2, 3], [2, 0]</span>
-<span class="go">[2, 6], [3, 0]</span>
-<span class="go">[6, 7], [3, 1]</span>
-<span class="go">[6, 9], [1, 0]</span>
+<span class="go">[5, 6], [3, 6]</span>
+<span class="go">[6, 7], [3, 7]</span>
+<span class="go">[9, 10], [4, 8]</span>
+<span class="go">[10, 11], [4, 7]</span>
+<span class="go">[6, 10], [7, 0]</span>
+<span class="go">[12, 14], [5, 2]</span>
+<span class="go">[13, 15], [5, 1]</span>
+<span class="go">[14, 15], [5, 0]</span>
+<span class="go">[1, 14], [2, 6]</span>
+<span class="go">[3, 15], [1, 8]</span>
+<span class="go">[6, 14], [0, 6]</span>
+<span class="go">[10, 15], [0, 8]</span>
 
 <span class="go">Boundary Element Nodes and Neighbors</span>
-<span class="go">[1, 3], 2</span>
-<span class="go">[0, 3], 0</span>
+<span class="go">[0, 1], 2</span>
+<span class="go">[2, 3], 1</span>
 <span class="go">[4, 5], 3</span>
-<span class="go">[1, 5], 2</span>
 <span class="go">[4, 7], 3</span>
-<span class="go">[8, 9], 1</span>
-<span class="go">[0, 9], 0</span>
-<span class="go">[7, 8], 1</span>
+<span class="go">[1, 5], 6</span>
+<span class="go">[8, 9], 4</span>
+<span class="go">[8, 11], 4</span>
+<span class="go">[7, 11], 7</span>
+<span class="go">[3, 9], 8</span>
+<span class="go">[12, 13], 5</span>
+<span class="go">[0, 12], 2</span>
+<span class="go">[2, 13], 1</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot the mesh and save an image</span>
@@ -575,9 +599,11 @@ accordingly.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a mesh, then delete a vertex</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">5</span>
+<span class="go">9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">delete_vertices</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
 <span class="go">[[0.  0. ]</span>
@@ -1474,6 +1500,26 @@ using <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.add_mesh_e
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.num_seed_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_seed_points</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.num_seed_points" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.seed_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_points</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.seed_points" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.add_seed_points">
+<span class="sig-name descname"><span class="pre">add_seed_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed_points</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.add_seed_points" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.delete_seed_points">
+<span class="sig-name descname"><span class="pre">delete_seed_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">del_points</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.delete_seed_points" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.points">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.points" title="Permalink to this definition"></a></dt>
 <dd><p>Array of seed point coordinates for mesh generation of the
@@ -1509,16 +1555,23 @@ be cleared. The number of <a class="reference internal" href="#vcfempy.meshgen.P
 <span class="go">[]</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a very simple mesh</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># note: num_elements == len(msh.points)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
-<span class="go">[[0.375 0.25 ]</span>
-<span class="go"> [0.875 0.25 ]</span>
-<span class="go"> [0.125 0.75 ]</span>
-<span class="go"> [0.625 0.75 ]]</span>
+<span class="go">[[0.5 0.5]</span>
+<span class="go"> [0.2 0.2]</span>
+<span class="go"> [0.2 0.8]</span>
+<span class="go"> [0.8 0.8]</span>
+<span class="go"> [0.8 0.2]</span>
+<span class="go"> [0.2 0.5]</span>
+<span class="go"> [0.5 0.8]</span>
+<span class="go"> [0.8 0.5]</span>
+<span class="go"> [0.5 0.2]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the seed points</span>
@@ -1530,14 +1583,19 @@ be cleared. The number of <a class="reference internal" href="#vcfempy.meshgen.P
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">points</span><span class="p">)</span>
-<span class="go">[[0.375 0.25 ]</span>
-<span class="go"> [0.875 0.25 ]</span>
-<span class="go"> [0.125 0.75 ]</span>
-<span class="go"> [0.625 0.75 ]]</span>
+<span class="go">[[0.5 0.5]</span>
+<span class="go"> [0.2 0.2]</span>
+<span class="go"> [0.2 0.8]</span>
+<span class="go"> [0.8 0.8]</span>
+<span class="go"> [0.8 0.2]</span>
+<span class="go"> [0.2 0.5]</span>
+<span class="go"> [0.5 0.8]</span>
+<span class="go"> [0.8 0.5]</span>
+<span class="go"> [0.5 0.2]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -1574,9 +1632,11 @@ be cleared. The number of <a class="reference internal" href="#vcfempy.meshgen.P
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
-<span class="go">10</span>
+<span class="go">16</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the nodes</span>
@@ -1586,9 +1646,9 @@ be cleared. The number of <a class="reference internal" href="#vcfempy.meshgen.P
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
-<span class="go">10</span>
+<span class="go">16</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -1635,18 +1695,26 @@ cleared.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
+<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
+<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
+<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
+<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the nodes</span>
@@ -1656,18 +1724,24 @@ cleared.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
+<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
+<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
+<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
+<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -1705,9 +1779,11 @@ cleared.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the elements</span>
@@ -1717,9 +1793,9 @@ cleared.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -1765,24 +1841,37 @@ be cleared.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
+<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
+<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
+<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
+<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[9, 0, 3, 2, 6]</span>
-<span class="go">[8, 7, 6, 9]</span>
-<span class="go">[2, 5, 1, 3]</span>
-<span class="go">[6, 2, 5, 4, 7]</span>
+<span class="go">[15, 14, 6, 10]</span>
+<span class="go">[15, 3, 2, 13]</span>
+<span class="go">[12, 0, 1, 14]</span>
+<span class="go">[7, 4, 5, 6]</span>
+<span class="go">[11, 8, 9, 10]</span>
+<span class="go">[15, 13, 12, 14]</span>
+<span class="go">[5, 1, 14, 6]</span>
+<span class="go">[10, 6, 7, 11]</span>
+<span class="go">[3, 15, 10, 9]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the elements</span>
@@ -1792,13 +1881,18 @@ be cleared.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[9, 0, 3, 2, 6]</span>
-<span class="go">[8, 7, 6, 9]</span>
-<span class="go">[2, 5, 1, 3]</span>
-<span class="go">[6, 2, 5, 4, 7]</span>
+<span class="go">[15, 14, 6, 10]</span>
+<span class="go">[15, 3, 2, 13]</span>
+<span class="go">[12, 0, 1, 14]</span>
+<span class="go">[7, 4, 5, 6]</span>
+<span class="go">[11, 8, 9, 10]</span>
+<span class="go">[15, 13, 12, 14]</span>
+<span class="go">[5, 1, 14, 6]</span>
+<span class="go">[10, 6, 7, 11]</span>
+<span class="go">[3, 15, 10, 9]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -1844,15 +1938,22 @@ be cleared.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[9, 0, 3, 2, 6]</span>
-<span class="go">[8, 7, 6, 9]</span>
-<span class="go">[2, 5, 1, 3]</span>
-<span class="go">[6, 2, 5, 4, 7]</span>
+<span class="go">[15, 14, 6, 10]</span>
+<span class="go">[15, 3, 2, 13]</span>
+<span class="go">[12, 0, 1, 14]</span>
+<span class="go">[7, 4, 5, 6]</span>
+<span class="go">[11, 8, 9, 10]</span>
+<span class="go">[15, 13, 12, 14]</span>
+<span class="go">[5, 1, 14, 6]</span>
+<span class="go">[10, 6, 7, 11]</span>
+<span class="go">[3, 15, 10, 9]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="p">)</span>
-<span class="go">[5, 4, 4, 5]</span>
+<span class="go">[4, 4, 4, 4, 4, 4, 4, 4, 4]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing the boundary geometry clears the mesh</span>
@@ -1885,6 +1986,10 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh, no mesh generated yet, so list of element</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># materials is empty</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># material regions can be overlapping and need not be entirely</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># inside the boundaries; to ensure all elements get assigned</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># materials, it is better to make the regions overlap, with</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># later assigned materials overwriting earlier</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.materials</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
@@ -1896,7 +2001,7 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;rock&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sand</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;sand&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mr_rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span>
-<span class="gp">... </span>                                           <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+<span class="gp">... </span>                                           <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
 <span class="gp">... </span>                                           <span class="n">rock</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mr_sand</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span>
 <span class="gp">... </span>                                           <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
@@ -1907,13 +2012,20 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># now materials will be assigned to elements</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">element_materials</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 <span class="go">rock</span>
 <span class="go">rock</span>
 <span class="go">sand</span>
 <span class="go">sand</span>
+<span class="go">rock</span>
+<span class="go">rock</span>
+<span class="go">sand</span>
+<span class="go">rock</span>
+<span class="go">rock</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing the boundary geometry clears the mesh</span>
@@ -1958,9 +2070,11 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># now element areas can be calculated</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_areas</span><span class="p">)</span>
-<span class="go">[-0.30078125  0.19921875  0.19921875 -0.30078125]</span>
+<span class="go">[-0.09   -0.1225 -0.1225  0.1225 -0.1225 -0.105   0.105  -0.105  -0.105 ]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that element areas sum to the area of the boundary</span>
@@ -2011,12 +2125,19 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># now element centroids can be calculated</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_centroids</span><span class="p">)</span>
-<span class="go">[[0.32251082 0.24323593]</span>
-<span class="go"> [0.82352941 0.26838235]</span>
-<span class="go"> [0.17647059 0.73161765]</span>
-<span class="go"> [0.67748918 0.75676407]]</span>
+<span class="go">[[0.5   0.5  ]</span>
+<span class="go"> [0.175 0.175]</span>
+<span class="go"> [0.175 0.825]</span>
+<span class="go"> [0.825 0.825]</span>
+<span class="go"> [0.825 0.175]</span>
+<span class="go"> [0.175 0.5  ]</span>
+<span class="go"> [0.5   0.825]</span>
+<span class="go"> [0.825 0.5  ]</span>
+<span class="go"> [0.5   0.175]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing the boundary geometry clears the mesh</span>
@@ -2075,58 +2196,111 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># now element quadrature points can be generated</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that the quadrature points are listed in a local</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># coordinate system relative to the element centroid</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span>
-<span class="go">Element 0 quad points, nq0 = 11</span>
-<span class="go">[[ 0.22686688 -0.18242695]</span>
-<span class="go"> [-0.24188312 -0.18242695]</span>
-<span class="go"> [-0.24188312  0.09882305]</span>
-<span class="go"> [ 0.03936688  0.23944805]</span>
-<span class="go"> [ 0.22686688  0.14569805]</span>
-<span class="go"> [-0.00500541 -0.12161797]</span>
-<span class="go"> [-0.16125541 -0.02786797]</span>
-<span class="go"> [-0.06750541  0.11275703]</span>
-<span class="go"> [ 0.08874459  0.12838203]</span>
-<span class="go"> [ 0.15124459 -0.01224297]</span>
-<span class="go"> [ 0.          0.        ]]</span>
+<span class="go">Element 0 quad points, nq0 = 9</span>
+<span class="go">[[-1.12500000e-01 -1.12500000e-01]</span>
+<span class="go"> [-1.12500000e-01  1.12500000e-01]</span>
+<span class="go"> [ 1.12500000e-01  1.12500000e-01]</span>
+<span class="go"> [ 1.12500000e-01 -1.12500000e-01]</span>
+<span class="go"> [-7.50000000e-02 -1.11022302e-16]</span>
+<span class="go"> [-1.11022302e-16  7.50000000e-02]</span>
+<span class="go"> [ 7.50000000e-02 -1.11022302e-16]</span>
+<span class="go"> [-1.11022302e-16 -7.50000000e-02]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
 
 <span class="go">Element 1 quad points, nq1 = 9</span>
-<span class="go">[[ 0.13235294 -0.20128676]</span>
-<span class="go"> [ 0.13235294  0.26746324]</span>
-<span class="go"> [-0.14889706  0.12683824]</span>
-<span class="go"> [-0.14889706 -0.20128676]</span>
-<span class="go"> [ 0.08823529  0.02205882]</span>
-<span class="go"> [-0.00551471  0.13143382]</span>
-<span class="go"> [-0.09926471 -0.02481618]</span>
-<span class="go"> [-0.00551471 -0.13419118]</span>
-<span class="go"> [ 0.          0.        ]]</span>
+<span class="go">[[ 1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [ 1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [-1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [ 8.75000000e-02  0.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00 -8.75000000e-02]</span>
+<span class="go"> [-8.75000000e-02  1.85037171e-17]</span>
+<span class="go"> [ 0.00000000e+00  8.75000000e-02]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
 
 <span class="go">Element 2 quad points, nq2 = 9</span>
-<span class="go">[[ 0.14889706 -0.12683824]</span>
-<span class="go"> [ 0.14889706  0.20128676]</span>
-<span class="go"> [-0.13235294  0.20128676]</span>
-<span class="go"> [-0.13235294 -0.26746324]</span>
-<span class="go"> [ 0.09926471  0.02481618]</span>
-<span class="go"> [ 0.00551471  0.13419118]</span>
-<span class="go"> [-0.08823529 -0.02205882]</span>
-<span class="go"> [ 0.00551471 -0.13143382]</span>
-<span class="go"> [ 0.          0.        ]]</span>
+<span class="go">[[-1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [ 1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [ 1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [-8.75000000e-02  2.77555756e-17]</span>
+<span class="go"> [-3.70074342e-17  8.75000000e-02]</span>
+<span class="go"> [ 8.75000000e-02  2.77555756e-17]</span>
+<span class="go"> [-1.85037171e-17 -8.75000000e-02]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
 
-<span class="go">Element 3 quad points, nq3 = 11</span>
-<span class="go">[[-0.03936688 -0.23944805]</span>
-<span class="go"> [-0.22686688 -0.14569805]</span>
-<span class="go"> [-0.22686688  0.18242695]</span>
-<span class="go"> [ 0.24188312  0.18242695]</span>
-<span class="go"> [ 0.24188312 -0.09882305]</span>
-<span class="go"> [-0.08874459 -0.12838203]</span>
-<span class="go"> [-0.15124459  0.01224297]</span>
-<span class="go"> [ 0.00500541  0.12161797]</span>
-<span class="go"> [ 0.16125541  0.02786797]</span>
-<span class="go"> [ 0.06750541 -0.11275703]</span>
-<span class="go"> [ 0.          0.        ]]</span>
+<span class="go">Element 3 quad points, nq3 = 9</span>
+<span class="go">[[ 1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [ 1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [-1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [ 8.75000000e-02  8.32667268e-17]</span>
+<span class="go"> [-5.55111512e-17  8.75000000e-02]</span>
+<span class="go"> [-8.75000000e-02  8.32667268e-17]</span>
+<span class="go"> [-2.77555756e-17 -8.75000000e-02]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
+
+<span class="go">Element 4 quad points, nq4 = 9</span>
+<span class="go">[[ 1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [ 1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [-1.31250000e-01 -1.31250000e-01]</span>
+<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
+<span class="go"> [ 8.75000000e-02 -9.25185854e-18]</span>
+<span class="go"> [ 8.32667268e-17 -8.75000000e-02]</span>
+<span class="go"> [-8.75000000e-02 -9.25185854e-18]</span>
+<span class="go"> [ 8.32667268e-17  8.75000000e-02]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
+
+<span class="go">Element 5 quad points, nq5 = 9</span>
+<span class="go">[[ 1.31250000e-01 -1.12500000e-01]</span>
+<span class="go"> [-1.31250000e-01 -1.12500000e-01]</span>
+<span class="go"> [-1.31250000e-01  1.12500000e-01]</span>
+<span class="go"> [ 1.31250000e-01  1.12500000e-01]</span>
+<span class="go"> [ 0.00000000e+00 -7.50000000e-02]</span>
+<span class="go"> [-8.75000000e-02  1.38777878e-17]</span>
+<span class="go"> [ 0.00000000e+00  7.50000000e-02]</span>
+<span class="go"> [ 8.75000000e-02  0.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
+
+<span class="go">Element 6 quad points, nq6 = 9</span>
+<span class="go">[[ 1.12500000e-01  1.31250000e-01]</span>
+<span class="go"> [-1.12500000e-01  1.31250000e-01]</span>
+<span class="go"> [-1.12500000e-01 -1.31250000e-01]</span>
+<span class="go"> [ 1.12500000e-01 -1.31250000e-01]</span>
+<span class="go"> [ 2.77555756e-17  8.75000000e-02]</span>
+<span class="go"> [-7.50000000e-02 -2.77555756e-17]</span>
+<span class="go"> [ 5.55111512e-17 -8.75000000e-02]</span>
+<span class="go"> [ 7.50000000e-02 -2.77555756e-17]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
+
+<span class="go">Element 7 quad points, nq7 = 9</span>
+<span class="go">[[-1.31250000e-01 -1.12500000e-01]</span>
+<span class="go"> [-1.31250000e-01  1.12500000e-01]</span>
+<span class="go"> [ 1.31250000e-01  1.12500000e-01]</span>
+<span class="go"> [ 1.31250000e-01 -1.12500000e-01]</span>
+<span class="go"> [-8.75000000e-02  8.32667268e-17]</span>
+<span class="go"> [ 1.38777878e-16  7.50000000e-02]</span>
+<span class="go"> [ 8.75000000e-02  8.32667268e-17]</span>
+<span class="go"> [ 1.38777878e-16 -7.50000000e-02]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
+
+<span class="go">Element 8 quad points, nq8 = 9</span>
+<span class="go">[[-1.12500000e-01 -1.31250000e-01]</span>
+<span class="go"> [-1.12500000e-01  1.31250000e-01]</span>
+<span class="go"> [ 1.12500000e-01  1.31250000e-01]</span>
+<span class="go"> [ 1.12500000e-01 -1.31250000e-01]</span>
+<span class="go"> [-7.50000000e-02  0.00000000e+00]</span>
+<span class="go"> [-5.55111512e-17  8.75000000e-02]</span>
+<span class="go"> [ 7.50000000e-02 -1.85037171e-17]</span>
+<span class="go"> [-5.55111512e-17 -8.75000000e-02]</span>
+<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing the boundary geometry clears the mesh</span>
@@ -2185,26 +2359,48 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># now element quadrature points can be generated</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that the quadrature points are listed in a local</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># coordinate system relative to the element centroid</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_weights</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad weights, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qw</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qw</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span>
-<span class="go">Element 0 quad weights, nq0 = 11</span>
-<span class="go">[0.13700319 0.12979995 0.0987549  0.09296443 0.0915012  0.08627986</span>
-<span class="go"> 0.08054059 0.07032208 0.07068559 0.07720864 0.06493957]</span>
+<span class="go">Element 0 quad weights, nq0 = 9</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
 
 <span class="go">Element 1 quad weights, nq1 = 9</span>
-<span class="go">[0.13313931 0.13313931 0.11431492 0.11431492 0.11160285 0.09836819</span>
-<span class="go"> 0.10036614 0.09836819 0.09638618]</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
 
 <span class="go">Element 2 quad weights, nq2 = 9</span>
-<span class="go">[0.11431492 0.11431492 0.13313931 0.13313931 0.10036614 0.09836819</span>
-<span class="go"> 0.11160285 0.09836819 0.09638618]</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
 
-<span class="go">Element 3 quad weights, nq3 = 11</span>
-<span class="go">[0.09296443 0.0915012  0.13700319 0.12979995 0.0987549  0.07068559</span>
-<span class="go"> 0.07720864 0.08627986 0.08054059 0.07032208 0.06493957]</span>
+<span class="go">Element 3 quad weights, nq3 = 9</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+
+<span class="go">Element 4 quad weights, nq4 = 9</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+
+<span class="go">Element 5 quad weights, nq5 = 9</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+
+<span class="go">Element 6 quad weights, nq6 = 9</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+
+<span class="go">Element 7 quad weights, nq7 = 9</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+
+<span class="go">Element 8 quad weights, nq8 = 9</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing the boundary geometry clears the mesh</span>
@@ -2242,9 +2438,11 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_interface_elements</span><span class="p">)</span>
-<span class="go">5</span>
+<span class="go">12</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the interface elements</span>
@@ -2254,9 +2452,9 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_interface_elements</span><span class="p">)</span>
-<span class="go">5</span>
+<span class="go">12</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -2298,60 +2496,94 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># and the neighbor element indices are all &lt; msh.num_elements</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># also note that interface elements all include at least one</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># node that is not on the boundary</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
-<span class="go">10</span>
+<span class="go">16</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
+<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
+<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
+<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
+<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[2, 5]</span>
-<span class="go">[2, 3]</span>
-<span class="go">[2, 6]</span>
+<span class="go">[5, 6]</span>
 <span class="go">[6, 7]</span>
-<span class="go">[6, 9]</span>
+<span class="go">[9, 10]</span>
+<span class="go">[10, 11]</span>
+<span class="go">[6, 10]</span>
+<span class="go">[12, 14]</span>
+<span class="go">[13, 15]</span>
+<span class="go">[14, 15]</span>
+<span class="go">[1, 14]</span>
+<span class="go">[3, 15]</span>
+<span class="go">[6, 14]</span>
+<span class="go">[10, 15]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">neighbors</span><span class="p">])</span>
-<span class="go">[2, 3]</span>
-<span class="go">[2, 0]</span>
-<span class="go">[3, 0]</span>
-<span class="go">[3, 1]</span>
-<span class="go">[1, 0]</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the interface elements</span>
+<span class="go">[3, 6]</span>
+<span class="go">[3, 7]</span>
+<span class="go">[4, 8]</span>
+<span class="go">[4, 7]</span>
+<span class="go">[7, 0]</span>
+<span class="go">[5, 2]</span>
+<span class="go">[5, 1]</span>
+<span class="go">[5, 0]</span>
+<span class="go">[2, 6]</span>
+<span class="go">[1, 8]</span>
+<span class="go">[0, 6]</span>
+<span class="go">[0, 8]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the interface elements</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">)</span>
 <span class="go">[]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[2, 5]</span>
-<span class="go">[2, 3]</span>
-<span class="go">[2, 6]</span>
+<span class="go">[5, 6]</span>
 <span class="go">[6, 7]</span>
-<span class="go">[6, 9]</span>
+<span class="go">[9, 10]</span>
+<span class="go">[10, 11]</span>
+<span class="go">[6, 10]</span>
+<span class="go">[12, 14]</span>
+<span class="go">[13, 15]</span>
+<span class="go">[14, 15]</span>
+<span class="go">[1, 14]</span>
+<span class="go">[3, 15]</span>
+<span class="go">[6, 14]</span>
+<span class="go">[10, 15]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">neighbors</span><span class="p">])</span>
-<span class="go">[2, 3]</span>
-<span class="go">[2, 0]</span>
-<span class="go">[3, 0]</span>
-<span class="go">[3, 1]</span>
-<span class="go">[1, 0]</span>
+<span class="go">[3, 6]</span>
+<span class="go">[3, 7]</span>
+<span class="go">[4, 8]</span>
+<span class="go">[4, 7]</span>
+<span class="go">[7, 0]</span>
+<span class="go">[5, 2]</span>
+<span class="go">[5, 1]</span>
+<span class="go">[5, 0]</span>
+<span class="go">[2, 6]</span>
+<span class="go">[1, 8]</span>
+<span class="go">[0, 6]</span>
+<span class="go">[0, 8]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -2389,9 +2621,11 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_boundary_elements</span><span class="p">)</span>
-<span class="go">8</span>
+<span class="go">12</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the interface elements</span>
@@ -2401,9 +2635,9 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_boundary_elements</span><span class="p">)</span>
-<span class="go">8</span>
+<span class="go">12</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -2445,35 +2679,47 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># and the neighbor element indices are all &lt; msh.num_elements</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># also note that boundary elements all have both nodes on the</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># analysis boundaries</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
-<span class="go">10</span>
+<span class="go">16</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
+<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
+<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
+<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
+<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[1, 3]</span>
-<span class="go">[0, 3]</span>
+<span class="go">[0, 1]</span>
+<span class="go">[2, 3]</span>
 <span class="go">[4, 5]</span>
-<span class="go">[1, 5]</span>
 <span class="go">[4, 7]</span>
+<span class="go">[1, 5]</span>
 <span class="go">[8, 9]</span>
-<span class="go">[0, 9]</span>
-<span class="go">[7, 8]</span>
+<span class="go">[8, 11]</span>
+<span class="go">[7, 11]</span>
+<span class="go">[3, 9]</span>
+<span class="go">[12, 13]</span>
+<span class="go">[0, 12]</span>
+<span class="go">[2, 13]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">neighbor</span><span class="p">)</span>
 <span class="gp">... </span>       <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">])</span>
-<span class="go">[2, 0, 3, 2, 3, 1, 0, 1]</span>
+<span class="go">[2, 1, 3, 3, 6, 4, 4, 7, 8, 5, 2, 1]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the boundary elements</span>
@@ -2483,20 +2729,24 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[1, 3]</span>
-<span class="go">[0, 3]</span>
+<span class="go">[0, 1]</span>
+<span class="go">[2, 3]</span>
 <span class="go">[4, 5]</span>
-<span class="go">[1, 5]</span>
 <span class="go">[4, 7]</span>
+<span class="go">[1, 5]</span>
 <span class="go">[8, 9]</span>
-<span class="go">[0, 9]</span>
-<span class="go">[7, 8]</span>
+<span class="go">[8, 11]</span>
+<span class="go">[7, 11]</span>
+<span class="go">[3, 9]</span>
+<span class="go">[12, 13]</span>
+<span class="go">[0, 12]</span>
+<span class="go">[2, 13]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">([</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">neighbor</span><span class="p">)</span>
 <span class="gp">... </span>       <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">])</span>
-<span class="go">[2, 0, 3, 2, 3, 1, 0, 1]</span>
+<span class="go">[2, 1, 3, 3, 6, 4, 4, 7, 8, 5, 2, 1]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -2558,11 +2808,13 @@ properties.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh, which sets mesh_valid as a side effect</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_elements</span><span class="p">)</span>
-<span class="go">4</span>
+<span class="go">9</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh with a bool value</span>
@@ -2574,7 +2826,7 @@ properties.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
@@ -2651,38 +2903,39 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a simple mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># elements will use minimum order quadrature</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
-<span class="go">Element 0 quad points, nq0 = 11</span>
-<span class="go">[[ 0.22686688 -0.18242695]</span>
-<span class="go"> [-0.24188312 -0.18242695]</span>
+<span class="go">Element 0 quad points, nq0 = 9</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.15124459 -0.01224297]</span>
-<span class="go"> [ 0.          0.        ]]</span>
 
 <span class="go">Element 1 quad points, nq1 = 9</span>
-<span class="go">[[ 0.13235294 -0.20128676]</span>
-<span class="go"> [ 0.13235294  0.26746324]</span>
 <span class="gp">...</span>
-<span class="go"> [-0.00551471 -0.13419118]</span>
-<span class="go"> [ 0.          0.        ]]</span>
 
 <span class="go">Element 2 quad points, nq2 = 9</span>
-<span class="go">[[ 0.14889706 -0.12683824]</span>
-<span class="go"> [ 0.14889706  0.20128676]</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.00551471 -0.13143382]</span>
-<span class="go"> [ 0.          0.        ]]</span>
 
-<span class="go">Element 3 quad points, nq3 = 11</span>
-<span class="go">[[-0.03936688 -0.23944805]</span>
-<span class="go"> [-0.22686688 -0.14569805]</span>
+<span class="go">Element 3 quad points, nq3 = 9</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.06750541 -0.11275703]</span>
-<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 4 quad points, nq4 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 5 quad points, nq5 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 6 quad points, nq6 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 7 quad points, nq7 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 8 quad points, nq8 = 9</span>
+<span class="gp">...</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># switch to high order quadrature</span>
@@ -2694,33 +2947,32 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
-<span class="go">Element 0 quad points, nq0 = 21</span>
-<span class="go">[[ 0.2571158  -0.20675054]</span>
-<span class="go"> [-0.2741342  -0.20675054]</span>
+<span class="go">Element 0 quad points, nq0 = 17</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.10284632 -0.00832522]</span>
-<span class="go"> [ 0.          0.        ]]</span>
 
 <span class="go">Element 1 quad points, nq1 = 17</span>
-<span class="go">[[ 0.15     -0.228125]</span>
-<span class="go"> [ 0.15      0.303125]</span>
 <span class="gp">...</span>
-<span class="go"> [-0.00375  -0.09125 ]</span>
-<span class="go"> [ 0.        0.      ]]</span>
 
 <span class="go">Element 2 quad points, nq2 = 17</span>
-<span class="go">[[ 0.16875  -0.14375 ]</span>
-<span class="go"> [ 0.16875   0.228125]</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.00375  -0.089375]</span>
-<span class="go"> [ 0.        0.      ]]</span>
 
-<span class="go">Element 3 quad points, nq3 = 21</span>
-<span class="go">[[-0.0446158  -0.27137446]</span>
-<span class="go"> [-0.2571158  -0.16512446]</span>
+<span class="go">Element 3 quad points, nq3 = 17</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.04590368 -0.07667478]</span>
-<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 4 quad points, nq4 = 17</span>
+<span class="gp">...</span>
+
+<span class="go">Element 5 quad points, nq5 = 17</span>
+<span class="gp">...</span>
+
+<span class="go">Element 6 quad points, nq6 = 17</span>
+<span class="gp">...</span>
+
+<span class="go">Element 7 quad points, nq7 = 17</span>
+<span class="gp">...</span>
+
+<span class="go">Element 8 quad points, nq8 = 17</span>
+<span class="gp">...</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># switch back to low order quadrature</span>
@@ -2732,33 +2984,32 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
-<span class="go">Element 0 quad points, nq0 = 11</span>
-<span class="go">[[ 0.22686688 -0.18242695]</span>
-<span class="go"> [-0.24188312 -0.18242695]</span>
+<span class="go">Element 0 quad points, nq0 = 9</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.15124459 -0.01224297]</span>
-<span class="go"> [ 0.          0.        ]]</span>
 
 <span class="go">Element 1 quad points, nq1 = 9</span>
-<span class="go">[[ 0.13235294 -0.20128676]</span>
-<span class="go"> [ 0.13235294  0.26746324]</span>
 <span class="gp">...</span>
-<span class="go"> [-0.00551471 -0.13419118]</span>
-<span class="go"> [ 0.          0.        ]]</span>
 
 <span class="go">Element 2 quad points, nq2 = 9</span>
-<span class="go">[[ 0.14889706 -0.12683824]</span>
-<span class="go"> [ 0.14889706  0.20128676]</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.00551471 -0.13143382]</span>
-<span class="go"> [ 0.          0.        ]]</span>
 
-<span class="go">Element 3 quad points, nq3 = 11</span>
-<span class="go">[[-0.03936688 -0.23944805]</span>
-<span class="go"> [-0.22686688 -0.14569805]</span>
+<span class="go">Element 3 quad points, nq3 = 9</span>
 <span class="gp">...</span>
-<span class="go"> [ 0.06750541 -0.11275703]</span>
-<span class="go"> [ 0.          0.        ]]</span>
+
+<span class="go">Element 4 quad points, nq4 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 5 quad points, nq5 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 6 quad points, nq6 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 7 quad points, nq7 = 9</span>
+<span class="gp">...</span>
+
+<span class="go">Element 8 quad points, nq8 = 9</span>
+<span class="gp">...</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># attempting to set high_order_quadrature</span>
@@ -2771,9 +3022,19 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 </div>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.mesh_scale">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh_scale</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.mesh_scale" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.mesh_rand">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh_rand</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.mesh_rand" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.generate_mesh">
-<span class="sig-name descname"><span class="pre">generate_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">10]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_rand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.generate_mesh" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">generate_mesh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.generate_mesh" title="Permalink to this definition"></a></dt>
 <dd><p>Generate polygonal mesh.</p>
 </dd></dl>
 
@@ -2870,7 +3131,7 @@ raise a <cite>ValueError</cite>.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;rock&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sand</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;sand&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rock_region</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">msh</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">vertices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rock region&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">rock</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">vertices</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;rock region&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">rock</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sand_region</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">mesh</span><span class="o">=</span><span class="n">msh</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">vertices</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;sand region&#39;</span><span class="p">,</span> <span class="n">material</span><span class="o">=</span><span class="n">sand</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
@@ -2886,7 +3147,9 @@ raise a <cite>ValueError</cite>.</p>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># turn verbose printing back on and generate the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">verbose_printing</span> <span class="o">=</span> <span class="s1">&#39;yes&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
 <span class="go">vcfempy.meshgen.PolyMesh2D &#39;test mesh&#39;</span>
 <span class="go">Number of Vertices = 6</span>
@@ -2896,10 +3159,10 @@ raise a <cite>ValueError</cite>.</p>
 <span class="go">Verbose Printing = True</span>
 <span class="go">High Order Quadrature = False</span>
 <span class="go">Mesh Generated = True</span>
-<span class="go">Number of Nodes = 10</span>
-<span class="go">Number of Elements = 4</span>
-<span class="go">Number of Interface Elements = 5</span>
-<span class="go">Number of Boundary Elements = 8</span>
+<span class="go">Number of Nodes = 16</span>
+<span class="go">Number of Elements = 9</span>
+<span class="go">Number of Interface Elements = 12</span>
+<span class="go">Number of Boundary Elements = 12</span>
 
 <span class="go">Vertices</span>
 <span class="go">[[0.  0. ]</span>
@@ -2916,45 +3179,67 @@ raise a <cite>ValueError</cite>.</p>
 <span class="go">[[0, 1], [1, 2], [2, 3], [3, 0]]</span>
 
 <span class="go">Material Region: rock region, Material: rock</span>
-<span class="go">[0, 4, 5, 3]</span>
+<span class="go">[0, 1, 2, 3]</span>
 
 <span class="go">Material Region: sand region, Material: sand</span>
 <span class="go">[4, 1, 2, 5]</span>
 
 <span class="go">Nodes</span>
-<span class="go">[[0.     0.    ]</span>
-<span class="go"> [0.     1.    ]</span>
-<span class="go"> [0.375  0.5625]</span>
-<span class="go"> [0.     0.375 ]</span>
-<span class="go"> [1.     1.    ]</span>
-<span class="go"> [0.375  1.    ]</span>
-<span class="go"> [0.625  0.4375]</span>
-<span class="go"> [1.     0.625 ]</span>
-<span class="go"> [1.     0.    ]</span>
-<span class="go"> [0.625  0.    ]]</span>
+<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
+<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
+<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
+<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
+<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
+<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
+<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
+<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
+<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 
 <span class="go">Element Nodes, Areas, Points, Centroids, Materials</span>
-<span class="go">[9, 0, 3, 2, 6], -0.30078125, [0.375 0.25 ], [0.32251082 0.24323593], rock</span>
-<span class="go">[8, 7, 6, 9], 0.19921875, [0.875 0.25 ], [0.82352941 0.26838235], rock</span>
-<span class="go">[2, 5, 1, 3], 0.19921875, [0.125 0.75 ], [0.17647059 0.73161765], sand</span>
-<span class="go">[6, 2, 5, 4, 7], -0.30078125, [0.625 0.75 ], [0.67748918 0.75676407], sand</span>
+<span class="go">[15, 14, 6, 10], -0.09000000000000002, [0.5 0.5], [0.5 0.5], rock</span>
+<span class="go">[15, 3, 2, 13], -0.12249999999999998, [0.2 0.2], [0.175 0.175], rock</span>
+<span class="go">[12, 0, 1, 14], -0.12249999999999998, [0.2 0.8], [0.175 0.825], sand</span>
+<span class="go">[7, 4, 5, 6], 0.12250000000000003, [0.8 0.8], [0.825 0.825], sand</span>
+<span class="go">[11, 8, 9, 10], -0.1225, [0.8 0.2], [0.825 0.175], rock</span>
+<span class="go">[15, 13, 12, 14], -0.10499999999999998, [0.2 0.5], [0.175 0.5  ], rock</span>
+<span class="go">[5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], sand</span>
+<span class="go">[10, 6, 7, 11], -0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock</span>
+<span class="go">[3, 15, 10, 9], -0.105, [0.5 0.2], [0.5   0.175], rock</span>
 
 <span class="go">Interface Element Nodes and Neighbors</span>
-<span class="go">[2, 5], [2, 3]</span>
-<span class="go">[2, 3], [2, 0]</span>
-<span class="go">[2, 6], [3, 0]</span>
-<span class="go">[6, 7], [3, 1]</span>
-<span class="go">[6, 9], [1, 0]</span>
+<span class="go">[5, 6], [3, 6]</span>
+<span class="go">[6, 7], [3, 7]</span>
+<span class="go">[9, 10], [4, 8]</span>
+<span class="go">[10, 11], [4, 7]</span>
+<span class="go">[6, 10], [7, 0]</span>
+<span class="go">[12, 14], [5, 2]</span>
+<span class="go">[13, 15], [5, 1]</span>
+<span class="go">[14, 15], [5, 0]</span>
+<span class="go">[1, 14], [2, 6]</span>
+<span class="go">[3, 15], [1, 8]</span>
+<span class="go">[6, 14], [0, 6]</span>
+<span class="go">[10, 15], [0, 8]</span>
 
 <span class="go">Boundary Element Nodes and Neighbors</span>
-<span class="go">[1, 3], 2</span>
-<span class="go">[0, 3], 0</span>
+<span class="go">[0, 1], 2</span>
+<span class="go">[2, 3], 1</span>
 <span class="go">[4, 5], 3</span>
-<span class="go">[1, 5], 2</span>
 <span class="go">[4, 7], 3</span>
-<span class="go">[8, 9], 1</span>
-<span class="go">[0, 9], 0</span>
-<span class="go">[7, 8], 1</span>
+<span class="go">[1, 5], 6</span>
+<span class="go">[8, 9], 4</span>
+<span class="go">[8, 11], 4</span>
+<span class="go">[7, 11], 7</span>
+<span class="go">[3, 9], 8</span>
+<span class="go">[12, 13], 5</span>
+<span class="go">[0, 12], 2</span>
+<span class="go">[2, 13], 1</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># attempting to set verbose_printing</span>
@@ -3070,7 +3355,9 @@ This is done by default when the <a class="reference internal" href="#vcfempy.me
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a mesh, then change material region material</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># this clears the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rock_region</span><span class="o">.</span><span class="n">material</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3084,7 +3371,7 @@ This is done by default when the <a class="reference internal" href="#vcfempy.me
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># this also clears the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># note that the material region need not be fully inside the</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># mesh boundaries</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
@@ -3329,7 +3616,9 @@ of <a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D.mesh" t
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing material type of a material region resets the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span><span class="o">.</span><span class="n">material</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3636,7 +3925,9 @@ is done by default when the <a class="reference internal" href="#vcfempy.meshgen
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate a mesh, then change mesh edge material</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># this clears the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">rock_joint</span><span class="o">.</span><span class="n">material</span> <span class="o">=</span> <span class="kc">None</span>
@@ -3648,7 +3939,7 @@ is done by default when the <a class="reference internal" href="#vcfempy.meshgen
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh, then change the mesh edge vertices</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># this also clears the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">])</span>
@@ -3903,7 +4194,9 @@ regardless of type.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing material type of an edge resets the mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_valid</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">me</span><span class="o">.</span><span class="n">material</span> <span class="o">=</span> <span class="kc">None</span>
@@ -4524,6 +4817,21 @@ nodes can be int or list of ints</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="vcfempy.meshgen.polygon_centroid">
 <span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">polygon_centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.polygon_centroid" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vcfempy.meshgen.get_unit_tangent_normal">
+<span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">get_unit_tangent_normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.get_unit_tangent_normal" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vcfempy.meshgen.reflect_point_across_edge">
+<span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">reflect_point_across_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.reflect_point_across_edge" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="vcfempy.meshgen.get_edge_reflection_points">
+<span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">get_edge_reflection_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rp0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rp1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_rand</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.get_edge_reflection_points" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
