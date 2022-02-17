@@ -94,10 +94,10 @@ def rectangular_mesh():
             int_test[2] += np.abs(area) * wk * (xq_k[1] + cent[1])
             int_test[3] += np.abs(area) * wk * (xq_k[0] + cent[0])**2
             int_test[4] += np.abs(area) * wk * (xq_k[1] + cent[1])**2
-            int_test[5] += np.abs(area) * wk * (xq_k[0]*xq_k[1]
-                                                + xq_k[0]*cent[1]
-                                                + xq_k[1]*cent[0]
-                                                + cent[0]*cent[1])
+            int_test[5] += np.abs(area) * wk * (xq_k[0] * xq_k[1]
+                                                + xq_k[0] * cent[1]
+                                                + xq_k[1] * cent[0]
+                                                + cent[0] * cent[1])
 
     print('Tst Ints: ', int_test)
     print('Exp Ints: ', int_exp)
@@ -182,8 +182,8 @@ def dam_mesh():
 
     # test area using generated quadrature
     int_test = np.zeros(1)
-    int_exp = np.array([0.5*55*30 + 0.5*(84-55)*(30+65)
-                        + (92.5-84)*65 + 0.5*65*(180-92.5)])
+    int_exp = shp.Polygon(dam_mesh.vertices[dam_mesh.boundary_vertices]).area
+    int_exp = np.array([int_exp])
     for e in dam_mesh.elements:
         wq = e.quad_weights
         area = e.area
@@ -300,9 +300,7 @@ def tunnel_mesh():
 
     print('Tst Ints: ', int_test)
     print('Exp Ints: ', int_exp)
-    print('Int Errs: {}%'.format(np.array2string(100*(int_test - int_exp)
-                                                 / int_exp,
-                                                 precision=3)))
+    print(f'Int Errs: {(int_test - int_exp) / int_exp}')
     print('\n')
 
 
@@ -310,6 +308,7 @@ if __name__ == '__main__':
     """ If called as a standalone script, run all examples. """
     import numpy as np
     import matplotlib.pyplot as plt
+    import shapely.geometry as shp
 
     import vcfempy.materials as mtl
     import vcfempy.meshgen as msh

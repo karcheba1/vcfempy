@@ -3290,15 +3290,15 @@ self.nodes is empty
             self._create_edge_points(edge.vertices)
         # eliminate points that are outside the boundaries and mesh boundary
         bpoly = shp.Polygon(self.vertices[self.boundary_vertices])
-        pcoll = shp.MultiPoint(self.points).geoms
-        in_bnd = np.array([bpoly.contains(x) for x in pcoll])
+        point_collection = shp.MultiPoint(self.points).geoms
+        in_bnd = np.array([bpoly.contains(x) for x in point_collection])
         self._points = self.points[in_bnd]
         self._create_edge_points(self.boundary_vertices, True)
         # generate Voronoi diagram and eliminate points outside the boundary
         vor = Voronoi(self.points)
         points_to_keep = np.arange(len(self.points))
-        pcoll = shp.MultiPoint(self.points).geoms
-        in_bnd = np.array([bpoly.contains(x) for x in pcoll])
+        point_collection = shp.MultiPoint(self.points).geoms
+        in_bnd = np.array([bpoly.contains(x) for x in point_collection])
         self._points = self.points[in_bnd]
         points_to_keep = points_to_keep[in_bnd]
         point_dict = {n: k for k, n in enumerate(points_to_keep)}
@@ -3335,10 +3335,10 @@ self.nodes is empty
         m0 = mtl.Material('NULL')
         element_materials = [m0 for k, _ in enumerate(elements)]
         element_materials = np.array(element_materials)
-        pcoll = shp.MultiPoint(self.points).geoms
+        point_collection = shp.MultiPoint(self.points).geoms
         for mr in self.material_regions:
             mpoly = shp.Polygon(self.vertices[mr.vertices])
-            in_bnd = np.array([mpoly.contains(x) for x in pcoll])
+            in_bnd = np.array([mpoly.contains(x) for x in point_collection])
             element_materials[in_bnd] = mr.material
         # create list of elements
         self._elements = []
@@ -3350,16 +3350,15 @@ self.nodes is empty
         for ee, en in zip(element_edges, element_neighbors):
             # boundary element
             if en[0] < 0 or en[1] < 0:
-                neighbor = (self.elements[en[1]] if en[0] < 0
-                            else self.elements[en[0]])
-                self.boundary_elements.append(
-                        BoundaryElement2D(self, ee, neighbor))
+                nn = (self.elements[en[1]] if en[0] < 0
+                      else self.elements[en[0]])
+                self.boundary_elements.append(BoundaryElement2D(self, ee, nn))
             # interface element, assign material type from first neighbor
             else:
-                neighbors = [self.elements[n] for n in en]
-                material = neighbors[0].material
+                nn = [self.elements[n] for n in en]
+                m = nn[0].material
                 self.interface_elements.append(
-                        InterfaceElement2D(self, material, ee, neighbors))
+                        InterfaceElement2D(self, ee, m, nn))
         # set mesh valid, the setter will perform checks for mesh validity
         self.mesh_valid = True
 
@@ -5075,7 +5074,7 @@ class PolyElement2D():
 
         Raises
         ------
-        `TypeError`
+        TypeError
             If type(material) not in [`NoneType`,
             :c:`vcfempy.materials.Material`]
 
@@ -5352,13 +5351,12 @@ class PolyElement2D():
 
     @property
     def area(self):
-        """The (signed) area of the :c:`PolyElement2D`.
+        """The area of the :c:`PolyElement2D`.
 
         Returns
         -------
         `float`
-            The (signed) area of the :c:`PolyElement2D`. Positive if nodes in
-            CCW order, negative if nodes in CW order.
+            The area of the :c:`PolyElement2D`.
 
         Examples
         --------
@@ -6241,32 +6239,34 @@ class InterfaceElement2D():
     Parameters
     ----------
     mesh : :c:`PolyMesh2D`
-        The parent mesh
-    material : :c:`vcfempy.materials.Material`, optional
-        The material type
+        The parent mesh.
     nodes : list[int], optional
         Initial list of node indices from the parent mesh that are contained
-        in the :c:`InterfaceElement2D`
+        in the :c:`InterfaceElement2D`.
+    material : :c:`vcfempy.materials.Material`, optional
+        The material type to assign to the :c:`InterfaceElement2D`.
     neighbors: `list` of :c:`PolyElement2D`, optional
-        List of neighboring :c:`PolyElement2D` from the parent mesh
+        List of neighboring :c:`PolyElement2D` from the parent mesh.
     width : float, optional
         The element width in the direction normal to the length of the
-        :c:`InterfaceElement2D`
+        :c:`InterfaceElement2D`.
 
     Examples
     --------
     """
 
-    def __init__(self, mesh, material=None, nodes=None, neighbors=None,
-                 width=None):
-        self._mesh = None
-        self.mesh = mesh
+    def __init__(self, mesh, nodes=None, material=None, neighbors=None,
+                 width=0.0):
+        if not isinstance(mesh, PolyMesh2D):
+            raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
+        self._mesh = mesh
 
         self._material = None
         self.material = material
 
-        self._width = 0.
         self.width = width
+
+        self.invalidate_properties()
 
         self._nodes = []
         self.insert_nodes(0, nodes)
@@ -6276,142 +6276,674 @@ class InterfaceElement2D():
 
     @property
     def mesh(self):
-        return self._mesh
+        """The parent :c:`PolyMesh2D`.
 
-    @mesh.setter
-    def mesh(self, mesh):
-        if type(mesh) not in [type(None), PolyMesh2D]:
-            raise TypeError('type(mesh) not in [NoneType, '
-                            + 'vcfempy.meshgen.PolyMesh2D]')
-        self._mesh = mesh
+        Returns
+        -------
+        :c:`PolyMesh2D`
+            The parent mesh assigned to the :c:`InterfaceElement2D`.
+
+        Note
+        ----
+        The :a:`mesh` is immutable and can only be assigned when the
+        :c:`InterfaceElement2D` is created. An :c:`InterfaceElement2D` should
+        not usually be created explicitly, but rather should be created
+        indirectly by calling the :m:`PolyMesh2D.generate_mesh` method.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].mesh is msh)
+        True
+        """
+        return self._mesh
 
     @property
     def material(self):
+        """Material type assigned to the :c:`InterfaceElement2D`.
+
+        Parameters
+        ----------
+        material : ``None`` | :c:`vcfempy.materials.Material`
+            The material to assign to the :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        ``None`` | :c:`vcfempy.materials.Material`
+            The material assigned to the :c:`InterfaceElement2D`.
+
+        Raises
+        ------
+        TypeError
+            If type(material) not in [`NoneType`,
+            :c:`vcfempy.materials.Material`]
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, [0, 1, 2, 3], rock)
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].material.name)
+        rock
+        """
         return self._material
 
     @material.setter
     def material(self, material):
-        if type(material) not in [type(None), mtl.Material]:
+        if not isinstance(material, (type(None), mtl.Material)):
             raise TypeError('type(material) not in [NoneType, '
                             + 'vcfempy.materials.Material]')
         self._material = material
 
     @property
-    def width(self, val):
+    def width(self):
+        """The width of the :c:`InterfaceElement2D` in the normal direction.
+
+        Parameters
+        ----------
+        val : float
+            The width to assign to the :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        `float`
+            The width of the :c:`InterfaceElement2D`.
+
+        Raises
+        ------
+        TypeError
+            If **val** is not a `str` or a number.
+        ValueError
+            If **val** cannot be cast to `float` or is < 0.0.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, [0, 1, 2, 3], rock)
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].width)
+        0.0
+        >>> msh.interface_elements[0].width = 0.5
+        >>> print(msh.interface_elements[0].width)
+        0.5
+        >>> msh.interface_elements[0].width = None
+        Traceback (most recent call last):
+            ...
+        TypeError: float() argument must be a string or a number, \
+not 'NoneType'
+        >>> msh.interface_elements[0].width = -0.1
+        Traceback (most recent call last):
+            ...
+        ValueError: width must be >= 0.0
+        >>> msh.interface_elements[0].width = 'abc'
+        Traceback (most recent call last):
+            ...
+        ValueError: could not convert string to float: 'abc'
+        """
         return self._width
 
     @width.setter
     def width(self, val):
-        # try to cast width to float
-        # this will raise a ValueError if val is not float-like
-        if val is None:
-            self._width = 0.
-        else:
-            self._width = float(val)
+        val = float(val)
+        if val < 0.0:
+            raise ValueError('width must be >= 0.0')
+        self._width = val
 
     @property
     def num_nodes(self):
+        """Number of nodes in the :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        `int`
+            The number of nodes in the :c:`InterfaceElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].num_nodes)
+        2
+        """
         return len(self.nodes)
 
     @property
     def nodes(self):
+        """List of node indices in the :c:`InterfaceElement2D`. References the
+        :a:`PolyMesh2D.nodes` of the parent :a:`mesh`.
+
+        Returns
+        -------
+        `list[int]`
+            The list of node indices in the :c:`InterfaceElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].nodes)
+        [5, 6]
+        """
         return self._nodes
 
-    def insert_nodes(self, index, nodes=None):
-        """Insert one or more nodes at index i
-        nodes can be int or list of ints
+    def insert_nodes(self, index, nodes):
+        """Insert node indices to the :c:`InterfaceElement2D`.
+
+        Parameters
+        ----------
+        index : int
+            The index at which to insert the **nodes** into :a:`nodes`.
+        nodes : list[int]
+            The list of node indices to add to :a:`nodes`. Must be a multiple
+            of 2 and the maximum number of :a:`nodes` is 4.
+
+        Note
+        -----
+        Before inserting the values in **nodes**, an attempt is made to
+        cast to a flattened `numpy.ndarray` of `int`. The new number of nodes
+        after insertion must be 0, 2, or 4.
+
+        Raises
+        ------
+        TypeError
+            If **index** cannot be interpreted as `int`.
+        ValueError
+            If **nodes** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **nodes** cannot be cast to `int`, are already
+            in :a:`nodes`, are negative, are >= :a:`mesh.num_nodes`, or
+            the list of nodes to be added would result in :a:`nodes` having
+            a length other than 0, 2, or 4.
+
+        Examples
+        --------
+        >>> # create a simple mesh
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.nodes.round(14))
+        [[-0.    1.  ]
+         [ 0.35  1.  ]
+         [ 0.    0.  ]
+         [ 0.35  0.  ]
+         [ 1.    1.  ]
+         [ 0.65  1.  ]
+         [ 0.65  0.65]
+         [ 1.    0.65]
+         [ 1.   -0.  ]
+         [ 0.65 -0.  ]
+         [ 0.65  0.35]
+         [ 1.    0.35]
+         [ 0.    0.65]
+         [ 0.    0.35]
+         [ 0.35  0.65]
+         [ 0.35  0.35]]
+
+        >>> # create a new element
+        >>> # note, this is normally not done explicitly, but is shown here
+        >>> # for testing and documentation
+        >>> e = vcfempy.meshgen.InterfaceElement2D(msh)
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes(0, [1, 14])
+        >>> print(e.nodes)
+        [1, 14]
+        >>> print(np.round(e.length, 14))
+        0.35
+
+        >>> # insert no nodes in multiple ways
+        >>> e.insert_nodes(0, None)
+        >>> e.insert_nodes(0, [])
+        >>> print(e.nodes)
+        [1, 14]
+
+        >>> # try to insert some invalid nodes
+        >>> e.insert_nodes(0, 'one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> e.insert_nodes(0, [1, 14])
+        Traceback (most recent call last):
+            ...
+        ValueError: 14 is already a node
+        >>> e.insert_nodes(0, [14, 2])
+        Traceback (most recent call last):
+            ...
+        ValueError: 14 is already a node
+        >>> print(e.nodes)
+        [1, 14]
+        >>> e.insert_nodes(0, [16, 17])
+        Traceback (most recent call last):
+            ...
+        ValueError: node index 17 out of range
+        >>> e.insert_nodes(0, [-1, -2])
+        Traceback (most recent call last):
+            ...
+        ValueError: node index -2 out of range
+        >>> e.insert_nodes(
+        ...             0, [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        >>> e.insert_nodes('one', [2, 3])
+        Traceback (most recent call last):
+            ...
+        TypeError: 'str' object cannot be interpreted as an integer
+        >>> e.insert_nodes(0, [2])
+        Traceback (most recent call last):
+            ...
+        ValueError: number of nodes in InterfaceElement2D \
+can only be 0, 2, or 4
+        >>> e.insert_nodes(0, [2, 3, 4, 5])
+        Traceback (most recent call last):
+            ...
+        ValueError: number of nodes in InterfaceElement2D \
+can only be 0, 2, or 4
         """
-        # basic type check of nodes
-        # nodes can only be None or a list because an InterfaceElement2D can
-        # only have 0, 2, or 4 nodes
-        if type(nodes) not in [type(None), list]:
-            raise TypeError('type(nodes) not in [NoneType, list]')
-
-        # if nodes given as None or empty list, return early
-        if nodes is None or len(nodes) == 0:
+        if nodes is None:
             return
-
-        # nodes is a non-empty list
-        # Note: we know this because of earlier type check on nodes
-
-        # catch incorrect number of nodes
-        # interfaces can only have 0, 2, or 4 nodes
+        nodes = np.array(nodes, dtype=int, ndmin=1)
+        if len(nodes) == 0:
+            return
         new_num_nodes = self.num_nodes + len(nodes)
-        if new_num_nodes % 2 == 1 or new_num_nodes > 4:
-            raise ValueError('InterfaceElement2D can only have 0, 2, or 4 '
-                             + 'nodes')
-
-        # check contents of nodes
-        for v in nodes:
-            # check type is integer
-            if type(v) not in [int, np.int32]:
-                raise TypeError('type of nodes contents not in [int, '
-                                + 'numpy.int32]')
-            # check value of node is less than number of nodes in parent mesh
-            if v >= self.mesh.num_nodes:
-                raise ValueError('nodes values must all be less than number '
-                                 + 'of nodes in the parent mesh')
-
-        # insert nodes
-        # Note: if here, we know that nodes is a valid list of ints
-        # nodes were added, so reset element properties
-        nodes.reverse()
-        for n in nodes:
-            self.nodes.insert(index, int(n))
+        if new_num_nodes % 2 or new_num_nodes > 4:
+            raise ValueError('number of nodes in InterfaceElement2D '
+                             + 'can only be 0, 2, or 4')
         self.invalidate_properties()
+        old_nodes = list(self.nodes)
+        nodes = np.flip(nodes.ravel())
+        try:
+            for n in nodes:
+                if n in self.nodes:
+                    raise ValueError(f'{n} is already a node')
+                if n < 0 or n >= self.mesh.num_nodes:
+                    raise ValueError(f'node index {n} out of range')
+                self.nodes.insert(index, int(n))
+        except ValueError:
+            self._nodes = old_nodes
+            raise
+
+    def remove_nodes(self, remove_nodes):
+        """Remove one or more node indices from the :c:`InterfaceElement2D`.
+
+        Parameters
+        ----------
+        remove_nodes : list[int]
+            The list of nodes to remove from :a:`nodes`.
+
+        Note
+        -----
+        Before removing the values in **remove_nodes**, an attempt will be
+        made to cast it to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        ValueError
+            If **remove_nodes** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **remove_nodes** cannot be cast to `int` or
+            are not in :a:`nodes`.
+            If the number of **remove_nodes** would result in the length of
+            :a:`nodes` being other than 0, 2, or 4.
+
+        Examples
+        --------
+        >>> # create a simple mesh, and remove nodes from an element
+        >>> # this should not normally be done explicitly unless you know
+        >>> # what you are doing
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].nodes)
+        [5, 6]
+        >>> msh.interface_elements[0].remove_nodes([5, 6])
+        >>> print(msh.interface_elements[0].nodes)
+        []
+
+        >>> # remove no nodes, in two different ways
+        >>> msh.interface_elements[0].insert_nodes(0, [5, 6])
+        >>> msh.interface_elements[0].remove_nodes(None)
+        >>> msh.interface_elements[0].remove_nodes([])
+        >>> print(msh.interface_elements[0].nodes)
+        [5, 6]
+
+        >>> # try to remove some invalid nodes
+        >>> msh.interface_elements[0].remove_nodes('one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> msh.interface_elements[0].remove_nodes([5, 8])
+        Traceback (most recent call last):
+            ...
+        ValueError: list.remove(x): x not in list
+        >>> print(msh.interface_elements[0].nodes)
+        [5, 6]
+        >>> msh.interface_elements[0].remove_nodes(4)
+        Traceback (most recent call last):
+            ...
+        ValueError: number of nodes in InterfaceElement2D \
+can only be 0, 2, or 4
+        >>> msh.interface_elements[0].remove_nodes(
+        ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        """
+        if remove_nodes is None:
+            return
+        remove_nodes = np.array(remove_nodes, dtype=int, ndmin=1)
+        if len(remove_nodes) == 0:
+            return
+        new_num_nodes = self.num_nodes - len(remove_nodes)
+        if new_num_nodes % 2 or new_num_nodes < 0:
+            raise ValueError('number of nodes in InterfaceElement2D '
+                             + 'can only be 0, 2, or 4')
+        self.invalidate_properties()
+        remove_nodes = remove_nodes.ravel()
+        old_nodes = list(self.nodes)
+        try:
+            for rn in remove_nodes:
+                self.nodes.remove(rn)
+        except ValueError:
+            self._nodes = old_nodes
+            raise
 
     @property
     def num_neighbors(self):
+        """Number of neighboring :c:`PolyElement2D` elements to the
+        :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        `int`
+            The number of neighbors to the :c:`InterfaceElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].num_neighbors)
+        2
+        """
         return len(self.neighbors)
 
     @property
     def neighbors(self):
+        """The list of neighboring :c:`PolyElement2D` elements to the
+        :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        `list` of :c:`PolyElement2D`
+            The list of neighbors to the :c:`InterfaceElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print([msh.elements.index(n)
+        ...        for n in msh.interface_elements[0].neighbors])
+        [3, 6]
+        """
         return self._neighbors
 
     def add_neighbors(self, neighbors):
-        # basic type check of neighbors
-        # Note: neighbors must be either None or a list because there can
-        #       only be 0 or 2 neighbors
-        if type(neighbors) not in [type(None), list]:
-            raise ValueError('type of neighbors not in [NoneType, list]')
+        """Add neighboring :c:`PolyElement2D` to the :c:`InterfaceElement2D`.
 
-        # check for early return if neighbors is empty
-        if neighbors is None or len(neighbors) == 0:
+        Parameters
+        ----------
+        neighbors : `list` of :c:`PolyElement2D`
+            The list of neighboring :c:`PolyElement2D` to the
+            :c:`InterfaceElement2D`.
+
+        Note
+        -----
+        An :c:`InterfaceElement2D` can only have 0 or 2 neighbors.
+
+        Raises
+        ------
+        ValueError
+            If any values in **neighbors** are not :c:`PolyElement2D`, are
+            already in :a:`neighbors`, do not have the same :a:`mesh` as the
+            :c:`InterfaceElement2D`, or the list of neighbors to be added
+            would result in :a:`neighbors` having a length other than 0 or 2.
+
+        Examples
+        --------
+        >>> # create a simple mesh
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+
+        >>> # create a new element
+        >>> # note, this is normally not done explicitly, but is shown here
+        >>> # for testing and documentation
+        >>> e = vcfempy.meshgen.InterfaceElement2D(msh)
+        >>> print(e.neighbors)
+        []
+        >>> e.add_neighbors(msh.elements[0:2])
+        >>> print([msh.elements.index(n) for n in e.neighbors])
+        [0, 1]
+
+        >>> # add no neighbors in multiple ways
+        >>> e.add_neighbors(None)
+        >>> e.add_neighbors([])
+        >>> print([msh.elements.index(n) for n in e.neighbors])
+        [0, 1]
+
+        >>> # try to add some invalid neighbors
+        >>> e.add_neighbors(msh.elements[0:2])
+        Traceback (most recent call last):
+            ...
+        ValueError: number of neighbors to InterfaceElement2D \
+can only be 0 or 2
+        """
+        if neighbors is None:
             return
-
-        # if here, we know that neighbors is a non-empty list
-
-        # check for correct length of neighbors
-        # the new number must be 2 because there can only be 0 or 2
-        # neighbors and we know neighbors is not empty
-        if self.num_neighbors + len(neighbors) != 2:
-            raise ValueError('InterfaceElement2D can only have 0 or 2 '
-                             + 'neighbors')
-
-        # check contents of neighbors
-        # they must be PolyElement2D elements with the same parent mesh
-        for n in neighbors:
-            if type(n) is not PolyElement2D:
-                raise TypeError('type of all neighbors must be '
-                                + 'vcfempy.meshgen.PolyElement2D')
-            if n.mesh is not self.mesh:
-                raise ValueError('vcfempy.meshgen.InterfaceElement2D must '
-                                 + 'have same parent mesh as its neighbors')
-
-        # passed all checks, add neighbors to the interface element
-        for n in neighbors:
-            self.neighbors.append(n)
-
-    def invalidate_properties(self):
-        self._length = None
+        if len(neighbors) == 0:
+            return
+        new_num_neighbors = self.num_neighbors + len(neighbors)
+        if new_num_neighbors % 2 or new_num_neighbors > 2:
+            raise ValueError('number of neighbors to InterfaceElement2D '
+                             + 'can only be 0 or 2')
+        old_neighbors = list(self.neighbors)
+        try:
+            for n in neighbors:
+                if n.mesh is not self.mesh:
+                    raise ValueError(f'{n} does not have the same parent mesh')
+                if n in self.neighbors:
+                    raise ValueError(f'element {self.mesh.elements.index(n)}'
+                                     + ' is already a neighbor')
+                self.neighbors.append(n)
+        except ValueError:
+            self._neighbors = old_neighbors
+            raise
 
     @property
     def length(self):
+        """The length of the :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        `float`
+            The length of the :c:`InterfaceElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(np.round(msh.interface_elements[0].length, 14))
+        0.35
+        """
         if self._length is None and self.num_nodes >= 2:
             n0 = self.mesh.nodes[self.nodes[0]]
             n1 = self.mesh.nodes[self.nodes[1]]
             self._length = np.linalg.norm(n1-n0)
         return self._length
+
+    def invalidate_properties(self):
+        """Resets cached value of computed attribute :a:`length`.
+
+        Note
+        ----
+        The :m:`invalidate_properties` method should be called whenever
+        :a:`nodes` is changed. This is done by :m:`insert_nodes` and
+        :m:`remove_nodes`, but needs to be done explicitly if making manual
+        changes to :a:`nodes`.
+
+        Examples
+        --------
+        >>> # create a simple mesh, check the element properties
+        >>> # invalidate properties and check the values of (private) cache
+        >>> # attributes
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0]._length)
+        None
+        >>> print(np.round(msh.interface_elements[0].length, 14))
+        0.35
+        >>> msh.interface_elements[0].invalidate_properties()
+        >>> print(msh.interface_elements[0]._length)
+        None
+        """
+        self._length = None
+
+    def plot(self, ax=None, **kwargs):
+        """Plot the :c:`InterfaceElement2D`.
+
+        Parameters
+        ----------
+        ax : None | :c:`matplotlib.axes.Axes`
+            The axes to plot on. If not provided, will try to get one using
+            :m:`matplotlib.pyplot.gca`.
+
+        Other Parameters
+        ----------------
+        **kwargs : :c:`matplotlib.pyplot.Line2D` properties, optional
+            Default values:
+            `linewidth` = 3.0,
+            `linestyle` = '--',
+            `color` = :a:`material` `color` (or 'black' if :a:`material` is
+            ``None``) with alpha = 1.0.
+
+        Returns
+        -------
+        :c:`matplotlib.axes.Axes`
+            The axes that the :c:`InterfaceElement2D` was plotted on.
+
+        Examples
+        --------
+        >>> # initialize a mesh and a material region, then generate a mesh
+        >>> # and plot the elements and interface elements
+        >>> import matplotlib.pyplot as plt
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:stone')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
+        ...                                       rock, 'rock region')
+        >>> msh.mesh_scale = 0.2
+        >>> msh.mesh_rand = 0.2
+        >>> msh.generate_mesh()
+        >>> fig = plt.figure()
+        >>> for e in msh.elements:
+        ...     ax = e.plot()
+        >>> for e in msh.interface_elements:
+        ...     ax = e.plot()
+        >>> xmin, xmax, ymin, ymax = ax.axis('equal')
+        >>> xtext = ax.set_xlabel('x')
+        >>> ytext = ax.set_ylabel('y')
+        >>> ttext = ax.set_title('InterfaceElement2D Test Plot')
+        >>> plt.savefig('InterfaceElement2D_test_plot.png')
+        """
+        if ax is None or not isinstance(ax, plt.Axes):
+            ax = plt.gca()
+        if 'linewidth' not in kwargs.keys():
+            kwargs['linewidth'] = 2.0
+        if 'linestyle' not in kwargs.keys():
+            kwargs['linestyle'] = '--'
+        if self.material is not None:
+            color = mplclr.to_rgb(self.material.color)
+            color = (color[0], color[1], color[2], 1.0)
+            kwargs['color'] = color
+        elif 'color' not in kwargs.keys():
+            kwargs['color'] = 'black'
+        ax.plot(self.mesh.nodes[self.nodes, 0],
+                self.mesh.nodes[self.nodes, 1],
+                **kwargs)
+        return ax
 
 
 class BoundaryElement2D():
