@@ -33,13 +33,13 @@ def rectangular_mesh():
     # add material types and regions
     # Note: here we create a MaterialRegion2D object and
     #       then add it to the mesh
-    rock = mtl.Material('rock', color='xkcd:stone')
-    msh.MaterialRegion2D(rect_mesh, rect_mesh.boundary_vertices, rock)
+    clay = mtl.Material('clay', color='xkcd:clay')
+    msh.MaterialRegion2D(rect_mesh, rect_mesh.boundary_vertices, clay)
 
     # generate mesh and print properties
     # Note: here [16,32] is the grid size for mesh seed points
     #       and 0.2 is the degree of random shifting
-    rect_mesh.mesh_scale = 2.5
+    rect_mesh.mesh_scale = 5.0
     rect_mesh.mesh_rand = 0.2
     rect_mesh.generate_mesh()
     print(rect_mesh)
@@ -63,10 +63,9 @@ def rectangular_mesh():
     ax = rect_mesh.plot_mesh()
     rect_mesh.plot_boundaries()
     rect_mesh.plot_mesh_edges()
-    rect_mesh.plot_mesh_boundaries()
+    rect_mesh.plot_mesh(element_quad_points=True)
     rect_mesh.plot_vertices()
-    rect_mesh.plot_mesh_nodes()
-    rect_mesh.plot_quad_points()
+    rect_mesh.plot_nodes()
 
     ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')
     ax.set_ylabel('y [m]', fontsize=12, fontweight='bold')
@@ -166,10 +165,10 @@ def dam_mesh():
     # plot mesh
     fig = plt.figure()
     fig.set_size_inches((10, 10))
-    ax = dam_mesh.plot_mesh()
     dam_mesh.plot_boundaries()
     dam_mesh.plot_mesh_edges()
-    dam_mesh.plot_mesh_boundaries()
+    ax = dam_mesh.plot_mesh()
+    dam_mesh.plot_vertices()
 
     ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')
     ax.set_ylabel('y [m]', fontsize=12, fontweight='bold')
@@ -233,7 +232,7 @@ def tunnel_mesh():
     tunnel_mesh.add_vertices([[2.5, 17.5],
                               [10., 12.5],
                               [12.,  7.5],
-                              [ 8., 17.5],
+                              [8., 17.5],
                               [12.5, 15.],
                               [17.5, 2.5]])
     msh.MeshEdge2D(tunnel_mesh, [nv, nv+1, nv+2])
@@ -263,8 +262,8 @@ def tunnel_mesh():
     fig.set_size_inches((10, 10))
     ax = tunnel_mesh.plot_mesh()
     tunnel_mesh.plot_boundaries()
+    tunnel_mesh.plot_mesh()
     tunnel_mesh.plot_mesh_edges()
-    tunnel_mesh.plot_mesh_boundaries()
     tunnel_mesh.plot_vertices()
 
     ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')

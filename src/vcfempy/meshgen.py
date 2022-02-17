@@ -206,11 +206,10 @@ class PolyMesh2D():
     >>> import matplotlib.pyplot as plt
     >>> fig = plt.figure()
     >>> ax = plt.gca()
-    >>> ax = msh.plot_mesh(ax)
-    >>> ax = msh.plot_boundaries(ax)
-    >>> ax = msh.plot_mesh_boundaries(ax)
-    >>> ax = msh.plot_vertices(ax)
-    >>> ax = msh.plot_mesh_nodes(ax)
+    >>> ax = msh.plot_boundaries()
+    >>> ax = msh.plot_mesh()
+    >>> ax = msh.plot_vertices()
+    >>> ax = msh.plot_nodes()
     >>> xmin, xmax, ymin, ymax = plt.axis('equal')
     >>> xlab_text = ax.set_xlabel('x', fontweight='bold')
     >>> ylab_text = ax.set_ylabel('y', fontweight='bold')
@@ -3143,7 +3142,7 @@ self.nodes is empty
             # first vertex, not closed, insert points before and after
             if not closed and k == 0:
                 vp1 = self.vertices[edge_verts[k+1]]
-                tt1, nn1 = get_unit_tangent_normal(v, vp1)
+                tt1, nn1 = _get_unit_tangent_normal(v, vp1)
                 top_points = np.vstack([top_points,
                                         v + 0.5 * d_scale * (-tt1 - nn1),
                                         v + 0.5 * d_scale * (+tt1 - nn1)])
@@ -3161,7 +3160,7 @@ self.nodes is empty
                 bot_points = np.vstack([bot_points,
                                         v + 0.5 * d_scale * (-tt0 + nn0)])
                 # reflect points behind
-                new_ref_points = get_edge_reflection_points(
+                new_ref_points = _get_edge_reflection_points(
                                     bot_points[-2],
                                     bot_points[-1],
                                     vm1, tt0, d_scale, self.mesh_rand)
@@ -3175,8 +3174,8 @@ self.nodes is empty
             else:
                 vm1 = self.vertices[edge_verts[k-1]]
                 vp1 = self.vertices[edge_verts[(k+1) % num_verts]]
-                tt0, nn0 = get_unit_tangent_normal(vm1, v)
-                tt1, nn1 = get_unit_tangent_normal(v, vp1)
+                tt0, nn0 = _get_unit_tangent_normal(vm1, v)
+                tt1, nn1 = _get_unit_tangent_normal(v, vp1)
                 tt_cross = np.cross(-tt0, tt1)
                 # straight vertex
                 if np.abs(tt_cross) < 1.e-8:
@@ -3187,7 +3186,7 @@ self.nodes is empty
                                             v + 0.5 * d_scale * (-tt1 + nn1)])
                     # reflect points behind
                     if k > 0:
-                        new_ref_points = get_edge_reflection_points(
+                        new_ref_points = _get_edge_reflection_points(
                                             bot_points[-2],
                                             bot_points[-1],
                                             vm1, tt0, d_scale, self.mesh_rand)
@@ -3199,7 +3198,7 @@ self.nodes is empty
                                             v + 0.5 * d_scale * (+tt1 + nn1)])
                     # reflect points ahead
                     if k == num_verts - 1:
-                        new_ref_points = get_edge_reflection_points(
+                        new_ref_points = _get_edge_reflection_points(
                                             top_points[-1],
                                             top_points[0],
                                             v, tt1, d_scale, self.mesh_rand)
@@ -3215,12 +3214,14 @@ self.nodes is empty
                         new_point = v + ss * vv
                         bot_points = np.vstack([bot_points, new_point])
                         new_top_points = [
-                                reflect_point_across_edge(new_point, vm1, tt0),
-                                reflect_point_across_edge(new_point, v, tt1)]
+                                _reflect_point_across_edge(new_point,
+                                                           vm1, tt0),
+                                _reflect_point_across_edge(new_point,
+                                                           v, tt1)]
                         top_points = np.vstack([top_points, new_top_points])
                         # reflect points behind
                         if k > 0:
-                            new_ref_points = get_edge_reflection_points(
+                            new_ref_points = _get_edge_reflection_points(
                                     bot_points[-2],
                                     bot_points[-1],
                                     vm1, tt0, d_scale, self.mesh_rand)
@@ -3231,12 +3232,14 @@ self.nodes is empty
                         new_point = v - ss * vv
                         top_points = np.vstack([top_points, new_point])
                         new_bot_points = [
-                                reflect_point_across_edge(new_point, vm1, tt0),
-                                reflect_point_across_edge(new_point, v, tt1)]
+                                _reflect_point_across_edge(new_point,
+                                                           vm1, tt0),
+                                _reflect_point_across_edge(new_point,
+                                                           v, tt1)]
                         bot_points = np.vstack([bot_points, new_bot_points])
                         # reflect points behind
                         if k > 0:
-                            new_ref_points = get_edge_reflection_points(
+                            new_ref_points = _get_edge_reflection_points(
                                     top_points[-2],
                                     top_points[-1],
                                     vm1, tt0, d_scale, self.mesh_rand)
@@ -3244,7 +3247,7 @@ self.nodes is empty
                                                     new_ref_points])
                     # reflect points ahead
                     if k == num_verts - 1:
-                        new_ref_points = get_edge_reflection_points(
+                        new_ref_points = _get_edge_reflection_points(
                                 top_points[-1],
                                 top_points[0],
                                 v, tt1, d_scale, self.mesh_rand)
@@ -3654,78 +3657,262 @@ self.nodes is empty
         return (f"<{__name__}.{type(self).__name__} object '{self.name}' at "
                 + f"{hex(id(self))}>")
 
-    def plot_boundaries(self, ax=None, line_type='-k'):
-        """ Plot out PolyMesh2D boundaries. """
-        if ax is None:
+    def plot_boundaries(self, ax=None, **kwargs):
+        """Plot the :c:`PolyMesh2D` :a:`boundary_edges` using
+        :m:`matplotlib.pyplot.fill`.
+
+        Parameters
+        ----------
+        ax : None | :c:`matplotlib.axes.Axes`
+            The axes to plot on. If not provided, will try to get one using
+            :m:`matplotlib.pyplot.gca`.
+
+        Other Parameters
+        ----------------
+        **kwargs : :c:`matplotlib.patches.Polygon` properties, optional
+            Default values:
+            `edgecolor` = 'black'
+            `linewidth` = 1.0,
+            `linestyle` = '-',
+            `fill` = ``False``.
+
+        Returns
+        -------
+        :c:`matplotlib.axes.Axes`
+            The axes that the :c:`MaterialRegion2D` was plotted on.
+
+        Examples
+        --------
+        >>> # initialize a mesh, then plot the boundaries
+        >>> import matplotlib.pyplot as plt
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> fig = plt.figure()
+        >>> ax = msh.plot_boundaries()
+        >>> xmin, xmax, ymin, ymax = ax.axis('equal')
+        >>> xtext = ax.set_xlabel('x')
+        >>> ytext = ax.set_ylabel('y')
+        >>> ttext = ax.set_title('PolyMesh2D Boundaries Test Plot')
+        >>> plt.savefig('PolyMesh2D_boundaries_test_plot.png')
+        """
+        if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        for edge in self.boundary_edges:
-            ax.plot(self.vertices[edge, 0], self.vertices[edge, 1], line_type)
+        if 'edgecolor' not in kwargs.keys():
+            kwargs['edgecolor'] = 'black'
+        if 'linewidth' not in kwargs.keys():
+            kwargs['linewidth'] = 1.0
+        if 'linestyle' not in kwargs.keys():
+            kwargs['linestyle'] = '-'
+        if 'fill' not in kwargs.keys():
+            kwargs['fill'] = False
+        ax.fill(self.vertices[self.boundary_vertices, 0],
+                self.vertices[self.boundary_vertices, 1],
+                **kwargs)
         return ax
 
-    def plot_vertices(self, ax=None, line_type='sk', markersize=5.0):
-        """ Plot out PolyMesh2D vertices. """
-        if ax is None:
-            ax = plt.gca()
-        ax.plot(self.vertices[:, 0],
-                self.vertices[:, 1],
-                line_type, markersize=markersize)
-        return ax
+    def plot_material_regions(self, ax=None):
+        """Plot the :c:`PolyMesh2D` :a:`material_regions`.
 
-    def plot_mesh_edges(self, ax=None, line_type='-k'):
-        """ Plot out PolyMesh2D mesh edges. """
-        if ax is None:
-            ax = plt.gca()
-        for edge in self.mesh_edges:
-            ax.plot(self.vertices[edge.vertices, 0],
-                    self.vertices[edge.vertices, 1],
-                    line_type)
-        return ax
+        Parameters
+        ----------
+        ax : None | :c:`matplotlib.axes.Axes`
+            The axes to plot on. If not provided, will try to get one using
+            :m:`matplotlib.pyplot.gca`.
 
-    def plot_material_regions(self, ax=None, line_type='-k', fill=True):
-        """ Plot out PolyMesh2D material regions. """
+        Note
+        ----
+        This :m:`plot_material_regions` method calls the
+        :m:`MaterialRegion2D.plot` method for each material region using
+        default parameters. If you would like to modify the plotting
+        parameters, use the :m:`MaterialRegion2D.plot` method directly.
+
+        Returns
+        -------
+        :c:`matplotlib.axes.Axes`
+            The axes that the :a:`material_regions` were plotted on.
+
+        Examples
+        --------
+        >>> # initialize a mesh, then plot the boundaries and material regions
+        >>> import matplotlib.pyplot as plt
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> sand = vcfempy.materials.Material('sand', color='xkcd:sand')
+        >>> clay = vcfempy.materials.Material('clay', color='xkcd:clay')
+        >>> sand_reg = vcfempy.meshgen.MaterialRegion2D(msh, [0, 4, 5, 3],
+        ...                                             sand)
+        >>> clay_reg = vcfempy.meshgen.MaterialRegion2D(msh, [4, 1, 2, 5],
+        ...                                             clay)
+        >>> fig = plt.figure()
+        >>> ax = msh.plot_boundaries()
+        >>> ax = msh.plot_material_regions()
+        >>> ax = msh.plot_vertices()
+        >>> xmin, xmax, ymin, ymax = ax.axis('equal')
+        >>> xtext = ax.set_xlabel('x')
+        >>> ytext = ax.set_ylabel('y')
+        >>> ttext = ax.set_title('PolyMesh2D Material Regions Test Plot')
+        >>> plt.savefig('PolyMesh2D_material_regions_test_plot.png')
+        """
         if ax is None:
             ax = plt.gca()
         for mr in self.material_regions:
-            mr.plot(ax, line_type, fill)
+            mr.plot(ax)
         return ax
 
-    def plot_mesh(self, ax=None, line_type=':k', fill=True):
-        """ Plot out PolyMesh2D elements. """
-        if ax is None:
+    def plot_vertices(self, ax=None, **kwargs):
+        """Plot the :a:`vertices` of the :c:`PolyMesh2D` using
+        :m:`matplotlib.pyplot.plot`.
+
+        Parameters
+        ----------
+        ax : :c:`matplotlib.axes.Axes`, optional
+            The axes to plot on. If not provided, will try to get one using
+            :m:`matplotlib.pyplot.gca`.
+
+        Other Parameters
+        ----------------
+        **kwargs : :c:`matplotlib.lines.Line2D` properties, optional
+            Default values:
+            `linewidth` = 0.0,
+            `markeredgecolor` = 'black'
+            `markerfacecolor` = 'white'
+            `marker` = 's',
+            `markersize` = 8.0.
+
+        Returns
+        -------
+        :c:`matplotlib.axes.Axes`
+            The axes that the :a:`vertices` were plotted on.
+
+        Examples
+        --------
+        >>> # initialize a mesh and plot the nodes
+        >>> import matplotlib.pyplot as plt
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:greenish')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
+        ...                                       rock, 'rock region')
+        >>> fig = plt.figure()
+        >>> ax = msh.plot_boundaries()
+        >>> ax = msh.plot_material_regions()
+        >>> ax = msh.plot_vertices()
+        >>> xmin, xmax, ymin, ymax = ax.axis('equal')
+        >>> xtext = ax.set_xlabel('x')
+        >>> ytext = ax.set_ylabel('y')
+        >>> ttext = ax.set_title('PolyMesh2D Vertices Test Plot')
+        >>> plt.savefig('PolyMesh2D_vertices_test_plot.png')
+        """
+        if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        for e in self.elements:
-            e.plot(ax)
-        for e in self.interface_elements:
-            ax.plot(self.nodes[e.nodes, 0],
-                    self.nodes[e.nodes, 1],
-                    line_type)
+        if 'linewidth' not in kwargs.keys():
+            kwargs['linewidth'] = 0.0
+        if 'markeredgecolor' not in kwargs.keys():
+            kwargs['markeredgecolor'] = 'black'
+        if 'markerfacecolor' not in kwargs.keys():
+            kwargs['markerfacecolor'] = 'black'
+        if 'marker' not in kwargs.keys():
+            kwargs['marker'] = 's'
+        if 'markersize' not in kwargs.keys():
+            kwargs['markersize'] = 8.0
+        ax.plot(self.vertices[:, 0], self.vertices[:, 1], **kwargs)
         return ax
 
-    def plot_mesh_boundaries(self, ax=None, line_type='--b'):
-        """ Plot out PolyMesh2D element edges that are on the boundaries. """
+    def plot_mesh_edges(self, ax=None):
         if ax is None:
             ax = plt.gca()
-        for e in self.boundary_elements:
-            ax.plot(self.nodes[e.nodes, 0],
-                    self.nodes[e.nodes, 1],
-                    line_type)
+        for edge in self.mesh_edges:
+            edge.plot(ax)
         return ax
 
-    def plot_mesh_nodes(self, ax=None, line_type='ok', markersize=2.0):
-        """ Plot out PolyMesh2D nodes. """
+    def plot_mesh(self, ax=None, elements=True, interface_elements=True,
+                  boundary_elements=True, element_quad_points=False):
         if ax is None:
             ax = plt.gca()
-        ax.plot(self.nodes[:, 0],
-                self.nodes[:, 1],
-                line_type, markersize=markersize)
+        if elements:
+            for e in self.elements:
+                e.plot(ax)
+        if interface_elements:
+            for e in self.interface_elements:
+                e.plot(ax)
+        if boundary_elements:
+            for e in self.boundary_elements:
+                e.plot(ax)
+        if element_quad_points:
+            for e in self.elements:
+                e.plot_quad_points(ax)
         return ax
 
-    def plot_quad_points(self, ax=None, **kwargs):
-        """ Plot out PolyMesh2D quadrature points. """
-        if ax is None:
+    def plot_nodes(self, ax=None, **kwargs):
+        """Plot the :a:`nodes` of the :c:`PolyMesh2D` using
+        :m:`matplotlib.pyplot.plot`.
+
+        Parameters
+        ----------
+        ax : :c:`matplotlib.axes.Axes`, optional
+            The axes to plot on. If not provided, will try to get one using
+            :m:`matplotlib.pyplot.gca`.
+
+        Other Parameters
+        ----------------
+        **kwargs : :c:`matplotlib.lines.Line2D` properties, optional
+            Default values:
+            `linewidth` = 0.0,
+            `markeredgecolor` = 'black'
+            `markerfacecolor` = 'white'
+            `marker` = 'o',
+            `markersize` = 4.0.
+
+        Returns
+        -------
+        :c:`matplotlib.axes.Axes`
+            The axes that the :a:`nodes` were plotted on.
+
+        Examples
+        --------
+        >>> # initialize a mesh and plot the nodes
+        >>> import matplotlib.pyplot as plt
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:greenish')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
+        ...                                       rock, 'rock region')
+        >>> msh.mesh_scale = 0.2
+        >>> msh.mesh_rand = 0.2
+        >>> msh.generate_mesh()
+        >>> fig = plt.figure()
+        >>> ax = msh.plot_mesh()
+        >>> ax = msh.plot_vertices()
+        >>> ax = msh.plot_nodes()
+        >>> xmin, xmax, ymin, ymax = ax.axis('equal')
+        >>> xtext = ax.set_xlabel('x')
+        >>> ytext = ax.set_ylabel('y')
+        >>> ttext = ax.set_title('PolyMesh2D Nodes Test Plot')
+        >>> plt.savefig('PolyMesh2D_nodes_test_plot.png')
+        """
+        if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        for e in self.elements:
-            e.plot_quad_points(ax, **kwargs)
+        if 'linewidth' not in kwargs.keys():
+            kwargs['linewidth'] = 0.0
+        if 'markeredgecolor' not in kwargs.keys():
+            kwargs['markeredgecolor'] = 'black'
+        if 'markerfacecolor' not in kwargs.keys():
+            kwargs['markerfacecolor'] = 'white'
+        if 'marker' not in kwargs.keys():
+            kwargs['marker'] = 'o'
+        if 'markersize' not in kwargs.keys():
+            kwargs['markersize'] = 4.0
+        ax.plot(self.nodes[:, 0], self.nodes[:, 1], **kwargs)
         return ax
 
 
@@ -4276,12 +4463,12 @@ class MaterialRegion2D():
         ----------------
         **kwargs : :c:`matplotlib.patches.Polygon` properties, optional
             Default values:
-            `edgecolor` = 'black',
-            `facecolor` = :a:`material` `color` (or ``None`` if :a:`material`
-            is ``None``),
+            `edgecolor` = :a:`material` `color` (or 'black' if :a:`material`
+            is ``None``) with alpha = 1.0,
+            `facecolor` = :a:`material` `color` (or 'black' if :a:`material`
+            is ``None``) with alpha = 0.8,
             `linewidth` = 2.0,
-            `linestyle` = '-',
-            `fill` = ``True``
+            `linestyle` = '-'.
 
         Returns
         -------
@@ -4312,10 +4499,14 @@ class MaterialRegion2D():
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'edgecolor' not in kwargs.keys():
-            kwargs['edgecolor'] = 'black'
         if self.material is not None:
-            kwargs['facecolor'] = self.material.color
+            color = mplclr.to_rgb(self.material.color)
+        else:
+            color = mplclr.to_rgb('black')
+        if 'edgecolor' not in kwargs.keys():
+            kwargs['edgecolor'] = color + (1.0, )
+        if 'facecolor' not in kwargs.keys():
+            kwargs['facecolor'] = color + (0.8, )
         if 'linewidth' not in kwargs.keys():
             kwargs['linewidth'] = 2.0
         if 'linestyle' not in kwargs.keys():
@@ -6109,12 +6300,12 @@ class PolyElement2D():
         ----------------
         **kwargs : :c:`matplotlib.patches.Polygon` properties, optional
             Default values:
-            `edgecolor` = 'black',
-            `facecolor` = :a:`material` `color` (or ``None`` if :a:`material`
+            `edgecolor` = :a:`material` `color` (or 'black' if :a:`material`
+            is ``None``) with alpha = 1.0,
+            `facecolor` = :a:`material` `color` (or 'black' if :a:`material`
             is ``None``) with alpha = 0.6,
-            `linewidth` = 0.7,
-            `linestyle` = ':',
-            `fill` = ``True``
+            `linewidth` = 1.0,
+            `linestyle` = ':'.
 
         Returns
         -------
@@ -6130,10 +6321,10 @@ class PolyElement2D():
         >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
         >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
         >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> rock = vcfempy.materials.Material('rock', color='xkcd:stone')
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:clay')
         >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
         ...                                       rock, 'rock region')
-        >>> msh.mesh_scale = 0.05
+        >>> msh.mesh_scale = 0.2
         >>> msh.mesh_rand = 0.2
         >>> msh.generate_mesh()
         >>> fig = plt.figure()
@@ -6147,14 +6338,16 @@ class PolyElement2D():
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'edgecolor' not in kwargs.keys():
-            kwargs['edgecolor'] = 'black'
         if self.material is not None:
             color = mplclr.to_rgb(self.material.color)
-            color = (color[0], color[1], color[2], 0.6)
-            kwargs['facecolor'] = color
+        else:
+            color = mplclr.to_rgb('black')
+        if 'edgecolor' not in kwargs.keys():
+            kwargs['edgecolor'] = color + (1.0, )
+        if 'facecolor' not in kwargs.keys():
+            kwargs['facecolor'] = color + (0.6, )
         if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 0.7
+            kwargs['linewidth'] = 1.0
         if 'linestyle' not in kwargs.keys():
             kwargs['linestyle'] = ':'
         ax.fill(self.mesh.nodes[self.nodes, 0],
@@ -6163,7 +6356,8 @@ class PolyElement2D():
         return ax
 
     def plot_quad_points(self, ax=None, **kwargs):
-        """Plot the :a:`quad_points` of the :c:`PolyElement2D`
+        """Plot the :a:`quad_points` of the :c:`PolyElement2D` using
+        :m:`matplotlib.pyplot.plot`.
 
         Parameters
         ----------
@@ -6176,9 +6370,11 @@ class PolyElement2D():
         **kwargs : :c:`matplotlib.lines.Line2D` properties, optional
             Default values:
             `linewidth` = 0.0,
-            `markeredgecolor` = :a:`material` `color` (or 'k' if
-            :a:`material` is ``None``) with alpha = 1.0,
-            `marker` = '+',
+            `markeredgecolor` = :a:`material` `color` with alpha = 1.0 (or
+            'black' if :a:`material` is ``None``),
+            `markerfacecolor` = :a:`material` `color` with alpha = 1.0 (or
+            'black' if :a:`material` is ``None``),
+            `marker` = 'P',
             `markersize` = 6.0.
 
         Returns
@@ -6196,10 +6392,10 @@ class PolyElement2D():
         >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
         >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
         >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> rock = vcfempy.materials.Material('rock', color='xkcd:stone')
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:greenish')
         >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
         ...                                       rock, 'rock region')
-        >>> msh.mesh_scale = 0.25
+        >>> msh.mesh_scale = 0.2
         >>> msh.mesh_rand = 0.2
         >>> msh.generate_mesh()
         >>> fig = plt.figure()
@@ -6218,12 +6414,15 @@ class PolyElement2D():
             kwargs['linewidth'] = 0.0
         if self.material is not None:
             color = mplclr.to_rgb(self.material.color)
-            color = (color[0], color[1], color[2], 1.0)
-            kwargs['markeredgecolor'] = color
-        elif 'markeredgecolor' not in kwargs.keys():
-            kwargs['markeredgecolor'] = 'k'
+            kwargs['markeredgecolor'] = color + (1.0, )
+            kwargs['markerfacecolor'] = color + (1.0, )
+        else:
+            if 'markeredgecolor' not in kwargs.keys():
+                kwargs['markeredgecolor'] = 'black'
+            if 'markerfacecolor' not in kwargs.keys():
+                kwargs['markerfacecolor'] = 'black'
         if 'marker' not in kwargs.keys():
-            kwargs['marker'] = '+'
+            kwargs['marker'] = 'P'
         if 'markersize' not in kwargs.keys():
             kwargs['markersize'] = 6.0
         ax.plot(self.quad_points[:, 0] + self.centroid[0],
@@ -6253,6 +6452,29 @@ class InterfaceElement2D():
 
     Examples
     --------
+    >>> # create a simple mesh and check the element properties
+    >>> import vcfempy.materials
+    >>> import vcfempy.meshgen
+    >>> msh = vcfempy.meshgen.PolyMesh2D()
+    >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+    >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+    >>> rock = vcfempy.materials.Material('rock')
+    >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, [0, 1, 2, 3], rock)
+    >>> msh.mesh_scale = 0.4
+    >>> msh.add_seed_points([0.5, 0.5])
+    >>> msh.generate_mesh()
+    >>> print(msh.interface_elements[0].mesh is msh)
+    True
+    >>> print(msh.interface_elements[0].num_nodes)
+    2
+    >>> print(msh.interface_elements[0].nodes)
+    [5, 6]
+    >>> print(msh.interface_elements[0].material.name)
+    rock
+    >>> print(np.round(msh.interface_elements[0].length, 14))
+    0.35
+    >>> print(msh.interface_elements[0].centroid.round(14))
+    [0.65  0.825]
     """
 
     def __init__(self, mesh, nodes=None, material=None, neighbors=None,
@@ -6411,6 +6633,7 @@ not 'NoneType'
         if val < 0.0:
             raise ValueError('width must be >= 0.0')
         self._width = val
+        self.invalidate_properties()
 
     @property
     def num_nodes(self):
@@ -6469,8 +6692,8 @@ not 'NoneType'
         index : int
             The index at which to insert the **nodes** into :a:`nodes`.
         nodes : list[int]
-            The list of node indices to add to :a:`nodes`. Must be a multiple
-            of 2 and the maximum number of :a:`nodes` is 4.
+            The list of node indices to add to :a:`nodes`. Length must be a
+            multiple of 2 and the maximum number of :a:`nodes` is 4.
 
         Note
         -----
@@ -6603,7 +6826,7 @@ can only be 0, 2, or 4
             raise
 
     def remove_nodes(self, remove_nodes):
-        """Remove one or more node indices from the :c:`InterfaceElement2D`.
+        """Remove node indices from the :c:`InterfaceElement2D`.
 
         Parameters
         ----------
@@ -6840,21 +7063,85 @@ can only be 0 or 2
         >>> print(np.round(msh.interface_elements[0].length, 14))
         0.35
         """
-        if self._length is None and self.num_nodes >= 2:
-            n0 = self.mesh.nodes[self.nodes[0]]
-            n1 = self.mesh.nodes[self.nodes[1]]
-            self._length = np.linalg.norm(n1-n0)
+        if self._length is None and self.num_nodes:
+            self._length = shp.LineString(
+                    self.mesh.nodes[self.nodes[0:2]]).length
         return self._length
 
+    @property
+    def area(self):
+        """The area of the :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        `float`
+            The area of the :c:`InterfaceElement2D`.
+
+        Note
+        ----
+        The method uses the :a:`length` and :a:`width` properties to
+        calculate the area. It does not use the polygon formed by the
+        :a:`nodes`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(np.round(msh.interface_elements[0].area, 14))
+        0.0
+        """
+        if self._area is None:
+            self._area = self.length * self.width
+        return self._area
+
+    @property
+    def centroid(self):
+        """The centroid coordinates of the :c:`InterfaceElement2D`.
+
+        Returns
+        -------
+        `numpy.ndarray`, shape = (2, )
+            The coordinates of the centroid of the :c:`InterfaceElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].centroid)
+        [0.65  0.825]
+        """
+        if self._centroid is None:
+            if self.num_nodes:
+                if self.num_nodes == 2:
+                    c = shp.LineString(self.mesh.nodes[self.nodes]).centroid
+                elif self.num_nodes == 4:
+                    c = shp.Polygon(self.mesh.nodes[self.nodes]).centroid
+                self._centroid = np.array([c.x, c.y], dtype=float)
+        return self._centroid
+
     def invalidate_properties(self):
-        """Resets cached value of computed attribute :a:`length`.
+        """Resets cached value of computed attributes :a:`length`, :a:`area`,
+        and :a:`centroid`.
 
         Note
         ----
         The :m:`invalidate_properties` method should be called whenever
-        :a:`nodes` is changed. This is done by :m:`insert_nodes` and
-        :m:`remove_nodes`, but needs to be done explicitly if making manual
-        changes to :a:`nodes`.
+        :a:`nodes` or :a:`width` are changed. This is done by
+        :m:`insert_nodes`, :m:`remove_nodes`, and the setter for :a:`width`,
+        but needs to be done explicitly if making manual changes to
+        :a:`nodes`.
 
         Examples
         --------
@@ -6868,18 +7155,34 @@ can only be 0 or 2
         >>> msh.mesh_scale = 0.4
         >>> msh.add_seed_points([0.5, 0.5])
         >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].width)
+        0.0
         >>> print(msh.interface_elements[0]._length)
+        None
+        >>> print(msh.interface_elements[0]._area)
+        None
+        >>> print(msh.interface_elements[0]._centroid)
         None
         >>> print(np.round(msh.interface_elements[0].length, 14))
         0.35
+        >>> print(msh.interface_elements[0].area)
+        0.0
+        >>> print(msh.interface_elements[0].centroid.round(14))
+        [0.65  0.825]
         >>> msh.interface_elements[0].invalidate_properties()
         >>> print(msh.interface_elements[0]._length)
         None
+        >>> print(msh.interface_elements[0]._area)
+        None
+        >>> print(msh.interface_elements[0]._centroid)
+        None
         """
         self._length = None
+        self._centroid = None
+        self._area = None
 
     def plot(self, ax=None, **kwargs):
-        """Plot the :c:`InterfaceElement2D`.
+        """Plot the :c:`InterfaceElement2D` using :m:`matplotlib.pyplot.fill`.
 
         Parameters
         ----------
@@ -6889,12 +7192,14 @@ can only be 0 or 2
 
         Other Parameters
         ----------------
-        **kwargs : :c:`matplotlib.pyplot.Line2D` properties, optional
+        **kwargs : :c:`matplotlib.patches.Polygon` properties, optional
             Default values:
-            `linewidth` = 3.0,
-            `linestyle` = '--',
-            `color` = :a:`material` `color` (or 'black' if :a:`material` is
-            ``None``) with alpha = 1.0.
+            `edgecolor` = :a:`material` `color` with alpha = 1.0 (or 'black'
+            with alpha = 1.0 if :a:`material` is ``None``),
+            `facecolor` = :a:`material` `color` with alpha = 0.6 (or 'black'
+            with alpha = 0.6 if :a:`material` is ``None``),
+            `linewidth` = 2.0,
+            `linestyle` = '--'.
 
         Returns
         -------
@@ -6911,7 +7216,7 @@ can only be 0 or 2
         >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
         >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
         >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> rock = vcfempy.materials.Material('rock', color='xkcd:stone')
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:clay')
         >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
         ...                                       rock, 'rock region')
         >>> msh.mesh_scale = 0.2
@@ -6919,7 +7224,8 @@ can only be 0 or 2
         >>> msh.generate_mesh()
         >>> fig = plt.figure()
         >>> for e in msh.elements:
-        ...     ax = e.plot()
+        ...     ax = e.plot(edgecolor=None)
+        ...     ax = e.plot_quad_points()
         >>> for e in msh.interface_elements:
         ...     ax = e.plot()
         >>> xmin, xmax, ymin, ymax = ax.axis('equal')
@@ -6930,17 +7236,19 @@ can only be 0 or 2
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
+        if self.material is not None:
+            color = mplclr.to_rgb(self.material.color)
+        else:
+            color = mplclr.to_rgb('black')
+        if 'facecolor' not in kwargs.keys():
+            kwargs['facecolor'] = color + (0.6, )
+        if 'edgecolor' not in kwargs.keys():
+            kwargs['edgecolor'] = color + (1.0, )
         if 'linewidth' not in kwargs.keys():
             kwargs['linewidth'] = 2.0
         if 'linestyle' not in kwargs.keys():
             kwargs['linestyle'] = '--'
-        if self.material is not None:
-            color = mplclr.to_rgb(self.material.color)
-            color = (color[0], color[1], color[2], 1.0)
-            kwargs['color'] = color
-        elif 'color' not in kwargs.keys():
-            kwargs['color'] = 'black'
-        ax.plot(self.mesh.nodes[self.nodes, 0],
+        ax.fill(self.mesh.nodes[self.nodes, 0],
                 self.mesh.nodes[self.nodes, 1],
                 **kwargs)
         return ax
@@ -6965,100 +7273,562 @@ class BoundaryElement2D():
     """
 
     def __init__(self, mesh, nodes=None, neighbor=None):
-        self._mesh = None
-        self.mesh = mesh
+        if not isinstance(mesh, PolyMesh2D):
+            raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
+        self._mesh = mesh
+
+        self.invalidate_properties()
 
         self._nodes = []
         self.insert_nodes(0, nodes)
 
-        self.neighbor = neighbor
+        if neighbor is None:
+            self._neighbor = None
+        else:
+            self.neighbor = neighbor
 
     @property
     def mesh(self):
-        return self._mesh
+        """The parent :c:`PolyMesh2D`.
 
-    @mesh.setter
-    def mesh(self, mesh):
-        if type(mesh) not in [type(None), PolyMesh2D]:
-            raise TypeError('type(mesh) not in [NoneType, '
-                            + 'vcfempy.meshgen.PolyMesh2D]')
-        self._mesh = mesh
+        Returns
+        -------
+        :c:`PolyMesh2D`
+            The parent mesh assigned to the :c:`BoundaryElement2D`.
+
+        Note
+        ----
+        The :a:`mesh` is immutable and can only be assigned when the
+        :c:`BoundaryElement2D` is created. An :c:`BoundaryElement2D` should
+        not usually be created explicitly, but rather should be created
+        indirectly by calling the :m:`PolyMesh2D.generate_mesh` method.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.boundary_elements[0].mesh is msh)
+        True
+        """
+        return self._mesh
 
     @property
     def num_nodes(self):
+        """Number of nodes in the :c:`BoundaryElement2D`.
+
+        Returns
+        -------
+        `int`
+            The number of nodes in the :c:`BoundaryElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.boundary_elements[0].num_nodes)
+        2
+        """
         return len(self.nodes)
 
     @property
     def nodes(self):
+        """List of node indices in the :c:`BoundaryElement2D`. References the
+        :a:`PolyMesh2D.nodes` of the parent :a:`mesh`.
+
+        Returns
+        -------
+        `list[int]`
+            The list of node indices in the :c:`BoundaryElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.boundary_elements[0].nodes)
+        [0, 1]
+        """
         return self._nodes
 
-    def insert_nodes(self, index, nodes=None):
-        """Insert one or more nodes at index i
-        nodes can be int or list of ints
+    def insert_nodes(self, index, nodes):
+        """Insert node indices to the :c:`BoundaryElement2D`.
+
+        Parameters
+        ----------
+        index : int
+            The index at which to insert the **nodes** into :a:`nodes`.
+        nodes : list[int]
+            The list of node indices to add to :a:`nodes`. Length must be a
+            multiple of 2 and the maximum number of :a:`nodes` is 2.
+
+        Note
+        -----
+        Before inserting the values in **nodes**, an attempt is made to
+        cast to a flattened `numpy.ndarray` of `int`. The new number of nodes
+        after insertion must be 0 or 2.
+
+        Raises
+        ------
+        TypeError
+            If **index** cannot be interpreted as `int`.
+        ValueError
+            If **nodes** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **nodes** cannot be cast to `int`, are already
+            in :a:`nodes`, are negative, are >= :a:`mesh.num_nodes`, or
+            the list of nodes to be added would result in :a:`nodes` having
+            a length other than 0 or 2.
+
+        Examples
+        --------
+        >>> # create a simple mesh
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.nodes.round(14))
+        [[-0.    1.  ]
+         [ 0.35  1.  ]
+         [ 0.    0.  ]
+         [ 0.35  0.  ]
+         [ 1.    1.  ]
+         [ 0.65  1.  ]
+         [ 0.65  0.65]
+         [ 1.    0.65]
+         [ 1.   -0.  ]
+         [ 0.65 -0.  ]
+         [ 0.65  0.35]
+         [ 1.    0.35]
+         [ 0.    0.65]
+         [ 0.    0.35]
+         [ 0.35  0.65]
+         [ 0.35  0.35]]
+
+        >>> # create a new element
+        >>> # note, this is normally not done explicitly, but is shown here
+        >>> # for testing and documentation
+        >>> e = vcfempy.meshgen.BoundaryElement2D(msh)
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes(0, [0, 1])
+        >>> print(e.nodes)
+        [0, 1]
+        >>> print(np.round(e.length, 14))
+        0.35
+
+        >>> # insert no nodes in multiple ways
+        >>> e.insert_nodes(0, None)
+        >>> e.insert_nodes(0, [])
+        >>> print(e.nodes)
+        [0, 1]
+
+        >>> # try to insert some invalid nodes
+        >>> e = vcfempy.meshgen.BoundaryElement2D(msh)
+        >>> e.insert_nodes(0, 'one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> e.insert_nodes(0, [0, 0])
+        Traceback (most recent call last):
+            ...
+        ValueError: 0 is already a node
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes(0, [16, 17])
+        Traceback (most recent call last):
+            ...
+        ValueError: node index 17 out of range
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes(0, [-1, -2])
+        Traceback (most recent call last):
+            ...
+        ValueError: node index -2 out of range
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes(
+        ...             0, [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes('one', [0, 1])
+        Traceback (most recent call last):
+            ...
+        TypeError: 'str' object cannot be interpreted as an integer
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes(0, [2])
+        Traceback (most recent call last):
+            ...
+        ValueError: number of nodes in BoundaryElement2D can only be 0 or 2
+        >>> print(e.nodes)
+        []
         """
-        # basic type check of nodes
-        # nodes can only be None or a list because a BoundaryElement2D
-        # can only have 0 or 2 nodes
-        if type(nodes) not in [type(None), list]:
-            raise TypeError('type(nodes) not in [NoneType, list]')
-
-        # if nodes given as None or empty list, return early
-        if nodes is None or len(nodes) == 0:
+        if nodes is None:
             return
-
-        # nodes is a non-empty list
-        # catch incorrect number of nodes
-        # boundary elements can only have 0 or 2 nodes
-        if self.num_nodes + len(nodes) != 2:
-            raise ValueError('vcfempy.BoundaryElement2D can only have '
-                             + '0 or 2 nodes')
-
-        # check contents of nodes
-        for n in nodes:
-            # check type is integer
-            if type(n) not in [int, np.int32]:
-                raise TypeError('type of nodes contents not in [int, '
-                                + 'numpy.int32]')
-            # check value of node is less than number of nodes in parent mesh
-            if n >= self.mesh.num_nodes:
-                raise ValueError('nodes values must all be less than number '
-                                 + 'of nodes in the parent mesh')
-
-        # insert nodes
-        # Note: if here, we know that nodes is a valid list of ints
-        # nodes were added, so reset element properties
-        nodes.reverse()
-        for n in nodes:
-            self.nodes.insert(index, int(n))
+        nodes = np.array(nodes, dtype=int, ndmin=1)
+        if len(nodes) == 0:
+            return
+        new_num_nodes = self.num_nodes + len(nodes)
+        if new_num_nodes % 2 or new_num_nodes > 2:
+            raise ValueError('number of nodes in BoundaryElement2D '
+                             + 'can only be 0 or 2')
         self.invalidate_properties()
+        old_nodes = list(self.nodes)
+        nodes = np.flip(nodes.ravel())
+        try:
+            for n in nodes:
+                if n in self.nodes:
+                    raise ValueError(f'{n} is already a node')
+                if n < 0 or n >= self.mesh.num_nodes:
+                    raise ValueError(f'node index {n} out of range')
+                self.nodes.insert(index, int(n))
+        except ValueError:
+            self._nodes = old_nodes
+            raise
+
+    def remove_nodes(self, remove_nodes):
+        """Remove node indices from the :c:`BoundaryElement2D`.
+
+        Parameters
+        ----------
+        remove_nodes : list[int]
+            The list of nodes to remove from :a:`nodes`.
+
+        Note
+        -----
+        Before removing the values in **remove_nodes**, an attempt will be
+        made to cast it to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        ValueError
+            If **remove_nodes** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **remove_nodes** cannot be cast to `int` or
+            are not in :a:`nodes`.
+            If the number of **remove_nodes** would result in the length of
+            :a:`nodes` being other than 0 or 2.
+
+        Examples
+        --------
+        >>> # create a simple mesh, and remove nodes from an element
+        >>> # this should not normally be done explicitly unless you know
+        >>> # what you are doing
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.boundary_elements[0].nodes)
+        [0, 1]
+        >>> msh.boundary_elements[0].remove_nodes([0, 1])
+        >>> print(msh.boundary_elements[0].nodes)
+        []
+
+        >>> # remove no nodes, in two different ways
+        >>> msh.boundary_elements[0].insert_nodes(0, [0, 1])
+        >>> msh.boundary_elements[0].remove_nodes(None)
+        >>> msh.boundary_elements[0].remove_nodes([])
+        >>> print(msh.boundary_elements[0].nodes)
+        [0, 1]
+
+        >>> # try to remove some invalid nodes
+        >>> msh.boundary_elements[0].remove_nodes('one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> msh.boundary_elements[0].remove_nodes([5, 0])
+        Traceback (most recent call last):
+            ...
+        ValueError: list.remove(x): x not in list
+        >>> print(msh.boundary_elements[0].nodes)
+        [0, 1]
+        >>> msh.boundary_elements[0].remove_nodes(4)
+        Traceback (most recent call last):
+            ...
+        ValueError: number of nodes in BoundaryElement2D can only be 0 or 2
+        >>> msh.boundary_elements[0].remove_nodes(
+        ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        """
+        if remove_nodes is None:
+            return
+        remove_nodes = np.array(remove_nodes, dtype=int, ndmin=1)
+        if len(remove_nodes) == 0:
+            return
+        new_num_nodes = self.num_nodes - len(remove_nodes)
+        if new_num_nodes % 2 or new_num_nodes < 0:
+            raise ValueError('number of nodes in BoundaryElement2D '
+                             + 'can only be 0 or 2')
+        self.invalidate_properties()
+        remove_nodes = remove_nodes.ravel()
+        old_nodes = list(self.nodes)
+        try:
+            for rn in remove_nodes:
+                self.nodes.remove(rn)
+        except ValueError:
+            self._nodes = old_nodes
+            raise
 
     @property
     def neighbor(self):
+        """The neighboring :c:`PolyElement2D` to the :c:`BoundaryElement2D`.
+
+        Parameters
+        ----------
+        neighbor : :c:`PolyElement2D`
+            The new neighboring :c:`PolyElement2D` to the
+            :c:`BoundaryElement2D`.
+
+        Returns
+        -------
+        ``None`` | :c:`PolyElement2D`
+            The neighboring :c:`PolyElement2D` to the :c:`BoundaryElement2D`.
+            If no neighbor has been assigned, returns ``None``.
+
+        Note
+        -----
+        A :c:`BoundaryElement2D` can only have 0 or 1 neighbors.
+
+        Raises
+        ------
+        TypeError
+            If **neighbor** is not a :c:`PolyElement2D`.
+        ValueError
+            If **neighbor** does not have the same :a:`mesh` as the
+            :c:`BoundaryElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+
+        >>> # create a new element
+        >>> # note, this is normally not done explicitly, but is shown here
+        >>> # for testing and documentation
+        >>> e = vcfempy.meshgen.BoundaryElement2D(msh)
+        >>> print(e.neighbor)
+        None
+        >>> e.neighbor = msh.elements[0]
+        >>> print(msh.elements.index(e.neighbor))
+        0
+
+        >>> # try to add some invalid neighbors
+        >>> e.neighbor = 0
+        Traceback (most recent call last):
+            ...
+        TypeError: neighbor must be a PolyElement2D
+        >>> msh_new = vcfempy.meshgen.PolyMesh2D()
+        >>> pe = vcfempy.meshgen.PolyElement2D(msh_new)
+        >>> e.neighbor = pe
+        Traceback (most recent call last):
+            ...
+        ValueError: neighbor must have same parent mesh
+        """
         return self._neighbor
 
     @neighbor.setter
-    def neighbor(self, n):
-        # basic type check of neighbor
-        if type(n) not in [type(None), PolyElement2D]:
-            raise TypeError('type(n) not in [NoneType, PolyElement2D]')
-        # check for matching parent mesh
-        if n is not None and self.mesh is not n.mesh:
+    def neighbor(self, neighbor):
+        if not isinstance(neighbor, PolyElement2D):
+            raise TypeError('neighbor must be a PolyElement2D')
+        if self.mesh is not neighbor.mesh:
             raise ValueError('neighbor must have same parent mesh')
-        self._neighbor = n
-
-    def invalidate_properties(self):
-        self._length = None
+        self._neighbor = neighbor
 
     @property
     def length(self):
-        if self._length is None and self.num_nodes == 2:
-            n0 = self.mesh.nodes[self.nodes[0]]
-            n1 = self.mesh.nodes[self.nodes[1]]
-            self._length = np.linalg.norm(n1-n0)
+        """The length of the :c:`BoundaryElement2D`.
+
+        Returns
+        -------
+        `float`
+            The length of the :c:`BoundaryElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(np.round(msh.boundary_elements[0].length, 14))
+        0.35
+        """
+        if self._length is None and self.num_nodes:
+            self._length = shp.LineString(self.mesh.nodes[self.nodes]).length
         return self._length
 
+    @property
+    def centroid(self):
+        """The centroid coordinates of the :c:`BoundaryElement2D`.
 
-def get_unit_tangent_normal(v0, v1):
+        Returns
+        -------
+        `numpy.ndarray`, shape = (2, )
+            The coordinates of the centroid of the :c:`BoundaryElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.boundary_elements[0].centroid)
+        [0.175 1.   ]
+        """
+        if self._centroid is None and self.num_nodes:
+            c = shp.LineString(self.mesh.nodes[self.nodes]).centroid
+            self._centroid = np.array([c.x, c.y], dtype=float)
+        return self._centroid
+
+    def invalidate_properties(self):
+        """Resets cached value of computed attributes :a:`length` and
+        :a:`centroid`.
+
+        Note
+        ----
+        The :m:`invalidate_properties` method should be called whenever
+        :a:`nodes` is changed. This is done by :m:`insert_nodes` and
+        :m:`remove_nodes`, but needs to be done explicitly if making manual
+        changes to :a:`nodes`.
+
+        Examples
+        --------
+        >>> # create a simple mesh, check the element properties
+        >>> # invalidate properties and check the values of (private) cache
+        >>> # attributes
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.boundary_elements[0]._length)
+        None
+        >>> print(msh.boundary_elements[0]._centroid)
+        None
+        >>> print(np.round(msh.boundary_elements[0].length, 14))
+        0.35
+        >>> print(msh.boundary_elements[0].centroid.round(14))
+        [0.175 1.   ]
+        >>> msh.boundary_elements[0].invalidate_properties()
+        >>> print(msh.interface_elements[0]._length)
+        None
+        >>> print(msh.interface_elements[0]._centroid)
+        None
+        """
+        self._length = None
+        self._centroid = None
+
+    def plot(self, ax=None, **kwargs):
+        """Plot the :c:`BoundaryElement2D` using :m:`matplotlib.pyplot.plot`.
+
+        Parameters
+        ----------
+        ax : None | :c:`matplotlib.axes.Axes`
+            The axes to plot on. If not provided, will try to get one using
+            :m:`matplotlib.pyplot.gca`.
+
+        Other Parameters
+        ----------------
+        **kwargs : :c:`matplotlib.lines.Line2D` properties, optional
+            Default values:
+            `linewidth` = 2.0,
+            `linestyle` = '--'.
+            `color` = 'black'
+
+        Returns
+        -------
+        :c:`matplotlib.axes.Axes`
+            The axes that the :c:`BoundaryElement2D` was plotted on.
+
+        Examples
+        --------
+        >>> # initialize a mesh and a material region, then generate a mesh
+        >>> # and plot the elements, interface elements, and boundary
+        >>> # elements
+        >>> import matplotlib.pyplot as plt
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:clay')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
+        ...                                       rock, 'rock region')
+        >>> msh.mesh_scale = 0.2
+        >>> msh.mesh_rand = 0.2
+        >>> msh.generate_mesh()
+        >>> fig = plt.figure()
+        >>> for e in msh.elements:
+        ...     ax = e.plot(edgecolor=None)
+        ...     ax = e.plot_quad_points()
+        >>> for e in msh.interface_elements:
+        ...     ax = e.plot()
+        >>> for e in msh.boundary_elements:
+        ...     ax = e.plot()
+        >>> xmin, xmax, ymin, ymax = ax.axis('equal')
+        >>> xtext = ax.set_xlabel('x')
+        >>> ytext = ax.set_ylabel('y')
+        >>> ttext = ax.set_title('BoundaryElement2D Test Plot')
+        >>> plt.savefig('BoundaryElement2D_test_plot.png')
+        """
+        if ax is None or not isinstance(ax, plt.Axes):
+            ax = plt.gca()
+        if 'linewidth' not in kwargs.keys():
+            kwargs['linewidth'] = 2.0
+        if 'linestyle' not in kwargs.keys():
+            kwargs['linestyle'] = '--'
+        if 'color' not in kwargs.keys():
+            kwargs['color'] = 'black'
+        ax.plot(self.mesh.nodes[self.nodes, 0],
+                self.mesh.nodes[self.nodes, 1],
+                **kwargs)
+        return ax
+
+
+def _get_unit_tangent_normal(v0, v1):
     tt = v1 - v0
     tt_len = np.linalg.norm(tt)
     tt /= tt_len
@@ -7066,13 +7836,13 @@ def get_unit_tangent_normal(v0, v1):
     return tt, nn
 
 
-def reflect_point_across_edge(p, v, tt):
+def _reflect_point_across_edge(p, v, tt):
     vp = p - v
     pp = v + np.dot(vp, tt) * tt
     return (2 * pp - p)
 
 
-def get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
+def _get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
     rr = rp1 - rp0
     rr_len = np.linalg.norm(rr)
     rr /= rr_len
@@ -7085,5 +7855,5 @@ def get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
     for ddrr in dr:
         rp = rp0 + ddrr * rr
         ref_points.append(rp)
-        ref_points.append(reflect_point_across_edge(rp, v, tt))
+        ref_points.append(_reflect_point_across_edge(rp, v, tt))
     return np.array(ref_points)
