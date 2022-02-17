@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>vcfempy.meshgen module &mdash; VcFemPy 0.0.10 documentation</title>
+  <title>vcfempy.meshgen module &mdash; VcFemPy 0.0.11 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -238,15 +238,15 @@ Passed to <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.insert
 <span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 
 <span class="go">Element Nodes, Areas, Points, Centroids, Materials</span>
-<span class="go">[15, 14, 6, 10], -0.09000000000000002, [0.5 0.5], [0.5 0.5], rock</span>
-<span class="go">[15, 3, 2, 13], -0.12249999999999998, [0.2 0.2], [0.175 0.175], rock</span>
-<span class="go">[12, 0, 1, 14], -0.12249999999999998, [0.2 0.8], [0.175 0.825], rock</span>
-<span class="go">[7, 4, 5, 6], 0.12250000000000003, [0.8 0.8], [0.825 0.825], rock</span>
-<span class="go">[11, 8, 9, 10], -0.1225, [0.8 0.2], [0.825 0.175], rock</span>
-<span class="go">[15, 13, 12, 14], -0.10499999999999998, [0.2 0.5], [0.175 0.5  ], rock</span>
+<span class="go">[15, 14, 6, 10], 0.09000000000000002, [0.5 0.5], [0.5 0.5], rock</span>
+<span class="go">[15, 3, 2, 13], 0.12249999999999998, [0.2 0.2], [0.175 0.175], rock</span>
+<span class="go">[12, 0, 1, 14], 0.1225, [0.2 0.8], [0.175 0.825], rock</span>
+<span class="go">[7, 4, 5, 6], 0.1225, [0.8 0.8], [0.825 0.825], rock</span>
+<span class="go">[11, 8, 9, 10], 0.12249999999999998, [0.8 0.2], [0.825 0.175], rock</span>
+<span class="go">[15, 13, 12, 14], 0.10500000000000001, [0.2 0.5], [0.175 0.5  ], rock</span>
 <span class="go">[5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], rock</span>
-<span class="go">[10, 6, 7, 11], -0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock</span>
-<span class="go">[3, 15, 10, 9], -0.105, [0.5 0.2], [0.5   0.175], rock</span>
+<span class="go">[10, 6, 7, 11], 0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock</span>
+<span class="go">[3, 15, 10, 9], 0.10500000000000001, [0.5 0.2], [0.5   0.175], rock</span>
 
 <span class="go">Interface Element Nodes and Neighbors</span>
 <span class="go">[5, 6], [3, 6]</span>
@@ -1698,23 +1698,23 @@ cleared.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
-<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
-<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
-<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.    1.  ]</span>
+<span class="go"> [ 0.35  1.  ]</span>
+<span class="go"> [ 0.    0.  ]</span>
+<span class="go"> [ 0.35  0.  ]</span>
+<span class="go"> [ 1.    1.  ]</span>
+<span class="go"> [ 0.65  1.  ]</span>
+<span class="go"> [ 0.65  0.65]</span>
+<span class="go"> [ 1.    0.65]</span>
+<span class="go"> [ 1.   -0.  ]</span>
+<span class="go"> [ 0.65 -0.  ]</span>
+<span class="go"> [ 0.65  0.35]</span>
+<span class="go"> [ 1.    0.35]</span>
+<span class="go"> [ 0.    0.65]</span>
+<span class="go"> [ 0.    0.35]</span>
+<span class="go"> [ 0.35  0.65]</span>
+<span class="go"> [ 0.35  0.35]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># explicitly resetting the mesh clears the nodes</span>
@@ -1725,23 +1725,23 @@ cleared.</p>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># regenerate the mesh</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
-<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
-<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
-<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.    1.  ]</span>
+<span class="go"> [ 0.35  1.  ]</span>
+<span class="go"> [ 0.    0.  ]</span>
+<span class="go"> [ 0.35  0.  ]</span>
+<span class="go"> [ 1.    1.  ]</span>
+<span class="go"> [ 0.65  1.  ]</span>
+<span class="go"> [ 0.65  0.65]</span>
+<span class="go"> [ 1.    0.65]</span>
+<span class="go"> [ 1.   -0.  ]</span>
+<span class="go"> [ 0.65 -0.  ]</span>
+<span class="go"> [ 0.65  0.35]</span>
+<span class="go"> [ 1.    0.35]</span>
+<span class="go"> [ 0.    0.65]</span>
+<span class="go"> [ 0.    0.35]</span>
+<span class="go"> [ 0.35  0.65]</span>
+<span class="go"> [ 0.35  0.35]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># adding a boundary vertex also resets the mesh</span>
@@ -1844,23 +1844,23 @@ be cleared.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
-<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
-<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
-<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.    1.  ]</span>
+<span class="go"> [ 0.35  1.  ]</span>
+<span class="go"> [ 0.    0.  ]</span>
+<span class="go"> [ 0.35  0.  ]</span>
+<span class="go"> [ 1.    1.  ]</span>
+<span class="go"> [ 0.65  1.  ]</span>
+<span class="go"> [ 0.65  0.65]</span>
+<span class="go"> [ 1.    0.65]</span>
+<span class="go"> [ 1.   -0.  ]</span>
+<span class="go"> [ 0.65 -0.  ]</span>
+<span class="go"> [ 0.65  0.35]</span>
+<span class="go"> [ 1.    0.35]</span>
+<span class="go"> [ 0.    0.65]</span>
+<span class="go"> [ 0.    0.35]</span>
+<span class="go"> [ 0.35  0.65]</span>
+<span class="go"> [ 0.35  0.35]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 <span class="go">[15, 14, 6, 10]</span>
@@ -2073,15 +2073,16 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_areas</span><span class="p">)</span>
-<span class="go">[-0.09   -0.1225 -0.1225  0.1225 -0.1225 -0.105   0.105  -0.105  -0.105 ]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_areas</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0.09   0.1225 0.1225 0.1225 0.1225 0.105  0.105  0.105  0.105 ]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># notice that element areas sum to the area of the boundary</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_areas</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">shapely.geometry</span> <span class="k">as</span> <span class="nn">shp</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_areas</span><span class="p">))</span>
 <span class="go">1.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">polygon_area</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">shp</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>
 <span class="go">1.0</span>
 </pre></div>
 </div>
@@ -2128,7 +2129,7 @@ element in the generated mesh for the <a class="reference internal" href="#vcfem
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_centroids</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_centroids</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
 <span class="go">[[0.5   0.5  ]</span>
 <span class="go"> [0.175 0.175]</span>
 <span class="go"> [0.175 0.825]</span>
@@ -2201,106 +2202,97 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
 <span class="go">Element 0 quad points, nq0 = 9</span>
-<span class="go">[[-1.12500000e-01 -1.12500000e-01]</span>
-<span class="go"> [-1.12500000e-01  1.12500000e-01]</span>
-<span class="go"> [ 1.12500000e-01  1.12500000e-01]</span>
-<span class="go"> [ 1.12500000e-01 -1.12500000e-01]</span>
-<span class="go"> [-7.50000000e-02 -1.11022302e-16]</span>
-<span class="go"> [-1.11022302e-16  7.50000000e-02]</span>
-<span class="go"> [ 7.50000000e-02 -1.11022302e-16]</span>
-<span class="go"> [-1.11022302e-16 -7.50000000e-02]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[-0.1125 -0.1125]</span>
+<span class="go"> [-0.1125  0.1125]</span>
+<span class="go"> [ 0.1125  0.1125]</span>
+<span class="go"> [ 0.1125 -0.1125]</span>
+<span class="go"> [-0.075   0.    ]</span>
+<span class="go"> [ 0.      0.075 ]</span>
+<span class="go"> [ 0.075   0.    ]</span>
+<span class="go"> [ 0.     -0.075 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
 <span class="go">Element 1 quad points, nq1 = 9</span>
-<span class="go">[[ 1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [ 1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [-1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [ 8.75000000e-02  0.00000000e+00]</span>
-<span class="go"> [ 0.00000000e+00 -8.75000000e-02]</span>
-<span class="go"> [-8.75000000e-02  1.85037171e-17]</span>
-<span class="go"> [ 0.00000000e+00  8.75000000e-02]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[ 0.13125  0.13125]</span>
+<span class="go"> [ 0.13125 -0.13125]</span>
+<span class="go"> [-0.13125 -0.13125]</span>
+<span class="go"> [-0.13125  0.13125]</span>
+<span class="go"> [ 0.0875   0.     ]</span>
+<span class="go"> [ 0.      -0.0875 ]</span>
+<span class="go"> [-0.0875   0.     ]</span>
+<span class="go"> [ 0.       0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 2 quad points, nq2 = 9</span>
-<span class="go">[[-1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [ 1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [ 1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [-8.75000000e-02  2.77555756e-17]</span>
-<span class="go"> [-3.70074342e-17  8.75000000e-02]</span>
-<span class="go"> [ 8.75000000e-02  2.77555756e-17]</span>
-<span class="go"> [-1.85037171e-17 -8.75000000e-02]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[-0.13125 -0.13125]</span>
+<span class="go"> [-0.13125  0.13125]</span>
+<span class="go"> [ 0.13125  0.13125]</span>
+<span class="go"> [ 0.13125 -0.13125]</span>
+<span class="go"> [-0.0875   0.     ]</span>
+<span class="go"> [-0.       0.0875 ]</span>
+<span class="go"> [ 0.0875   0.     ]</span>
+<span class="go"> [ 0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 3 quad points, nq3 = 9</span>
-<span class="go">[[ 1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [ 1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [-1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [ 8.75000000e-02  8.32667268e-17]</span>
-<span class="go"> [-5.55111512e-17  8.75000000e-02]</span>
-<span class="go"> [-8.75000000e-02  8.32667268e-17]</span>
-<span class="go"> [-2.77555756e-17 -8.75000000e-02]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[ 0.13125 -0.13125]</span>
+<span class="go"> [ 0.13125  0.13125]</span>
+<span class="go"> [-0.13125  0.13125]</span>
+<span class="go"> [-0.13125 -0.13125]</span>
+<span class="go"> [ 0.0875  -0.     ]</span>
+<span class="go"> [-0.       0.0875 ]</span>
+<span class="go"> [-0.0875  -0.     ]</span>
+<span class="go"> [-0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 4 quad points, nq4 = 9</span>
-<span class="go">[[ 1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [ 1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [-1.31250000e-01 -1.31250000e-01]</span>
-<span class="go"> [-1.31250000e-01  1.31250000e-01]</span>
-<span class="go"> [ 8.75000000e-02 -9.25185854e-18]</span>
-<span class="go"> [ 8.32667268e-17 -8.75000000e-02]</span>
-<span class="go"> [-8.75000000e-02 -9.25185854e-18]</span>
-<span class="go"> [ 8.32667268e-17  8.75000000e-02]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[ 0.13125  0.13125]</span>
+<span class="go"> [ 0.13125 -0.13125]</span>
+<span class="go"> [-0.13125 -0.13125]</span>
+<span class="go"> [-0.13125  0.13125]</span>
+<span class="go"> [ 0.0875  -0.     ]</span>
+<span class="go"> [ 0.      -0.0875 ]</span>
+<span class="go"> [-0.0875  -0.     ]</span>
+<span class="go"> [ 0.       0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 5 quad points, nq5 = 9</span>
-<span class="go">[[ 1.31250000e-01 -1.12500000e-01]</span>
-<span class="go"> [-1.31250000e-01 -1.12500000e-01]</span>
-<span class="go"> [-1.31250000e-01  1.12500000e-01]</span>
-<span class="go"> [ 1.31250000e-01  1.12500000e-01]</span>
-<span class="go"> [ 0.00000000e+00 -7.50000000e-02]</span>
-<span class="go"> [-8.75000000e-02  1.38777878e-17]</span>
-<span class="go"> [ 0.00000000e+00  7.50000000e-02]</span>
-<span class="go"> [ 8.75000000e-02  0.00000000e+00]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[ 0.13125 -0.1125 ]</span>
+<span class="go"> [-0.13125 -0.1125 ]</span>
+<span class="go"> [-0.13125  0.1125 ]</span>
+<span class="go"> [ 0.13125  0.1125 ]</span>
+<span class="go"> [ 0.      -0.075  ]</span>
+<span class="go"> [-0.0875  -0.     ]</span>
+<span class="go"> [ 0.       0.075  ]</span>
+<span class="go"> [ 0.0875  -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 6 quad points, nq6 = 9</span>
-<span class="go">[[ 1.12500000e-01  1.31250000e-01]</span>
-<span class="go"> [-1.12500000e-01  1.31250000e-01]</span>
-<span class="go"> [-1.12500000e-01 -1.31250000e-01]</span>
-<span class="go"> [ 1.12500000e-01 -1.31250000e-01]</span>
-<span class="go"> [ 2.77555756e-17  8.75000000e-02]</span>
-<span class="go"> [-7.50000000e-02 -2.77555756e-17]</span>
-<span class="go"> [ 5.55111512e-17 -8.75000000e-02]</span>
-<span class="go"> [ 7.50000000e-02 -2.77555756e-17]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[ 0.1125   0.13125]</span>
+<span class="go"> [-0.1125   0.13125]</span>
+<span class="go"> [-0.1125  -0.13125]</span>
+<span class="go"> [ 0.1125  -0.13125]</span>
+<span class="go"> [-0.       0.0875 ]</span>
+<span class="go"> [-0.075   -0.     ]</span>
+<span class="go"> [ 0.      -0.0875 ]</span>
+<span class="go"> [ 0.075   -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 7 quad points, nq7 = 9</span>
-<span class="go">[[-1.31250000e-01 -1.12500000e-01]</span>
-<span class="go"> [-1.31250000e-01  1.12500000e-01]</span>
-<span class="go"> [ 1.31250000e-01  1.12500000e-01]</span>
-<span class="go"> [ 1.31250000e-01 -1.12500000e-01]</span>
-<span class="go"> [-8.75000000e-02  8.32667268e-17]</span>
-<span class="go"> [ 1.38777878e-16  7.50000000e-02]</span>
-<span class="go"> [ 8.75000000e-02  8.32667268e-17]</span>
-<span class="go"> [ 1.38777878e-16 -7.50000000e-02]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
-
+<span class="go">[[-0.13125 -0.1125 ]</span>
+<span class="go"> [-0.13125  0.1125 ]</span>
+<span class="go"> [ 0.13125  0.1125 ]</span>
+<span class="go"> [ 0.13125 -0.1125 ]</span>
+<span class="go"> [-0.0875  -0.     ]</span>
+<span class="go"> [ 0.       0.075  ]</span>
+<span class="go"> [ 0.0875  -0.     ]</span>
+<span class="go"> [ 0.      -0.075  ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 8 quad points, nq8 = 9</span>
-<span class="go">[[-1.12500000e-01 -1.31250000e-01]</span>
-<span class="go"> [-1.12500000e-01  1.31250000e-01]</span>
-<span class="go"> [ 1.12500000e-01  1.31250000e-01]</span>
-<span class="go"> [ 1.12500000e-01 -1.31250000e-01]</span>
-<span class="go"> [-7.50000000e-02  0.00000000e+00]</span>
-<span class="go"> [-5.55111512e-17  8.75000000e-02]</span>
-<span class="go"> [ 7.50000000e-02 -1.85037171e-17]</span>
-<span class="go"> [-5.55111512e-17 -8.75000000e-02]</span>
-<span class="go"> [ 0.00000000e+00  0.00000000e+00]]</span>
+<span class="go">[[-0.1125  -0.13125]</span>
+<span class="go"> [-0.1125   0.13125]</span>
+<span class="go"> [ 0.1125   0.13125]</span>
+<span class="go"> [ 0.1125  -0.13125]</span>
+<span class="go"> [-0.075    0.     ]</span>
+<span class="go"> [-0.       0.0875 ]</span>
+<span class="go"> [ 0.075    0.     ]</span>
+<span class="go"> [-0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># changing the boundary geometry clears the mesh</span>
@@ -2365,39 +2357,30 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_weights</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad weights, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qw</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qw</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span>
 <span class="go">Element 0 quad weights, nq0 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 1 quad weights, nq1 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 2 quad weights, nq2 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 3 quad weights, nq3 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 4 quad weights, nq4 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 5 quad weights, nq5 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 6 quad weights, nq6 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 7 quad weights, nq7 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
-
 <span class="go">Element 8 quad weights, nq8 = 9</span>
 <span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
 <span class="go"> 0.10083037 0.10083037 0.09371293]</span>
@@ -2501,23 +2484,23 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
 <span class="go">16</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
-<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
-<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
-<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.    1.  ]</span>
+<span class="go"> [ 0.35  1.  ]</span>
+<span class="go"> [ 0.    0.  ]</span>
+<span class="go"> [ 0.35  0.  ]</span>
+<span class="go"> [ 1.    1.  ]</span>
+<span class="go"> [ 0.65  1.  ]</span>
+<span class="go"> [ 0.65  0.65]</span>
+<span class="go"> [ 1.    0.65]</span>
+<span class="go"> [ 1.   -0.  ]</span>
+<span class="go"> [ 0.65 -0.  ]</span>
+<span class="go"> [ 0.65  0.35]</span>
+<span class="go"> [ 1.    0.35]</span>
+<span class="go"> [ 0.    0.65]</span>
+<span class="go"> [ 0.    0.35]</span>
+<span class="go"> [ 0.35  0.65]</span>
+<span class="go"> [ 0.35  0.35]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">interface_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 <span class="go">[5, 6]</span>
@@ -2684,23 +2667,23 @@ access the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.qu
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
 <span class="go">16</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-<span class="go">[[-2.77555756e-17  1.00000000e+00]</span>
-<span class="go"> [ 3.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 0.00000000e+00  2.77555756e-17]</span>
-<span class="go"> [ 3.50000000e-01  2.77555756e-17]</span>
-<span class="go"> [ 1.00000000e+00  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  1.00000000e+00]</span>
-<span class="go"> [ 6.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  6.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01 -2.77555756e-17]</span>
-<span class="go"> [ 6.50000000e-01  3.50000000e-01]</span>
-<span class="go"> [ 1.00000000e+00  3.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  6.50000000e-01]</span>
-<span class="go"> [ 2.77555756e-17  3.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  6.50000000e-01]</span>
-<span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.    1.  ]</span>
+<span class="go"> [ 0.35  1.  ]</span>
+<span class="go"> [ 0.    0.  ]</span>
+<span class="go"> [ 0.35  0.  ]</span>
+<span class="go"> [ 1.    1.  ]</span>
+<span class="go"> [ 0.65  1.  ]</span>
+<span class="go"> [ 0.65  0.65]</span>
+<span class="go"> [ 1.    0.65]</span>
+<span class="go"> [ 1.   -0.  ]</span>
+<span class="go"> [ 0.65 -0.  ]</span>
+<span class="go"> [ 0.65  0.35]</span>
+<span class="go"> [ 1.    0.35]</span>
+<span class="go"> [ 0.    0.65]</span>
+<span class="go"> [ 0.    0.35]</span>
+<span class="go"> [ 0.35  0.65]</span>
+<span class="go"> [ 0.35  0.35]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_elements</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
 <span class="go">[0, 1]</span>
@@ -2908,34 +2891,61 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 <span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span> 
 <span class="go">Element 0 quad points, nq0 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.1125 -0.1125]</span>
+<span class="go"> [-0.1125  0.1125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.     -0.075 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
 <span class="go">Element 1 quad points, nq1 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125  0.13125]</span>
+<span class="go"> [ 0.13125 -0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.       0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 2 quad points, nq2 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.13125 -0.13125]</span>
+<span class="go"> [-0.13125  0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 3 quad points, nq3 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125 -0.13125]</span>
+<span class="go"> [ 0.13125  0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [-0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 4 quad points, nq4 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125  0.13125]</span>
+<span class="go"> [ 0.13125 -0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.       0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 5 quad points, nq5 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125 -0.1125 ]</span>
+<span class="go"> [-0.13125 -0.1125 ]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.0875  -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 6 quad points, nq6 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.1125   0.13125]</span>
+<span class="go"> [-0.1125   0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.075   -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 7 quad points, nq7 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.13125 -0.1125 ]</span>
+<span class="go"> [-0.13125  0.1125 ]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.      -0.075  ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 8 quad points, nq8 = 9</span>
-<span class="gp">...</span>
+<span class="go">[[-0.1125  -0.13125]</span>
+<span class="go"> [-0.1125   0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [-0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># switch to high order quadrature</span>
@@ -2945,34 +2955,61 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span> 
 <span class="go">Element 0 quad points, nq0 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.1275 -0.1275]</span>
+<span class="go"> [-0.1275  0.1275]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.     -0.051 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
 <span class="go">Element 1 quad points, nq1 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.14875  0.14875]</span>
+<span class="go"> [ 0.14875 -0.14875]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.       0.0595 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 2 quad points, nq2 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.14875 -0.14875]</span>
+<span class="go"> [-0.14875  0.14875]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.      -0.0595 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 3 quad points, nq3 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.14875 -0.14875]</span>
+<span class="go"> [ 0.14875  0.14875]</span>
+<span class="go"> ...</span>
+<span class="go"> [-0.      -0.0595 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 4 quad points, nq4 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.14875  0.14875]</span>
+<span class="go"> [ 0.14875 -0.14875]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.       0.0595 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 5 quad points, nq5 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.14875 -0.1275 ]</span>
+<span class="go"> [-0.14875 -0.1275 ]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.0595  -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 6 quad points, nq6 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.1275   0.14875]</span>
+<span class="go"> [-0.1275   0.14875]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.051   -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 7 quad points, nq7 = 17</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.14875 -0.1275 ]</span>
+<span class="go"> [-0.14875  0.1275 ]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.      -0.051  ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 8 quad points, nq8 = 17</span>
-<span class="gp">...</span>
+<span class="go">[[-0.1275  -0.14875]</span>
+<span class="go"> [-0.1275   0.14875]</span>
+<span class="go"> ...</span>
+<span class="go"> [-0.      -0.0595 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># switch back to low order quadrature</span>
@@ -2982,34 +3019,61 @@ converted to <code class="docutils literal notranslate"><span class="pre">False<
 <span class="go">False</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">qp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">element_quad_points</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Element </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> quad points, nq</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">()</span> 
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">qp</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span> 
 <span class="go">Element 0 quad points, nq0 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.1125 -0.1125]</span>
+<span class="go"> [-0.1125  0.1125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.     -0.075 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
 <span class="go">Element 1 quad points, nq1 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125  0.13125]</span>
+<span class="go"> [ 0.13125 -0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.       0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 2 quad points, nq2 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.13125 -0.13125]</span>
+<span class="go"> [-0.13125  0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 3 quad points, nq3 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125 -0.13125]</span>
+<span class="go"> [ 0.13125  0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [-0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 4 quad points, nq4 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125  0.13125]</span>
+<span class="go"> [ 0.13125 -0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.       0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 5 quad points, nq5 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.13125 -0.1125 ]</span>
+<span class="go"> [-0.13125 -0.1125 ]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.0875  -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 6 quad points, nq6 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[ 0.1125   0.13125]</span>
+<span class="go"> [-0.1125   0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.075   -0.     ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 7 quad points, nq7 = 9</span>
-<span class="gp">...</span>
-
+<span class="go">[[-0.13125 -0.1125 ]</span>
+<span class="go"> [-0.13125  0.1125 ]</span>
+<span class="go"> ...</span>
+<span class="go"> [ 0.      -0.075  ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 <span class="go">Element 8 quad points, nq8 = 9</span>
-<span class="gp">...</span>
+<span class="go">[[-0.1125  -0.13125]</span>
+<span class="go"> [-0.1125   0.13125]</span>
+<span class="go"> ...</span>
+<span class="go"> [-0.      -0.0875 ]</span>
+<span class="go"> [ 0.       0.     ]]</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># attempting to set high_order_quadrature</span>
@@ -3203,15 +3267,15 @@ raise a <cite>ValueError</cite>.</p>
 <span class="go"> [ 3.50000000e-01  3.50000000e-01]]</span>
 
 <span class="go">Element Nodes, Areas, Points, Centroids, Materials</span>
-<span class="go">[15, 14, 6, 10], -0.09000000000000002, [0.5 0.5], [0.5 0.5], rock</span>
-<span class="go">[15, 3, 2, 13], -0.12249999999999998, [0.2 0.2], [0.175 0.175], rock</span>
-<span class="go">[12, 0, 1, 14], -0.12249999999999998, [0.2 0.8], [0.175 0.825], sand</span>
-<span class="go">[7, 4, 5, 6], 0.12250000000000003, [0.8 0.8], [0.825 0.825], sand</span>
-<span class="go">[11, 8, 9, 10], -0.1225, [0.8 0.2], [0.825 0.175], rock</span>
-<span class="go">[15, 13, 12, 14], -0.10499999999999998, [0.2 0.5], [0.175 0.5  ], rock</span>
+<span class="go">[15, 14, 6, 10], 0.09000000000000002, [0.5 0.5], [0.5 0.5], rock</span>
+<span class="go">[15, 3, 2, 13], 0.12249999999999998, [0.2 0.2], [0.175 0.175], rock</span>
+<span class="go">[12, 0, 1, 14], 0.1225, [0.2 0.8], [0.175 0.825], sand</span>
+<span class="go">[7, 4, 5, 6], 0.1225, [0.8 0.8], [0.825 0.825], sand</span>
+<span class="go">[11, 8, 9, 10], 0.12249999999999998, [0.8 0.2], [0.825 0.175], rock</span>
+<span class="go">[15, 13, 12, 14], 0.10500000000000001, [0.2 0.5], [0.175 0.5  ], rock</span>
 <span class="go">[5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], sand</span>
-<span class="go">[10, 6, 7, 11], -0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock</span>
-<span class="go">[3, 15, 10, 9], -0.105, [0.5 0.2], [0.5   0.175], rock</span>
+<span class="go">[10, 6, 7, 11], 0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock</span>
+<span class="go">[3, 15, 10, 9], 0.10500000000000001, [0.5 0.2], [0.5   0.175], rock</span>
 
 <span class="go">Interface Element Nodes and Neighbors</span>
 <span class="go">[5, 6], [3, 6]</span>
@@ -3295,8 +3359,8 @@ raise a <cite>ValueError</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.plot_quadrature_points">
-<span class="sig-name descname"><span class="pre">plot_quadrature_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'+k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markersize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.plot_quadrature_points" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyMesh2D.plot_quad_points">
+<span class="sig-name descname"><span class="pre">plot_quad_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyMesh2D.plot_quad_points" title="Permalink to this definition"></a></dt>
 <dd><p>Plot out PolyMesh2D quadrature points.</p>
 </dd></dl>
 
@@ -3828,7 +3892,7 @@ made to cast it to a flattened <cite>numpy.ndarray</cite> of <cite>int</cite>.</
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code>.</p>
 </dd>
 <dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><p><strong>**kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.pyplot.Polygon</span></code> properties, optional) – Default values:
+<dd class="field-even"><p><strong>**kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Polygon</span></code> properties, optional) – Default values:
 <cite>edgecolor</cite> = ‘black’,
 <cite>facecolor</cite> = <a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D.material" title="vcfempy.meshgen.MaterialRegion2D.material"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material</span></code></a> <cite>color</cite> (or <code class="docutils literal notranslate"><span class="pre">None</span></code> if <a class="reference internal" href="#vcfempy.meshgen.MaterialRegion2D.material" title="vcfempy.meshgen.MaterialRegion2D.material"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material</span></code></a>
 is <code class="docutils literal notranslate"><span class="pre">None</span></code>),
@@ -4463,213 +4527,873 @@ made to cast it to a flattened <cite>numpy.ndarray</cite> of <cite>int</cite>.</
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">PolyElement2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class for polygonal element geometry and quadrature generation</p>
+<p>A class for polygonal element geometry and quadrature generation. Used
+by <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a> to generate polygonal meshes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mesh</strong> (<em>vcfempy.meshgen.PolyMesh2D</em>) – The parent mesh</p></li>
-<li><p><strong>nodes</strong> (<em>None or list of int, optional</em>) – The list of node indices from the parent mesh
-Can be in CW or CCW order</p></li>
-<li><p><strong>material</strong> (<em>None or vcfempy.materials.Material, optional</em>) – The material type assigned to the element</p></li>
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.meshgen.PolyMesh2D</span></code></a>) – The parent mesh.</p></li>
+<li><p><strong>nodes</strong> (<em>list[int], optional</em>) – The list of node indices from the parent mesh. Can be in CW or CCW
+order.</p></li>
+<li><p><strong>material</strong> (<a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a>, optional) – The material type assigned to the element.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.num_nodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.num_nodes" title="Permalink to this definition"></a></dt>
-<dd><p>Number of nodes in the element</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The number of nodes in the element</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.nodes">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.nodes" title="Permalink to this definition"></a></dt>
-<dd><p>List of element nodes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The list of node indices in the element</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[int]</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-</dd></dl>
-
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.materials</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;rock&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">rock</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="n">msh</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
+<span class="go">4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[15, 14, 6, 10]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="go">rock</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+<span class="go">0.09</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0.5 0.5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_points</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.1125 -0.1125]</span>
+<span class="go"> [-0.1125  0.1125]</span>
+<span class="go"> [ 0.1125  0.1125]</span>
+<span class="go"> [ 0.1125 -0.1125]</span>
+<span class="go"> [-0.075   0.    ]</span>
+<span class="go"> [ 0.      0.075 ]</span>
+<span class="go"> [ 0.075   0.    ]</span>
+<span class="go"> [ 0.     -0.075 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_weights</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_weights</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.mesh">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.mesh" title="Permalink to this definition"></a></dt>
-<dd><p>Parent mesh</p>
+<dd><p>The parent <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>mesh</strong> (<em>None | PolyMesh2D</em>) – The parent mesh to assign to the element</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The parent mesh assigned to the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The parent mesh assigned to the element</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None | <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D">PolyMesh2D</a></p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – type(mesh) not in [NoneType, PolyMesh2D]</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D" title="vcfempy.meshgen.PolyMesh2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyMesh2D</span></code></a></p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.mesh" title="vcfempy.meshgen.PolyElement2D.mesh"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh</span></code></a> is immutable and can only be assigned when the
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> is created. A <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> should not
+usually be created explicitly, but rather should be created indirectly
+by calling the <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.generate_mesh" title="vcfempy.meshgen.PolyMesh2D.generate_mesh"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PolyMesh2D.generate_mesh()</span></code></a> method.</p>
+</div>
 <p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mesh</span> <span class="ow">is</span> <span class="n">msh</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.material">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">material</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.material" title="Permalink to this definition"></a></dt>
-<dd><p>Material type of the PolyElement2D</p>
+<dd><p>Material type assigned to the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>material</strong> (<em>None | vcfempy.materials.Material</em>) – The material to assign to the element</p>
+<dd class="field-odd"><p><strong>material</strong> (<code class="docutils literal notranslate"><span class="pre">None</span></code> | <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a>) – The material to assign to the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The material assigned to the element</p>
+<dd class="field-even"><p>The material assigned to the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None | <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material">vcfempy.materials.Material</a></p>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code> | <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a></p>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>TypeError</strong> – If type(material) not in [NoneType, vcfempy.materials.Material]</p>
+<dd class="field-even"><p><strong>TypeError</strong> – If type(material) not in [<cite>NoneType</cite>,
+    <a class="reference internal" href="vcfempy.materials.html#vcfempy.materials.Material" title="vcfempy.materials.Material"><code class="xref py py-class docutils literal notranslate"><span class="pre">vcfempy.materials.Material</span></code></a>]</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.materials</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;rock&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">rock</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="go">rock</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.num_nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.num_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Number of nodes in the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of nodes in the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><cite>int</cite></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num_nodes</span><span class="p">)</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.nodes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nodes</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.nodes" title="Permalink to this definition"></a></dt>
+<dd><p>List of node indices in the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>. References the
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.nodes" title="vcfempy.meshgen.PolyMesh2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">PolyMesh2D.nodes</span></code></a> of the parent <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.mesh" title="vcfempy.meshgen.PolyElement2D.mesh"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The list of node indices in the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><cite>list[int]</cite></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[15, 14, 6, 10]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.insert_nodes">
+<span class="sig-name descname"><span class="pre">insert_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.insert_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Insert one or more node indices to the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – The index at which to insert the <strong>nodes</strong> into <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.nodes" title="vcfempy.meshgen.PolyElement2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a>.</p></li>
+<li><p><strong>nodes</strong> (<em>int | list[int]</em>) – The list of node indices to add to <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.nodes" title="vcfempy.meshgen.PolyElement2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before inserting the values in <strong>nodes</strong>, an attempt is made to
+cast to a flattened <cite>numpy.ndarray</cite> of <cite>int</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <strong>index</strong> cannot be interpreted as <cite>int</cite>.</p></li>
+<li><p><strong>ValueError</strong> – If <strong>nodes</strong> is not <cite>array_like</cite>, such as a jagged
+    <cite>list[list[int]]</cite>.
+    If any values in <strong>nodes</strong> cannot be cast to <cite>int</cite>, are already
+    in <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.nodes" title="vcfempy.meshgen.PolyElement2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a>, are negative, or are &gt;= <code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh.num_nodes</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.    1.  ]</span>
+<span class="go"> [ 0.35  1.  ]</span>
+<span class="go"> [ 0.    0.  ]</span>
+<span class="go"> [ 0.35  0.  ]</span>
+<span class="go"> [ 1.    1.  ]</span>
+<span class="go"> [ 0.65  1.  ]</span>
+<span class="go"> [ 0.65  0.65]</span>
+<span class="go"> [ 1.    0.65]</span>
+<span class="go"> [ 1.   -0.  ]</span>
+<span class="go"> [ 0.65 -0.  ]</span>
+<span class="go"> [ 0.65  0.35]</span>
+<span class="go"> [ 1.    0.35]</span>
+<span class="go"> [ 0.    0.65]</span>
+<span class="go"> [ 0.    0.35]</span>
+<span class="go"> [ 0.35  0.65]</span>
+<span class="go"> [ 0.35  0.35]]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a new element</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># note, this is normally not done explicitly, but is shown here</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># for testing and documentation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyElement2D</span><span class="p">(</span><span class="n">msh</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[0, 1, 14, 12]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+<span class="go">0.1225</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># insert no nodes in multiple ways</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[0, 1, 14, 12]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># try to insert some invalid nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid literal for int() with base 10: &#39;one&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">1 is already a node</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">node index 16 out of range</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">node index -1 out of range</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="mi">0</span><span class="p">,</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">3</span><span class="p">])</span> 
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">insert_nodes</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">TypeError</span>: <span class="n">&#39;str&#39; object cannot be interpreted as an integer</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.remove_nodes">
+<span class="sig-name descname"><span class="pre">remove_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remove_nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.remove_nodes" title="Permalink to this definition"></a></dt>
+<dd><p>Remove one or more node indices from the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>remove_nodes</strong> (<em>int | list[int]</em>) – The node or list of nodes to remove from <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.nodes" title="vcfempy.meshgen.PolyElement2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a>.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Before removing the values in <strong>remove_nodes</strong>, an attempt will be
+made to cast it to a flattened <cite>numpy.ndarray</cite> of <cite>int</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <strong>remove_nodes</strong> is not <cite>array_like</cite>, such as a jagged
+    <cite>list[list[int]]</cite>.
+    If any values in <strong>remove_nodes</strong> cannot be cast to <cite>int</cite> or
+    are not in <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.nodes" title="vcfempy.meshgen.PolyElement2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a>.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh, and remove a node from an element</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># this should not normally be done explicitly unless you know</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># what you are doing</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[714, 710, 711, 712, 713]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">(</span><span class="mi">714</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[710, 711, 712, 713]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># remove multiple nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[1328, 276, 81, 714, 710, 1327]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">([</span><span class="mi">276</span><span class="p">,</span> <span class="mi">81</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[1328, 714, 710, 1327]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># the list of nodes to remove need not be 1d</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># if not, it will be flattened</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i7</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i7</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[446, 162, 7, 9, 8, 10, 445]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i7</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">([[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i7</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[446, 162, 445]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># remove no nodes, in two different ways</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">([])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+<span class="go">[710, 711, 712, 713]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># try to remove some invalid nodes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">(</span><span class="s1">&#39;one&#39;</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">invalid literal for int() with base 10: &#39;one&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">list.remove(x): x not in list</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">remove_nodes</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">3</span><span class="p">])</span> 
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">...</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.area">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">area</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.area" title="Permalink to this definition"></a></dt>
-<dd><p>Element area</p>
+<dd><p>The (signed) area of the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The element area
-Positive if nodes in CCW order, negative if nodes in CW order</p>
+<dd class="field-odd"><p>The (signed) area of the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>. Positive if nodes in
+CCW order, negative if nodes in CW order.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p><cite>float</cite></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+<span class="go">0.09</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.centroid">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">centroid</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.centroid" title="Permalink to this definition"></a></dt>
-<dd><p>Element centroid coordinates</p>
+<dd><p>The centroid coordinates of the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The coordinates of the element centroid</p>
+<dd class="field-odd"><p>The coordinates of the centroid of the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.array, shape = (2, )</p>
+<dd class="field-even"><p><cite>numpy.ndarray</cite>, shape = (2, )</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">centroid</span><span class="p">)</span>
+<span class="go">[0.5 0.5]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.num_quad_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_quad_points</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.num_quad_points" title="Permalink to this definition"></a></dt>
+<dd><p>The number of quadrature points in the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of quadrature points in the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><cite>int</cite></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_points</span><span class="p">)</span>
+<span class="go">9</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.quad_points">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">quad_points</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.quad_points" title="Permalink to this definition"></a></dt>
-<dd><p>Element quadrature point coordinates</p>
+<dd><p>The quadrature point coordinates for the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The coordinates of the element quadrature points</p>
+<dd class="field-odd"><p>The coordinates of the quadrature points for the
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.ndarray, shape = (num_quad_points, 2)</p>
+<dd class="field-even"><p><cite>numpy.ndarray</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.num_quad_points" title="vcfempy.meshgen.PolyElement2D.num_quad_points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_quad_points</span></code></a>, 2)</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The quadrature point coordinates are provided in a local coordinate
+system with the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.centroid" title="vcfempy.meshgen.PolyElement2D.centroid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">centroid</span></code></a> at the origin.</p>
+</div>
 <p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_points</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.1125 -0.1125]</span>
+<span class="go"> [-0.1125  0.1125]</span>
+<span class="go"> [ 0.1125  0.1125]</span>
+<span class="go"> [ 0.1125 -0.1125]</span>
+<span class="go"> [-0.075   0.    ]</span>
+<span class="go"> [ 0.      0.075 ]</span>
+<span class="go"> [ 0.075   0.    ]</span>
+<span class="go"> [ 0.     -0.075 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.quad_weights">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">quad_weights</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.quad_weights" title="Permalink to this definition"></a></dt>
-<dd><p>Element quadrature point weights</p>
+<dd><p>The quadrature point weights for the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The weights of the element quadrature points
-Should sum to 1.0</p>
+<dd class="field-odd"><p>The weights of the quadrature points in the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.ndarray, shape = (num_quad_points, )</p>
+<dd class="field-even"><p><cite>numpy.ndarray</cite>, shape = (<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.num_quad_points" title="vcfempy.meshgen.PolyElement2D.num_quad_points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_quad_points</span></code></a>, )</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The quadrature point weights should always sum to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+</div>
 <p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_weights</span><span class="p">)</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_weights</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.num_quad_integrals">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_quad_integrals</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.num_quad_integrals" title="Permalink to this definition"></a></dt>
+<dd><p>The number of quadrature basis function integrals used in
+generating the quadrature for the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The number of quadrature basis function integrals for the
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><cite>int</cite></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The number of quadrature integrals corresponds to the number of basis
+functions used to develop the quadrature rule. The number depends on
+the order of interpolation for the flux field in the hybrid finite
+element approach. The flux field interpolation uses complete
+polynomials in 2D and the order depends on the number of nodes in the
+element (and whether <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">PolyMesh2D.high_order_quadrature</span></code></a> is <code class="docutils literal notranslate"><span class="pre">True</span></code>
+for the parent <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.mesh" title="vcfempy.meshgen.PolyElement2D.mesh"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh</span></code></a>). In integrating finite element matrices, it
+is necessary to integrate terms containing the square of the flux
+field basis functions, so the quadrature rule must increment the
+maximum order of basis function by 2 for each increase in order of
+flux field interpolation. The number of basis functions is as follows:
+[3 nodes: constant: 1 basis function, 4-5 nodes: quadratic: 6 basis
+functions, 6-7 nodes: 4th order: 15 basis functions, 8-10 nodes:
+6th order: 28 basis functions, <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">PolyMesh2D.high_order_quadrature</span></code></a>
+for <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.mesh" title="vcfempy.meshgen.PolyElement2D.mesh"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh</span></code></a>: 6th order: 28 basis functions].</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_rand</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i3</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i3</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i5</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i5</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i7</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i7</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">15</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i8</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i8</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">28</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># set high order quadrature and check number of basis functions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">high_order_quadrature</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i3</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i3</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">28</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i5</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i5</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">28</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i7</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i7</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">28</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">i8</span> <span class="o">=</span> <span class="n">msh</span><span class="o">.</span><span class="n">num_nodes_per_element</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="n">i8</span><span class="p">]</span><span class="o">.</span><span class="n">num_quad_integrals</span><span class="p">)</span>
+<span class="go">28</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.quad_integrals">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">quad_integrals</span></span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.quad_integrals" title="Permalink to this definition"></a></dt>
-<dd><p>Element quadrature basis function integrals</p>
+<dd><p>The quadrature basis function integrals for the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The values of the element quadrature basis function integrals
-Computed in local coordinates with origin at centroid
-Basis functions depends on number of nodes and
-mesh.high_order_quadrature
-3 nodes: 1
-up to 5 nodes: …, x**2, x*y, y**2
-up to 7 nodes: …, x**4, x**3 * y, … y**4
-mesh.high_order_quadrature or up to 10 nodes:
-…, x**6, x**5 * y, … y**6</p>
+<dd class="field-odd"><p>The values of the element quadrature basis function integrals for
+the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>numpy.ndarray, size = (num_quad_basis_functions, )</p>
+<dd class="field-even"><p><cite>numpy.ndarray</cite>, size = (<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.num_quad_integrals" title="vcfempy.meshgen.PolyElement2D.num_quad_integrals"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_quad_integrals</span></code></a>, )</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.num_quad_integrals" title="vcfempy.meshgen.PolyElement2D.num_quad_integrals"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_quad_integrals</span></code></a></dt><dd><p>For explanatory <strong>Note</strong> on number of basis functions.</p>
+</dd>
+</dl>
+</div>
 <p class="rubric">Examples</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.insert_nodes">
-<span class="sig-name descname"><span class="pre">insert_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.insert_nodes" title="Permalink to this definition"></a></dt>
-<dd><p>Insert one or more nodes at index i
-nodes can be int or list of ints</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># note that the first basis function integral is always equal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># to the element area</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_integrals</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[ 0.09     -0.        0.        0.000675  0.        0.000675]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+<span class="go">0.09</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.invalidate_properties">
 <span class="sig-name descname"><span class="pre">invalidate_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.invalidate_properties" title="Permalink to this definition"></a></dt>
-<dd><p>Resets computed element properties
-Should be called whenever nodes is changed</p>
+<dd><p>Resets cached values of computed attributes <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.area" title="vcfempy.meshgen.PolyElement2D.area"><code class="xref py py-attr docutils literal notranslate"><span class="pre">area</span></code></a>,
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.centroid" title="vcfempy.meshgen.PolyElement2D.centroid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">centroid</span></code></a>, <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_points" title="vcfempy.meshgen.PolyElement2D.quad_points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_points</span></code></a>, <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_weights" title="vcfempy.meshgen.PolyElement2D.quad_weights"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_weights</span></code></a>, and
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_integrals" title="vcfempy.meshgen.PolyElement2D.quad_integrals"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_integrals</span></code></a> for the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.invalidate_properties" title="vcfempy.meshgen.PolyElement2D.invalidate_properties"><code class="xref py py-meth docutils literal notranslate"><span class="pre">invalidate_properties()</span></code></a> method should be called whenever
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.nodes" title="vcfempy.meshgen.PolyElement2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a> is changed. This is done by <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.insert_nodes" title="vcfempy.meshgen.PolyElement2D.insert_nodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">insert_nodes()</span></code></a> and
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.remove_nodes" title="vcfempy.meshgen.PolyElement2D.remove_nodes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">remove_nodes()</span></code></a>, but needs to be done explicitly if making manual
+changes to <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.nodes" title="vcfempy.meshgen.PolyElement2D.nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">nodes</span></code></a>.</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh, check the element properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># invalidate properties and check the values of (private) cache</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># attributes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_area</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_centroid</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_points</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_weights</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_integrals</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+<span class="go">0.09</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">centroid</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0.5 0.5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_points</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.1125 -0.1125]</span>
+<span class="go"> [-0.1125  0.1125]</span>
+<span class="go"> [ 0.1125  0.1125]</span>
+<span class="go"> [ 0.1125 -0.1125]</span>
+<span class="go"> [-0.075   0.    ]</span>
+<span class="go"> [ 0.      0.075 ]</span>
+<span class="go"> [ 0.075   0.    ]</span>
+<span class="go"> [ 0.     -0.075 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_weights</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quad_integrals</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[ 0.09     -0.        0.        0.000675  0.        0.000675]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">invalidate_properties</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_area</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_centroid</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_points</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_weights</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_integrals</span><span class="p">)</span>
+<span class="go">None</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.generate_quadrature">
 <span class="sig-name descname"><span class="pre">generate_quadrature</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.generate_quadrature" title="Permalink to this definition"></a></dt>
-<dd><p>Generate quadrature points and weights for a PolyElement2D
-Determines correct quadcon method to call depending on
-num_nodes and mesh.high_order_quadrature</p>
+<dd><p>Generate quadrature points and weights for the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.generate_quadrature" title="vcfempy.meshgen.PolyElement2D.generate_quadrature"><code class="xref py py-meth docutils literal notranslate"><span class="pre">generate_quadrature()</span></code></a> method determines the correct (private)
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">_quadconX()</span></code> method to call depending on the values of
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.num_nodes" title="vcfempy.meshgen.PolyElement2D.num_nodes"><code class="xref py py-attr docutils literal notranslate"><span class="pre">num_nodes</span></code></a> and <a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">PolyMesh2D.high_order_quadrature</span></code></a> for
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.mesh" title="vcfempy.meshgen.PolyElement2D.mesh"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mesh</span></code></a>. Elements with 8 or more nodes (or
+<a class="reference internal" href="#vcfempy.meshgen.PolyMesh2D.high_order_quadrature" title="vcfempy.meshgen.PolyMesh2D.high_order_quadrature"><code class="xref py py-attr docutils literal notranslate"><span class="pre">PolyMesh2D.high_order_quadrature</span></code></a> set) call <code class="xref py py-meth docutils literal notranslate"><span class="pre">_quadcon10()</span></code>,
+elements with 6-7 nodes call <code class="xref py py-meth docutils literal notranslate"><span class="pre">_quadcon7()</span></code>, elements with 4-5 nodes
+call <code class="xref py py-meth docutils literal notranslate"><span class="pre">_quadcon5()</span></code>, and elements with 3 nodes call <code class="xref py py-meth docutils literal notranslate"><span class="pre">_quadcon3()</span></code>.
+This method does not have a direct return value, but sets the cached
+values of private attributes corresponding to <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.area" title="vcfempy.meshgen.PolyElement2D.area"><code class="xref py py-attr docutils literal notranslate"><span class="pre">area</span></code></a>,
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.centroid" title="vcfempy.meshgen.PolyElement2D.centroid"><code class="xref py py-attr docutils literal notranslate"><span class="pre">centroid</span></code></a>, <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_points" title="vcfempy.meshgen.PolyElement2D.quad_points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_points</span></code></a>, <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_weights" title="vcfempy.meshgen.PolyElement2D.quad_weights"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_weights</span></code></a>, and
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_integrals" title="vcfempy.meshgen.PolyElement2D.quad_integrals"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_integrals</span></code></a>.</p>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># create a simple mesh and check the element (private) attributes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_seed_points</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_area</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_centroid</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_points</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_weights</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_integrals</span><span class="p">)</span>
+<span class="go">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">generate_quadrature</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_area</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+<span class="go">0.09</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_centroid</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0.5 0.5]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_points</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[[-0.1125 -0.1125]</span>
+<span class="go"> [-0.1125  0.1125]</span>
+<span class="go"> [ 0.1125  0.1125]</span>
+<span class="go"> [ 0.1125 -0.1125]</span>
+<span class="go"> [-0.075   0.    ]</span>
+<span class="go"> [ 0.      0.075 ]</span>
+<span class="go"> [ 0.075   0.    ]</span>
+<span class="go"> [ 0.     -0.075 ]</span>
+<span class="go"> [ 0.      0.    ]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_weights</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037</span>
+<span class="go"> 0.10083037 0.10083037 0.09371293]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_quad_integrals</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span>
+<span class="go">[ 0.09     -0.        0.        0.000675  0.        0.000675]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.plot">
-<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">':k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">borders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.plot" title="Permalink to this definition"></a></dt>
-<dd><p>Plots the element
-Can provide a matplotlib.pyplot.axis or if None will
-use matplotlib.pyplot.gca()
-If fill, will fill the area with material.color
-If borders, will plot element borders with line_type</p>
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.plot" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> using <code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.pyplot.fill()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ax</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code>, optional) – The axes to plot on. If not provided, will try to get one using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code>.</p>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><p><strong>**kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.patches.Polygon</span></code> properties, optional) – Default values:
+<cite>edgecolor</cite> = ‘black’,
+<cite>facecolor</cite> = <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.material" title="vcfempy.meshgen.PolyElement2D.material"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material</span></code></a> <cite>color</cite> (or <code class="docutils literal notranslate"><span class="pre">None</span></code> if <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.material" title="vcfempy.meshgen.PolyElement2D.material"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material</span></code></a>
+is <code class="docutils literal notranslate"><span class="pre">None</span></code>) with alpha = 0.6,
+<cite>linewidth</cite> = 0.7,
+<cite>linestyle</cite> = ‘:’,
+<cite>fill</cite> = <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The axes that the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a> was plotted on.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh and material region, then plot the elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.materials</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">(</span><span class="s1">&#39;test mesh&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;rock&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;xkcd:stone&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">,</span>
+<span class="gp">... </span>                                      <span class="n">rock</span><span class="p">,</span> <span class="s1">&#39;rock region&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.05</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_rand</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xtext</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ytext</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ttext</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PolyElement2D Test Plot&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;PolyElement2D_test_plot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.plot_quadrature_points">
-<span class="sig-name descname"><span class="pre">plot_quadrature_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'+k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markersize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.plot_quadrature_points" title="Permalink to this definition"></a></dt>
-<dd><p>Plots element quadrature points
-Can provide a matplotlib.pyplot.axis or if None will
-use matplotlib.pyplot.gca()</p>
+<dt class="sig sig-object py" id="vcfempy.meshgen.PolyElement2D.plot_quad_points">
+<span class="sig-name descname"><span class="pre">plot_quad_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.PolyElement2D.plot_quad_points" title="Permalink to this definition"></a></dt>
+<dd><p>Plot the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_points" title="vcfempy.meshgen.PolyElement2D.quad_points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_points</span></code></a> of the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D" title="vcfempy.meshgen.PolyElement2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">PolyElement2D</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ax</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code>, optional) – The axes to plot on. If not provided, will try to get one using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">matplotlib.pyplot.gca()</span></code>.</p>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><p><strong>**kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.lines.Line2D</span></code> properties, optional) – Default values:
+<cite>linewidth</cite> = 0.0,
+<cite>markeredgecolor</cite> = <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.material" title="vcfempy.meshgen.PolyElement2D.material"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material</span></code></a> <cite>color</cite> (or ‘k’ if
+<a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.material" title="vcfempy.meshgen.PolyElement2D.material"><code class="xref py py-attr docutils literal notranslate"><span class="pre">material</span></code></a> is <code class="docutils literal notranslate"><span class="pre">None</span></code>) with alpha = 1.0,
+<cite>marker</cite> = ‘+’,
+<cite>markersize</cite> = 6.0.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The axes that the <a class="reference internal" href="#vcfempy.meshgen.PolyElement2D.quad_points" title="vcfempy.meshgen.PolyElement2D.quad_points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">quad_points</span></code></a> were plotted on.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># initialize a mesh and material region, then plot the elements</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># and quad points</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.materials</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vcfempy.meshgen</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">PolyMesh2D</span><span class="p">(</span><span class="s1">&#39;test mesh&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">add_vertices</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">insert_boundary_vertices</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rock</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">Material</span><span class="p">(</span><span class="s1">&#39;rock&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;xkcd:stone&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mr</span> <span class="o">=</span> <span class="n">vcfempy</span><span class="o">.</span><span class="n">meshgen</span><span class="o">.</span><span class="n">MaterialRegion2D</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="n">msh</span><span class="o">.</span><span class="n">boundary_vertices</span><span class="p">,</span>
+<span class="gp">... </span>                                      <span class="n">rock</span><span class="p">,</span> <span class="s1">&#39;rock region&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_scale</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">mesh_rand</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msh</span><span class="o">.</span><span class="n">generate_mesh</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">msh</span><span class="o">.</span><span class="n">elements</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">ax</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">plot_quad_points</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">xtext</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ytext</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ttext</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;PolyElement2D Test Plot&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;PolyElement2D_quad_points_test_plot.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -4808,16 +5532,6 @@ nodes can be int or list of ints</p>
 <dd></dd></dl>
 
 </dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="vcfempy.meshgen.polygon_area">
-<span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">polygon_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.polygon_area" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="vcfempy.meshgen.polygon_centroid">
-<span class="sig-prename descclassname"><span class="pre">vcfempy.meshgen.</span></span><span class="sig-name descname"><span class="pre">polygon_centroid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#vcfempy.meshgen.polygon_centroid" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="vcfempy.meshgen.get_unit_tangent_normal">

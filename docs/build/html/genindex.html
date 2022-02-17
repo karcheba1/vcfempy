@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; VcFemPy 0.0.10 documentation</title>
+  <title>Index &mdash; VcFemPy 0.0.11 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -347,10 +347,10 @@
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_elements">num_elements (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_interface_elements">num_interface_elements (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_material_regions">num_material_regions (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_mesh_edges">num_mesh_edges (vcfempy.meshgen.PolyMesh2D property)</a>
@@ -368,6 +368,10 @@
 </li>
       </ul></li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_nodes_per_element">num_nodes_per_element (vcfempy.meshgen.PolyMesh2D property)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.num_quad_integrals">num_quad_integrals (vcfempy.meshgen.PolyElement2D property)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.num_quad_points">num_quad_points (vcfempy.meshgen.PolyElement2D property)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.num_seed_points">num_seed_points (vcfempy.meshgen.PolyMesh2D property)</a>
 </li>
@@ -405,14 +409,14 @@
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.plot_mesh_nodes">plot_mesh_nodes() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.plot_quadrature_points">plot_quadrature_points() (vcfempy.meshgen.PolyElement2D method)</a>
-
-      <ul>
-        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.plot_quadrature_points">(vcfempy.meshgen.PolyMesh2D method)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.plot_quad_points">plot_quad_points() (vcfempy.meshgen.PolyElement2D method)</a>
+
+      <ul>
+        <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.plot_quad_points">(vcfempy.meshgen.PolyMesh2D method)</a>
+</li>
+      </ul></li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.plot_vertices">plot_vertices() (vcfempy.meshgen.PolyMesh2D method)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.points">points (vcfempy.meshgen.PolyMesh2D property)</a>
@@ -422,10 +426,6 @@
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D">PolyElement2D (class in vcfempy.meshgen)</a>
 </li>
       <li><a href="vcfempy.flow.html#vcfempy.flow.PolyFlow2D">PolyFlow2D (class in vcfempy.flow)</a>
-</li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.polygon_area">polygon_area() (in module vcfempy.meshgen)</a>
-</li>
-      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.polygon_centroid">polygon_centroid() (in module vcfempy.meshgen)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D">PolyMesh2D (class in vcfempy.meshgen)</a>
 </li>
@@ -462,6 +462,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyMesh2D.remove_mesh_edge">remove_mesh_edge() (vcfempy.meshgen.PolyMesh2D method)</a>
+</li>
+      <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.PolyElement2D.remove_nodes">remove_nodes() (vcfempy.meshgen.PolyElement2D method)</a>
 </li>
       <li><a href="vcfempy.meshgen.html#vcfempy.meshgen.MaterialRegion2D.remove_vertices">remove_vertices() (vcfempy.meshgen.MaterialRegion2D method)</a>
 

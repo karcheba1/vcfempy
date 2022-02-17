@@ -66,7 +66,7 @@ def rectangular_mesh():
     rect_mesh.plot_mesh_boundaries()
     rect_mesh.plot_vertices()
     rect_mesh.plot_mesh_nodes()
-    rect_mesh.plot_quadrature_points()
+    rect_mesh.plot_quad_points()
 
     ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')
     ax.set_ylabel('y [m]', fontsize=12, fontweight='bold')
