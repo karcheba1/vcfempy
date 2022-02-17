@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: vcfempy
-Version: 0.0.12
+Version: 0.0.13
 Summary: A Python package for the Voronoi Cell Finite Element Method
 Home-page: https://github.com/karcheba1/vcfempy
 Author: Brandon Karchewski
