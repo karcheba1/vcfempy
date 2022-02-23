@@ -254,7 +254,9 @@ class PolyMesh2D():
 
         # intialize mesh properties
         self._mesh_scale = None
+        self.mesh_scale_shift = False
         self.mesh_rand = 0.0
+        self.hex_shift = True
         self._seed_points = np.empty((0, 2))
 
     @property
@@ -1881,6 +1883,67 @@ class PolyMesh2D():
         """
         return self._elements
 
+    def add_element(self, element):
+        """Add a :c:`PolyElement2D` to the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        element : :c:`PolyElement2D`
+            :c:`PolyElement2D` to add to the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        TypeError
+            If **element** is not a :c:`PolyElement2D`.
+        ValueError
+            If **element** is already in :a:`elements` or
+            does not have this :c:`PolyMesh2D` as its parent.
+
+        Note
+        ----
+        It is not normally necessary to call :m:`add_element` when
+        creating a new :c:`PolyElement2D` since it will add itself to the
+        parent :c:`PolyMesh2D` by default.
+        This is only necessary if the :c:`PolyElement2D` was created with
+        **add_to_mesh** = ``False`` or if the :c:`PolyElement2D` was
+        previously removed from the :c:`PolyMesh2D` using
+        :m:`remove_element`.
+
+        Examples
+        --------
+        """
+        if not isinstance(element, PolyElement2D):
+            raise TypeError('element is not vcfempy.meshgen.PolyElement2D')
+        if element in self.elements:
+            raise ValueError('element already in list')
+        if element.mesh is not self:
+            raise ValueError('element does not have self as mesh')
+        self.elements.append(element)
+
+    def remove_element(self, element):
+        """Remove a :c:`PolyElement2D` from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        element : :c:`PolyElement2D`
+            :c:`PolyElement2D` to remove from the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        ValueError
+            If **element** is not in :a:`elements`.
+
+        Note
+        ----
+        When removing an element from the :c:`PolyMesh2D`, the
+        :a:`PolyElement2D.mesh` is not changed, and it can be added again
+        using :m:`add_element` if desired.
+
+        Examples
+        --------
+        """
+        self.elements.remove(element)
+
     @property
     def num_nodes_per_element(self):
         """Number of nodes per element in the generated mesh for the
@@ -2508,6 +2571,68 @@ class PolyMesh2D():
         """
         return self._interface_elements
 
+    def add_interface_element(self, interface):
+        """Add an :c:`InterfaceElement2D` to the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        interface : :c:`InterfaceElement2D`
+            :c:`InterfaceElement2D` to add to the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        TypeError
+            If **interface** is not an :c:`InterfaceElement2D`.
+        ValueError
+            If **interface** is already in :a:`interface_elements` or
+            does not have this :c:`PolyMesh2D` as its parent.
+
+        Note
+        ----
+        It is not normally necessary to call :m:`add_interface_element` when
+        creating a new :c:`InterfaceElement2D` since it will add itself to the
+        parent :c:`PolyMesh2D` by default.
+        This is only necessary if the :c:`InterfaceElement2D` was created with
+        **add_to_mesh** = ``False`` or if the :c:`InterfaceElement2D` was
+        previously removed from the :c:`PolyMesh2D` using
+        :m:`remove_interface_element`.
+
+        Examples
+        --------
+        """
+        if not isinstance(interface, InterfaceElement2D):
+            raise TypeError('interface is not '
+                            + 'vcfempy.meshgen.InterfaceElement2D')
+        if interface in self.interface_elements:
+            raise ValueError('interface already in list')
+        if interface.mesh is not self:
+            raise ValueError('interface does not have self as mesh')
+        self.interface_elements.append(interface)
+
+    def remove_interface_element(self, interface):
+        """Remove an :c:`InterfaceElement2D` from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        interface : :c:`InterfaceElement2D`
+            :c:`InterfaceElement2D` to remove from the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        ValueError
+            If **interface** is not in :a:`interface_elements`.
+
+        Note
+        ----
+        When removing an :c:`InterfaceElement2D` from the :c:`PolyMesh2D`, the
+        :a:`InterfaceElement2D.mesh` is not changed, and it can be added again
+        using :m:`add_interface_element` if desired.
+
+        Examples
+        --------
+        """
+        self.interface_elements.remove(interface)
+
     @property
     def num_boundary_elements(self):
         """Number of :a:`boundary_elements` in the generated mesh for a
@@ -2656,6 +2781,254 @@ class PolyMesh2D():
         []
         """
         return self._boundary_elements
+
+    def add_boundary_element(self, boundary):
+        """Add a :c:`BoundaryElement2D` to the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        boundary : :c:`BoundaryElement2D`
+            :c:`BoundaryElement2D` to add to the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        TypeError
+            If **boundary** is not a :c:`BoundaryElement2D`.
+        ValueError
+            If **boundary** is already in :a:`boundary_elements` or
+            does not have this :c:`PolyMesh2D` as its parent.
+
+        Note
+        ----
+        It is not normally necessary to call :m:`add_boundary_element` when
+        creating a new :c:`BoundaryElement2D` since it will add itself to the
+        parent :c:`PolyMesh2D` by default.
+        This is only necessary if the :c:`BoundaryElement2D` was created with
+        **add_to_mesh** = ``False`` or if the :c:`BoundaryElement2D` was
+        previously removed from the :c:`PolyMesh2D` using
+        :m:`remove_boundary_element`.
+
+        Examples
+        --------
+        """
+        if not isinstance(boundary, BoundaryElement2D):
+            raise TypeError('boundary is not '
+                            + 'vcfempy.meshgen.BoundaryElement2D')
+        if boundary in self.boundary_elements:
+            raise ValueError('boundary already in list')
+        if boundary.mesh is not self:
+            raise ValueError('boundary does not have self as mesh')
+        self.boundary_elements.append(boundary)
+
+    def remove_boundary_element(self, boundary):
+        """Remove a :c:`BoundaryElement2D` from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        boundary : :c:`BoundaryElement2D`
+            :c:`BoundaryElement2D` to remove from the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        ValueError
+            If **boundary** is not in :a:`boundary_elements`.
+
+        Note
+        ----
+        When removing a :c:`BoundaryElement2D` from the :c:`PolyMesh2D`, the
+        :a:`BoundaryElement2D.mesh` is not changed, and it can be added again
+        using :m:`add_boundary_element` if desired.
+
+        Examples
+        --------
+        """
+        self.boundary_elements.remove(boundary)
+
+    @property
+    def num_intersection_elements(self):
+        """Number of :a:`intersection_elements` in the generated mesh for a
+        :c:`PolyMesh2D`.
+
+        Returns
+        -------
+        `int`
+            The number of :a:`intersection_elements` in the :c:`PolyMesh2D`.
+
+        Examples
+        --------
+        >>> # create a mesh and add some vertices but no mesh generated yet
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, bnd_verts)
+        >>> print(msh.num_intersection_elements)
+        0
+
+        >>> # generate a simple mesh
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.num_intersection_elements)
+        12
+
+        >>> # explicitly resetting the mesh clears the intersection elements
+        >>> msh.mesh_valid = False
+        >>> print(msh.num_intersection_elements)
+        0
+
+        >>> # regenerate the mesh
+        >>> msh.generate_mesh()
+        >>> print(msh.num_intersection_elements)
+        12
+
+        >>> # adding a boundary vertex also resets the mesh
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> msh.insert_boundary_vertices(3, 4)
+        >>> print(msh.num_intersection_elements)
+        0
+        """
+        return len(self.intersection_elements)
+
+    @property
+    def intersection_elements(self):
+        """List of :c:`IntersectionElement2D` in the generated mesh for a
+        :c:`PolyMesh2D`.
+
+        Returns
+        -------
+        `list` of :c:`IntersectionElement2D`
+            The list of intersection elements in the :c:`PolyMesh2D`.
+
+        Examples
+        --------
+        >>> # create a mesh and add some vertices but no mesh generated yet
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
+        >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
+        >>> msh.add_vertices(new_verts)
+        >>> msh.insert_boundary_vertices(0, bnd_verts)
+        >>> print(msh.intersection_elements)
+        []
+
+        >>> # generate a simple mesh and print the intersection elements
+        >>> # notice that intersection node indices are all < msh.num_nodes
+        >>> # and the neighbor element indices are all < msh.num_elements
+        >>> # also note that intersection elements all include at least one
+        >>> # node that is not on the boundary
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.num_nodes)
+        16
+        >>> print(msh.nodes.round(14))
+        [[-0.    1.  ]
+         [ 0.35  1.  ]
+         [ 0.    0.  ]
+         [ 0.35  0.  ]
+         [ 1.    1.  ]
+         [ 0.65  1.  ]
+         [ 0.65  0.65]
+         [ 1.    0.65]
+         [ 1.   -0.  ]
+         [ 0.65 -0.  ]
+         [ 0.65  0.35]
+         [ 1.    0.35]
+         [ 0.    0.65]
+         [ 0.    0.35]
+         [ 0.35  0.65]
+         [ 0.35  0.35]]
+        >>> for e in msh.intersection_elements:
+        ...     print(e.nodes)
+        >>> print(msh.num_elements)
+        9
+        >>> for e in msh.intersection_elements:
+        ...     print([msh.elements.index(n) for n in e.neighbors])
+
+        >>> # explicitly resetting the mesh clears the interface elements
+        >>> msh.mesh_valid = False
+        >>> print(msh.intersection_elements)
+        []
+
+        >>> # regenerate the mesh
+        >>> msh.generate_mesh()
+        >>> for e in msh.intersection_elements:
+        ...     print(e.nodes)
+        >>> for e in msh.intersection_elements:
+        ...     print([msh.elements.index(n) for n in e.neighbors])
+
+        >>> # adding a boundary vertex also resets the mesh
+        >>> msh.add_vertices([1.5, 0.5])
+        >>> msh.insert_boundary_vertices(3, 4)
+        >>> print(msh.intersection_elements)
+        []
+        """
+        return self._intersection_elements
+
+    def add_intersection_element(self, intersection):
+        """Add an :c:`IntersectionElement2D` to the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        intersection : :c:`IntersectionElement2D`
+            :c:`IntersectionElement2D` to add to the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        TypeError
+            If **intersection** is not an :c:`IntersectionElement2D`.
+        ValueError
+            If **intersection** is already in :a:`intersection_elements` or
+            does not have this :c:`PolyMesh2D` as its parent.
+
+        Note
+        ----
+        It is not normally necessary to call :m:`add_intersection_element`
+        when creating a new :c:`IntersectionElement2D` since it will add
+        itself to the parent :c:`PolyMesh2D` by default.
+        This is only necessary if the :c:`IntersectionElement2D` was created
+        with **add_to_mesh** = ``False`` or if the :c:`IntersectionElement2D`
+        was previously removed from the :c:`PolyMesh2D` using
+        :m:`remove_intersection_element`.
+
+        Examples
+        --------
+        """
+        if not isinstance(intersection, IntersectionElement2D):
+            raise TypeError('intersection is not '
+                            + 'vcfempy.meshgen.IntersectionElement2D')
+        if intersection in self.intersection_elements:
+            raise ValueError('intersection already in list')
+        if intersection.mesh is not self:
+            raise ValueError('intersection does not have self as mesh')
+        self.intersection_elements.append(intersection)
+
+    def remove_intersection_element(self, intersection):
+        """Remove an :c:`IntersectionElement2D` from the :c:`PolyMesh2D`.
+
+        Parameters
+        ----------
+        intersection : :c:`IntersectionElement2D`
+            :c:`IntersectionElement2D` to remove from the :c:`PolyMesh2D`.
+
+        Raises
+        ------
+        ValueError
+            If **intersection** is not in :a:`intersection_elements`.
+
+        Note
+        ----
+        When removing an :c:`IntersectionElement2D` from the :c:`PolyMesh2D`,
+        the :a:`IntersectionElement2D.mesh` is not changed,
+        and it can be added again using :m:`add_intersection_element` if
+        desired.
+
+        Examples
+        --------
+        """
+        self.intersection_elements.remove(intersection)
 
     @property
     def mesh_valid(self):
@@ -3070,6 +3443,69 @@ self.nodes is empty
             raise ValueError(f'mesh_rand {val} invalid, should be in [0., 1.)')
         self._mesh_rand = val
 
+    @property
+    def hex_shift(self):
+        return self._hex_shift
+
+    @hex_shift.setter
+    def hex_shift(self, flag):
+        if isinstance(flag, (str, np.str_)):
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
+        self._hex_shift = bool(flag)
+
+    @property
+    def mesh_scale_shift(self):
+        return self._mesh_scale_shift
+
+    @mesh_scale_shift.setter
+    def mesh_scale_shift(self, flag):
+        if isinstance(flag, (str, np.str_)):
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
+        self._mesh_scale_shift = bool(flag)
+
+    def _get_limits(self, shift=None):
+        if shift is None:
+            shift = 2. * self.mesh_scale if self.mesh_scale else 0.
+        verts = self.vertices[self.boundary_vertices]
+        xmin = np.min(verts[:, 0]) - shift
+        xmax = np.max(verts[:, 0]) + shift
+        ymin = np.min(verts[:, 1]) - shift
+        ymax = np.max(verts[:, 1]) + shift
+        return xmin, xmax, ymin, ymax
+
+    def _create_points_grid(self):
+        # get grid dimensions
+        shift = self.mesh_scale if self.mesh_scale_shift else None
+        xmin, xmax, ymin, ymax = self._get_limits(shift)
+        Lx = xmax - xmin
+        Ly = ymax - ymin
+        nx = int(np.round(Lx / self.mesh_scale)) + 1
+        ny = int(np.round(Ly / self.mesh_scale)) + 1
+        # generate regular grid of x and y coords
+        gx = np.linspace(xmin, xmax, nx)
+        gy = np.linspace(ymin, ymax, ny)
+        gx, gy = np.meshgrid(gx, gy)
+        # shift for hexagonal grid
+        if self.hex_shift:
+            for k, _ in enumerate(gx):
+                if k % 2:
+                    gx[k, :] -= 0.25 * self.mesh_scale
+                else:
+                    gx[k, :] += 0.25 * self.mesh_scale
+        # create point list from x and y coords
+        self._points = np.vstack([gx.ravel(), gy.ravel()]).T
+        # perform random point shifting for irregular grid
+        if self.mesh_rand:
+            grd_shift = (self.mesh_rand * self.mesh_scale
+                         * (2. * np.random.random((gx.size, 2)) - 1.))
+            self._points += grd_shift
+
     def _check_edge_scale(self, edge_verts):
         d_scale = self.mesh_scale
         for k, v0 in enumerate(self.vertices[edge_verts[:-1]]):
@@ -3256,113 +3692,314 @@ self.nodes is empty
         self._points = np.vstack([self.points,
                                   top_points, bot_points, ref_points])
 
-    def generate_mesh(self):
-        """ Generate polygonal mesh. """
-        # if seed points provided, initialize points with those
-        self._points = np.array(self.seed_points)
-        # if no seed points, generate seed points on a regular grid
-        if not len(self.points):
-            xmin = (np.min(self.vertices[self.boundary_vertices, 0])
-                    - 2 * self.mesh_scale)
-            xmax = (np.max(self.vertices[self.boundary_vertices, 0])
-                    + 2 * self.mesh_scale)
-            ymin = (np.min(self.vertices[self.boundary_vertices, 1])
-                    - 2 * self.mesh_scale)
-            ymax = (np.max(self.vertices[self.boundary_vertices, 1])
-                    + 2 * self.mesh_scale)
-            # get dimensions and number of points for regular grid
-            Lx = xmax - xmin
-            Ly = ymax - ymin
-            nx = int(np.round(Lx / self.mesh_scale)) + 1
-            ny = int(np.round(Ly / self.mesh_scale)) + 1
-            # generate regular grid and shift points for hexagonal grid
-            xc = np.linspace(xmin, xmax, nx)
-            yc = np.linspace(ymin, ymax, ny)
-            xc, yc = np.meshgrid(xc, yc)
-            for k, _ in enumerate(xc):
-                xc[k, :] += (-1 if (k % 2) else +1) * 0.25 * self.mesh_scale
-            self._points = np.vstack([self.points,
-                                      np.vstack([xc.ravel(), yc.ravel()]).T])
-            # randomly shift seed points
-            if self.mesh_rand:
-                rand_shift = (self.mesh_rand * self.mesh_scale
-                              * (2. * np.random.random((xc.size, 2)) - 1.))
-                self._points += rand_shift
-        # generate points for mesh edges
-        for edge in self.mesh_edges:
-            self._create_edge_points(edge.vertices)
-        # eliminate points that are outside the boundaries and mesh boundary
-        bpoly = shp.Polygon(self.vertices[self.boundary_vertices])
-        point_collection = shp.MultiPoint(self.points).geoms
-        in_bnd = np.array([bpoly.contains(x) for x in point_collection])
-        self._points = self.points[in_bnd]
-        self._create_edge_points(self.boundary_vertices, True)
-        # generate Voronoi diagram and eliminate points outside the boundary
+    def _get_mesh_from_voronoi(self):
+        # get Voronoi diagram
         vor = Voronoi(self.points)
-        points_to_keep = np.arange(len(self.points))
-        point_collection = shp.MultiPoint(self.points).geoms
-        in_bnd = np.array([bpoly.contains(x) for x in point_collection])
-        self._points = self.points[in_bnd]
-        points_to_keep = points_to_keep[in_bnd]
+        # get points inside the boundary, and not inside holes
+        in_bnd = _points_in_polygon(vor.points,
+                                    self.vertices[self.boundary_vertices])
+        for edge in self.mesh_edges:
+            if not edge.is_hole:
+                continue
+            in_bnd &= ~_points_in_polygon(vor.points,
+                                          self.vertices[edge.vertices])
+        self._points = vor.points[in_bnd]
+        points_to_keep = np.arange(len(vor.points))[in_bnd]
         point_dict = {n: k for k, n in enumerate(points_to_keep)}
-        # get elements to keep
-        point_elements = np.array(vor.point_region, dtype=int)
-        point_elements = point_elements[in_bnd]
-        elements = []
-        for pe in point_elements:
-            elements.append(vor.regions[pe])
-        # get edges to keep
-        element_edges = []
-        element_neighbors = []
-        for rp, rv in zip(vor.ridge_points, vor.ridge_vertices):
-            if in_bnd[rp[0]] or in_bnd[rp[1]]:
-                element_edges.append(rv)
-                element_neighbors.append([point_dict[rp[0]]
-                                          if in_bnd[rp[0]] else -1,
-                                          point_dict[rp[1]]
-                                          if in_bnd[rp[1]] else -1])
-        # get nodes to keep and correct node indices in elements
-        nodes_to_keep = []
-        for e in elements:
-            nodes_to_keep += e
-        nodes_to_keep = np.unique(nodes_to_keep)
-        self._nodes = vor.vertices[nodes_to_keep]
-        node_dict = {n: k for k, n in enumerate(nodes_to_keep)}
-        for k, el in enumerate(elements):
-            for j, n in enumerate(el):
-                elements[k][j] = node_dict[n]
-        for k, ee in enumerate(element_edges):
-            for j, n in enumerate(ee):
-                element_edges[k][j] = node_dict[n]
-        # determine material type of each element
-        m0 = mtl.Material('NULL')
-        element_materials = [m0 for k, _ in enumerate(elements)]
-        element_materials = np.array(element_materials)
-        point_collection = shp.MultiPoint(self.points).geoms
-        for mr in self.material_regions:
-            mpoly = shp.Polygon(self.vertices[mr.vertices])
-            in_bnd = np.array([mpoly.contains(x) for x in point_collection])
-            element_materials[in_bnd] = mr.material
-        # create list of elements
+        # get node list
+        self._nodes = vor.vertices
+        # get body element node lists, and add new PolyElement2D to mesh
+        point_elements = np.array(vor.point_region, dtype=int)[in_bnd]
         self._elements = []
-        for e, m in zip(elements, element_materials):
-            self.elements.append(PolyElement2D(self, e, m))
-        # create lists of interface and boundary elements
+        for pe in point_elements:
+            PolyElement2D(self, vor.regions[pe])
+        # get interface and boundary element nodes and neighbors
         self._interface_elements = []
         self._boundary_elements = []
-        for ee, en in zip(element_edges, element_neighbors):
-            # boundary element
-            if en[0] < 0 or en[1] < 0:
-                nn = (self.elements[en[1]] if en[0] < 0
-                      else self.elements[en[0]])
-                self.boundary_elements.append(BoundaryElement2D(self, ee, nn))
-            # interface element, assign material type from first neighbor
+        for rp, rv in zip(vor.ridge_points, vor.ridge_vertices):
+            # if both points are element points, it is an interface
+            if in_bnd[rp[0]] and in_bnd[rp[1]]:
+                nb = [self.elements[point_dict[rp[0]]],
+                      self.elements[point_dict[rp[1]]]]
+                InterfaceElement2D(mesh=self, nodes=rv, neighbors=nb)
+            # if only one point is an element point, it is a boundary
+            elif in_bnd[rp[0]] or in_bnd[rp[1]]:
+                if in_bnd[rp[0]]:
+                    nb = self.elements[point_dict[rp[0]]]
+                else:
+                    nb = self.elements[point_dict[rp[1]]]
+                BoundaryElement2D(mesh=self, nodes=rv, neighbor=nb)
+            # if neither point was an element point, it is neither
+
+    def _sort_element_nodes(self):
+        # sort element node lists in ccw order
+        for e in self.elements:
+            if not shp.LinearRing(self.nodes[e.nodes]).is_ccw:
+                e.nodes.reverse()
+
+    def _sort_interface_nodes_and_neighbors(self, side=0):
+        # get index of neighbor and nodes
+        k = side % 2
+        kk = 2 * k
+        for e in self.interface_elements:
+            # order neighbor elements so that lower index element is first
+            swap_nb = (self.elements.index(e.neighbors[0])
+                       > self.elements.index(e.neighbors[1]))
+            if swap_nb:
+                e.neighbors.reverse()
+            # order nodes so normal points to neighbor neighbor on given side
+            c = e.centroid
+            tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[kk]],
+                                              self.nodes[e.nodes[kk + 1]])
+            p = self.points[self.elements.index[e.neighbors[0]]]
+            if np.dot(nn, p - c) < 0.:
+                e.nodes[kk], e.nodes[kk + 1] = e.nodes[kk + 1], e.nodes[kk]
+
+    def _sort_boundary_nodes(self):
+        for e in self.boundary_elements:
+            # order nodes so normal points outward (away from neighbor)
+            c = e.centroid
+            tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[0]],
+                                              self.nodes[e.nodes[1]])
+            p = self.points[self.elements.index(e.neighbor)]
+            if np.dot(nn, p - c) > 0.:
+                e.nodes.reverse()
+
+    def _sort_intersection_nodes_and_neighbors(self):
+        for e in self.intersection_elements:
+            # sort nodes and neighbors in ccw order
+            inb = [self.elements.index(n) for n in e.neighbors]
+            if not shp.LinearRing(self.points[inb]).is_ccw:
+                e.nodes.reverse()
+                e.neighbors.reverse()
+
+    def _get_element_materials(self):
+        m0 = mtl.Material('NULL')
+        element_materials = [m0 for _ in enumerate(self.elements)]
+        element_materials = np.array(element_materials, dtype=mtl.Material)
+        for mr in self.material_regions:
+            if mr.material is None:
+                continue
+            in_mtl = _points_in_polygon(self.points,
+                                        self.vertices[mr.vertices])
+            element_materials[in_mtl] = mr.material
+        for e, m in zip(self.elements, element_materials):
+            e.material = m if m is not m0 else None
+
+    def _get_interface_materials(self):
+        m0 = mtl.Material('NULL')
+        interface_materials = [m0 for _ in enumerate(self.interface_elements)]
+        interface_materials = np.array(interface_materials, dtype=mtl.Material)
+        interface_centroids = [e.centroid for e in self.interface_elements]
+        interface_centroids = np.array(interface_centroids,
+                                       dtype=float, ndmin=2)
+        for mr in self.material_regions:
+            if mr.material is None:
+                continue
+            in_mtl = _points_in_polygon(interface_centroids,
+                                        self.vertices[mr.vertices])
+            interface_materials[in_mtl] = mr.material
+        for edge in self.mesh_edges:
+            if (edge.material is None
+                    or edge.is_hole or len(edge.vertices <= 1)):
+                continue
+            if edge.is_closed:
+                edge_geom = shp.LinearRing(self.vertices[edge.vertices])
             else:
-                nn = [self.elements[n] for n in en]
-                m = nn[0].material
-                self.interface_elements.append(
-                        InterfaceElement2D(self, ee, m, nn))
-        # set mesh valid, the setter will perform checks for mesh validity
+                edge_geom = shp.LineString(self.vertices[edge.vertices])
+            in_mtl = np.array([edge_geom.intersects(
+                               shp.LineString(self.nodes[e.nodes]))
+                               for e in self.interface_elements], dtype=bool)
+            interface_materials[in_mtl] = edge.material
+        for e, m in zip(self.interface_elements, interface_materials):
+            e.material = m if m is not m0 else None
+
+    def _get_intersection_materials(self):
+        m0 = mtl.Material('NULL')
+        intersection_materials = [m0 for _ in
+                                  enumerate(self.intersection_elements)]
+        intersection_materials = np.array(intersection_materials,
+                                          dtype=mtl.Material)
+        intersection_centroids = [e.centroid for e
+                                  in self.intersection_elements]
+        intersection_centroids = np.array(intersection_centroids,
+                                          dtype=float, ndmin=2)
+        for mr in self.material_regions:
+            if mr.material is None:
+                continue
+            in_mtl = _points_in_polygon(intersection_centroids,
+                                        self.vertices[mr.vertices])
+            intersection_materials[in_mtl] = mr.material
+        for edge in self.mesh_edges:
+            if (edge.material is None
+                    or edge.is_hole or len(edge.vertices <= 1)):
+                continue
+            if edge.is_closed:
+                edge_geom = shp.LinearRing(self.vertices[edge.vertices])
+            else:
+                edge_geom = shp.LineString(self.vertices[edge.vertices])
+            in_mtl = np.array([edge_geom.intersects(
+                               shp.Polygon(self.nodes[e.nodes]))
+                               for e in self.intersection_elements],
+                              dtype=bool)
+            intersection_materials[in_mtl] = edge.material
+        for e, m in zip(self.intersection_elements, intersection_materials):
+            e.material = m if m is not m0 else None
+
+    def _get_element_interfaces_and_boundaries(self):
+        for e in self.elements:
+            e_ints = []
+            e_bnds = []
+            for ie in self.interface_elements:
+                if e in ie.neighbors:
+                    e_ints.append(ie)
+            for be in self.boundary_elements:
+                if e is be.neighbor:
+                    e_bnds.append(be)
+            nn = e.num_nodes
+            e._interface_elements = []
+            e._boundary_elements = []
+            for k, n0 in enumerate(e.nodes):
+                n1 = e.nodes[(k+1) % nn]
+                for ie in e_ints:
+                    if n0 in ie.nodes and n1 in ie.nodes:
+                        e.interface_elements.append(ie)
+                        break
+                else:
+                    e.interface_elements.append(None)
+                for be in e_bnds:
+                    if n0 in be.nodes and n1 in be.nodes:
+                        e.boundary_elements.append(be)
+                        break
+                else:
+                    e.boundary_elements.append(None)
+
+    def _check_material_interfaces(self):
+        some_interfaces = False
+        all_interfaces = True
+        for e in self.interface_elements:
+            some_interfaces |= e.material.has_interfaces
+            all_interfaces &= e.material.has_interfaces
+            if some_interfaces and not all_interfaces:
+                break
+        return some_interfaces, all_interfaces
+
+    def _split_nodes_and_intersections(self):
+        # split each node based on how many elements it is in
+        old_nodes = np.array(self.nodes)
+        self._intersection_elements = []
+        for k, n in enumerate(old_nodes):
+            # find element indices that the node is in
+            ne = []
+            for j, e in enumerate(self.elements):
+                if k in e.nodes:
+                    ne.append(j)
+            # skip nodes not contained in any elements
+            if len(ne) == 0:
+                continue
+            # sort neighbor elements in ccw order
+            ne = np.array(ne, dtype=int)
+            vv = self.points[ne[0]] - n
+            vv /= np.linalg.norm(vv)
+            ne_crs = []
+            for j in ne[1:]:
+                vj = self.points[j] - n
+                vj /= np.linalg.norm(vj)
+                ne_crs.append(np.cross(vv, vj))
+            ne_crs = np.array(ne_crs, dtype=float)
+            ind_ccw = np.flip(np.argsort(ne_crs))
+            ne = np.hstack([ne[0], ne[1:][ind_ccw]]).tolist()
+            # convert element indices to element objects
+            for jj, j in enumerate(ne):
+                ne[jj] = self.elements[j]
+            # create a new node for each element that the node is in
+            # replace the old node number with the new node number in:
+            #   element
+            #   element boundary elements
+            #   element interface elements where element is the first neighbor
+            # append the new node number in element interface elements where
+            # element is the second neighbor
+            nnii = []
+            for e in ne:
+                # create the new node
+                nn = self.num_nodes
+                self._nodes = np.vstack([self.nodes, n])
+                # replace node in element
+                kk = e.nodes.index(k)
+                e.nodes[kk] = nn
+                # add the node to the intersection element
+                nnii.append(nn)
+                # replace node in element boundary elements
+                for be in e.boundary_elements:
+                    if be is None:
+                        continue
+                    if k in be.nodes:
+                        kk = be.nodes.index(k)
+                        be.nodes[kk] = nn
+                # replace or append node in element interface elements
+                for ie in e.interface_elements:
+                    if ie is None:
+                        continue
+                    if k in ie.nodes:
+                        # first neighbor, replace the node
+                        if ie.neighbors[0] is e:
+                            kk = ie.nodes.index(k)
+                            ie.nodes[kk] = nn
+                        # second neighbor, append the node
+                        else:
+                            ie.nodes.append(nn)
+            # create an intersection element
+            if len(ne) > 2:
+                IntersectionElement2D(mesh=self, nodes=nnii, neighbors=ne)
+
+    def _merge_non_interface_nodes(self):
+        pass
+
+    def generate_mesh(self):
+        """ Generate polygonal mesh. """
+        # if no seed points, generate seed points on a regular grid
+        if not self.num_seed_points:
+            self._create_points_grid()
+        # if seed points provided, initialize points with those
+        else:
+            self._points = np.array(self.seed_points)
+        # generate points for mesh edges
+        for edge in self.mesh_edges:
+            self._create_edge_points(edge.vertices, closed=edge.is_closed)
+        # eliminate points that are outside the boundaries and mesh boundary
+        in_bnd = _points_in_polygon(self.points,
+                                    self.vertices[self.boundary_vertices])
+        self._points = self.points[in_bnd]
+        self._create_edge_points(self.boundary_vertices, closed=True)
+        # get Voronoi diagram, eliminate points outside the boundary,
+        # and initialize mesh information
+        self._get_mesh_from_voronoi()
+        # sort nodes in elements, interfaces, and boundaries
+        self._sort_element_nodes()
+        self._sort_interface_nodes_and_neighbors()
+        self._sort_boundary_nodes()
+        # assign materials to elements and interfaces
+        self._get_element_materials()
+        self._get_interface_materials()
+        # get interface and boundary elements neighboring elements
+        self._get_element_interfaces_and_boundaries()
+        # process node splitting at interfaces and generate intersections
+        self._intersection_elements = []
+        some_interfaces, all_interfaces = self._check_material_interfaces()
+        if some_interfaces:
+            # split nodes and create intersection elements
+            self._split_nodes_and_intersections()
+            # sort interface nodes on second side and sort intersections ccw
+            self._sort_interface_nodes_and_neighbors(side=1)
+            self._sort_intersection_nodes_and_neighbors()
+            # merge nodes for non-interface materials
+            if not all_interfaces:
+                # TODO: pick up here by writing this method
+                self._merge_non_interface_nodes()
+            # TODO: assign materials to intersections
+        # TODO: eliminate unnecessary interfaces and intersections
+        # TODO: eliminate nodes not in elements
+        # TODO: sort nodes based on geometry, to reduce matrix bandwidth
         self.mesh_valid = True
 
     @property
@@ -3577,8 +4214,6 @@ self.nodes is empty
 
     @verbose_printing.setter
     def verbose_printing(self, flag):
-        # try to cast flag to bool
-        # will raise a ValueError if this does not work
         if isinstance(flag, (str, np.str_)):
             try:
                 flag = float(flag)
@@ -4534,6 +5169,12 @@ class MeshEdge2D():
         A descriptive name for the :c:`MeshEdge2D`. If not provided, will be
         set to a default 'Unnamed Mesh Edge {`k`}' where `k` is a counter for
         how many :c:`MeshEdge2D` have been created.
+    is_closed : bool, optional, default=False
+        Flag for whether the :c:`MeshEdge2D` is a closed ring.
+    is_hole : bool, optional, default=False
+        Flag for whether the :c:`MeshEdge2D` is a hole containing no material.
+        If this is ``True``, :a:`is_closed` will also be set to ``True``
+        regardless of the value of **is_closed**.
 
     Other Parameters
     ----------------
@@ -4602,7 +5243,7 @@ class MeshEdge2D():
     _num_created = 0
 
     def __init__(self, mesh, vertices=None, material=None, name=None,
-                 add_to_mesh=True):
+                 is_closed=False, is_hole=False, add_to_mesh=True):
         if not isinstance(mesh, PolyMesh2D):
             raise TypeError('type(mesh) must be vcfempy.meshgen.PolyMesh2D')
         self._mesh = mesh
@@ -4619,6 +5260,9 @@ class MeshEdge2D():
         self.insert_vertices(0, vertices)
 
         self.material = material
+
+        self.is_closed = is_closed
+        self.is_hole = is_hole
 
     @property
     def name(self):
@@ -4791,6 +5435,38 @@ class MeshEdge2D():
          [0.8  0.8 ]]
         """
         return self._vertices
+
+    @property
+    def is_hole(self):
+        return self._is_hole
+
+    @is_hole.setter
+    def is_hole(self, flag):
+        if isinstance(flag, (str, np.str_)):
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
+        self._is_hole = bool(flag)
+        if self.is_hole:
+            self.is_closed = True
+
+    @property
+    def is_closed(self):
+        return self._is_closed
+
+    @is_closed.setter
+    def is_closed(self, flag):
+        if isinstance(flag, (str, np.str_)):
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
+        flag = bool(flag)
+        if self.is_hole and not flag:
+            raise ValueError('MeshEdge2D.is_hole is True, '
+                             + 'MeshEdge2D.is_closed cannot be False')
+        self._is_closed = flag
 
     @property
     def material(self):
@@ -5160,6 +5836,12 @@ class PolyElement2D():
     material : :c:`vcfempy.materials.Material`, optional
         The material type assigned to the element.
 
+    Other Parameters
+    ----------------
+    add_to_mesh : bool, optional, default=True
+       Flag for whether to add the :c:`PolyElement2D` to its parent mesh.
+       This is done by default when the :c:`PolyElement2D` is created.
+
     Examples
     --------
     >>> # create a simple mesh and check the element properties
@@ -5202,21 +5884,23 @@ class PolyElement2D():
     1.0
     """
 
-    def __init__(self, mesh, nodes=None, material=None):
+    def __init__(self, mesh, nodes=None, material=None, add_to_mesh=True):
         # initialize parent mesh
         if not isinstance(mesh, PolyMesh2D):
-            raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
+            raise TypeError('type(mesh) must be vcfempy.meshgen.PolyMesh2D')
         self._mesh = mesh
-
+        if add_to_mesh:
+            self.mesh.add_element(self)
         # initialize nodes
         self._nodes = []
         self.insert_nodes(0, nodes)
-
         # initialize material
         self.material = material
-
         # initialize geometry and quadrature attributes
         self.invalidate_properties()
+        # initialize lists of neighboring interface and boundary elements
+        self._interface_elements = []
+        self._boundary_elements = []
 
     @property
     def mesh(self):
@@ -5539,6 +6223,14 @@ class PolyElement2D():
         remove_nodes = remove_nodes.ravel()
         for rn in remove_nodes:
             self.nodes.remove(rn)
+
+    @property
+    def interface_elements(self):
+        return self._interface_elements
+
+    @property
+    def boundary_elements(self):
+        return self._boundary_elements
 
     @property
     def area(self):
@@ -6450,6 +7142,12 @@ class InterfaceElement2D():
         The element width in the direction normal to the length of the
         :c:`InterfaceElement2D`.
 
+    Other Parameters
+    ----------------
+    add_to_mesh : bool, optional, default=True
+       Flag for whether to add the :c:`InterfaceElement2D` to its parent mesh.
+       This is done by default when the :c:`InterfaceElement2D` is created.
+
     Examples
     --------
     >>> # create a simple mesh and check the element properties
@@ -6478,10 +7176,12 @@ class InterfaceElement2D():
     """
 
     def __init__(self, mesh, nodes=None, material=None, neighbors=None,
-                 width=0.0):
+                 width=0.0, add_to_mesh=True):
         if not isinstance(mesh, PolyMesh2D):
             raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
         self._mesh = mesh
+        if add_to_mesh:
+            self.mesh.add_interface_element(self)
 
         self._material = None
         self.material = material
@@ -7268,14 +7968,22 @@ class BoundaryElement2D():
     neighbor: :c:`PolyElement2D`, optional
         The neighboring :c:`PolyElement2D` from the parent mesh
 
+    Other Parameters
+    ----------------
+    add_to_mesh : bool, optional, default=True
+       Flag for whether to add the :c:`InterfaceElement2D` to its parent mesh.
+       This is done by default when the :c:`InterfaceElement2D` is created.
+
     Examples
     --------
     """
 
-    def __init__(self, mesh, nodes=None, neighbor=None):
+    def __init__(self, mesh, nodes=None, neighbor=None, add_to_mesh=True):
         if not isinstance(mesh, PolyMesh2D):
             raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
         self._mesh = mesh
+        if add_to_mesh:
+            self.mesh.add_boundary_element(self)
 
         self.invalidate_properties()
 
@@ -7828,6 +8536,675 @@ class BoundaryElement2D():
         return ax
 
 
+class IntersectionElement2D():
+    """A class for intersections between :c:`InterfaceElement2D` elements in
+    a :c:`PolyMesh2D`.
+
+    Parameters
+    ----------
+    mesh : :c:`PolyMesh2D`
+        The parent mesh.
+    nodes : list[int], optional
+        Initial list of node indices from the parent mesh that are contained
+        in the :c:`IntersectionElement2D`.
+    material : :c:`vcfempy.materials.Material`, optional
+        The material type to assign to the :c:`IntersectionElement2D`.
+    neighbors: `list` of :c:`PolyElement2D`, optional
+        List of neighboring :c:`PolyElement2D` from the parent mesh.
+
+    Other Parameters
+    ----------------
+    add_to_mesh : bool, optional, default=True
+       Flag for whether to add the :c:`IntersectionElement2D` to its parent
+       mesh.
+       This is done by default when the :c:`IntersectionElement2D` is created.
+
+    Examples
+    --------
+    """
+
+    def __init__(self, mesh, nodes=None, material=None, neighbors=None,
+                 add_to_mesh=True):
+        if not isinstance(mesh, PolyMesh2D):
+            raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
+        self._mesh = mesh
+        if add_to_mesh:
+            self.mesh.add_intersection_element(self)
+
+        self._material = None
+        self.material = material
+
+        self.invalidate_properties()
+
+        self._nodes = []
+        self.insert_nodes(0, nodes)
+
+        self._neighbors = []
+        self.add_neighbors(neighbors)
+
+    @property
+    def mesh(self):
+        """The parent :c:`PolyMesh2D`.
+
+        Returns
+        -------
+        :c:`PolyMesh2D`
+            The parent mesh assigned to the :c:`IntersectionElement2D`.
+
+        Note
+        ----
+        The :a:`mesh` is immutable and can only be assigned when the
+        :c:`IntersectionElement2D` is created.
+        An :c:`IntersectionElement2D` should not usually be created
+        explicitly,
+        but rather should be created indirectly by calling the
+        :m:`PolyMesh2D.generate_mesh` method.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.intersection_elements[0].mesh is msh)
+        True
+        """
+        return self._mesh
+
+    @property
+    def material(self):
+        """Material type assigned to the :c:`IntersectionElement2D`.
+
+        Parameters
+        ----------
+        material : ``None`` | :c:`vcfempy.materials.Material`
+            The material to assign to the :c:`IntersectionElement2D`.
+
+        Returns
+        -------
+        ``None`` | :c:`vcfempy.materials.Material`
+            The material assigned to the :c:`IntersectionElement2D`.
+
+        Raises
+        ------
+        TypeError
+            If type(material) not in [`NoneType`,
+            :c:`vcfempy.materials.Material`]
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, [0, 1, 2, 3], rock)
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.intersection_elements[0].material.name)
+        rock
+        """
+        return self._material
+
+    @material.setter
+    def material(self, material):
+        if not isinstance(material, (type(None), mtl.Material)):
+            raise TypeError('type(material) not in [NoneType, '
+                            + 'vcfempy.materials.Material]')
+        self._material = material
+
+    @property
+    def num_nodes(self):
+        """Number of nodes in the :c:`IntersectionElement2D`.
+
+        Returns
+        -------
+        `int`
+            The number of nodes in the :c:`IntersectionElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.interface_elements[0].num_nodes)
+        3
+        """
+        return len(self.nodes)
+
+    @property
+    def nodes(self):
+        """List of node indices in the :c:`IntersectionElement2D`.
+        References the :a:`PolyMesh2D.nodes` of the parent :a:`mesh`.
+
+        Returns
+        -------
+        `list[int]`
+            The list of node indices in the :c:`IntersectionElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.intersection_elements[0].nodes)
+        [5, 6]
+        """
+        return self._nodes
+
+    def insert_nodes(self, index, nodes):
+        """Insert node indices to the :c:`IntersectionElement2D`.
+
+        Parameters
+        ----------
+        index : int
+            The index at which to insert the **nodes** into :a:`nodes`.
+        nodes : list[int]
+            The list of node indices to add to :a:`nodes`.
+
+        Note
+        -----
+        Before inserting the values in **nodes**, an attempt is made to
+        cast to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        TypeError
+            If **index** cannot be interpreted as `int`.
+        ValueError
+            If **nodes** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **nodes**
+            cannot be cast to `int`,
+            are already in :a:`nodes`,
+            are negative,
+            or are >= :a:`mesh.num_nodes`.
+
+        Examples
+        --------
+        >>> # create a simple mesh
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.nodes.round(14))
+        [[-0.    1.  ]
+         [ 0.35  1.  ]
+         [ 0.    0.  ]
+         [ 0.35  0.  ]
+         [ 1.    1.  ]
+         [ 0.65  1.  ]
+         [ 0.65  0.65]
+         [ 1.    0.65]
+         [ 1.   -0.  ]
+         [ 0.65 -0.  ]
+         [ 0.65  0.35]
+         [ 1.    0.35]
+         [ 0.    0.65]
+         [ 0.    0.35]
+         [ 0.35  0.65]
+         [ 0.35  0.35]]
+
+        >>> # create a new intersection element
+        >>> # note, this is normally not done explicitly, but is shown here
+        >>> # for testing and documentation
+        >>> e = vcfempy.meshgen.IntersectionElement2D(msh)
+        >>> print(e.nodes)
+        []
+        >>> e.insert_nodes(0, [1, 14, 0])
+        >>> print(e.nodes)
+        [1, 14, 0]
+        >>> print(np.round(e.area, 14))
+        0.06125
+
+        >>> # insert no nodes in multiple ways
+        >>> e.insert_nodes(0, None)
+        >>> e.insert_nodes(0, [])
+        >>> print(e.nodes)
+        [1, 14, 0]
+
+        >>> # try to insert some invalid nodes
+        >>> e.insert_nodes(0, 'one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> e.insert_nodes(0, [1, 14])
+        Traceback (most recent call last):
+            ...
+        ValueError: 14 is already a node
+        >>> e.insert_nodes(0, [14, 2])
+        Traceback (most recent call last):
+            ...
+        ValueError: 14 is already a node
+        >>> print(e.nodes)
+        [1, 14, 0]
+        >>> e.insert_nodes(0, [16, 17])
+        Traceback (most recent call last):
+            ...
+        ValueError: node index 17 out of range
+        >>> e.insert_nodes(0, [-1, -2])
+        Traceback (most recent call last):
+            ...
+        ValueError: node index -2 out of range
+        >>> e.insert_nodes(
+        ...             0, [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        >>> e.insert_nodes('one', [2, 3])
+        Traceback (most recent call last):
+            ...
+        TypeError: 'str' object cannot be interpreted as an integer
+        """
+        if nodes is None:
+            return
+        nodes = np.array(nodes, dtype=int, ndmin=1)
+        if len(nodes) == 0:
+            return
+        self.invalidate_properties()
+        old_nodes = list(self.nodes)
+        nodes = np.flip(nodes.ravel())
+        try:
+            for n in nodes:
+                if n in self.nodes:
+                    raise ValueError(f'{n} is already a node')
+                if n < 0 or n >= self.mesh.num_nodes:
+                    raise ValueError(f'node index {n} out of range')
+                self.nodes.insert(index, int(n))
+        except ValueError:
+            self._nodes = old_nodes
+            raise
+
+    def remove_nodes(self, remove_nodes):
+        """Remove node indices from the :c:`IntersectionElement2D`.
+
+        Parameters
+        ----------
+        remove_nodes : list[int]
+            The list of nodes to remove from :a:`nodes`.
+
+        Note
+        -----
+        Before removing the values in **remove_nodes**, an attempt will be
+        made to cast it to a flattened `numpy.ndarray` of `int`.
+
+        Raises
+        ------
+        ValueError
+            If **remove_nodes** is not `array_like`, such as a jagged
+            `list[list[int]]`.
+            If any values in **remove_nodes** cannot be cast to `int` or
+            are not in :a:`nodes`.
+
+        Examples
+        --------
+        >>> # create a simple mesh, and remove nodes from an element
+        >>> # this should not normally be done explicitly unless you know
+        >>> # what you are doing
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.intersection_elements[0].nodes)
+        [5, 6]
+        >>> msh.intersection_elements[0].remove_nodes([5, 6])
+        >>> print(msh.intersection_elements[0].nodes)
+        []
+
+        >>> # remove no nodes, in two different ways
+        >>> msh.intersection_elements[0].insert_nodes(0, [5, 6])
+        >>> msh.intersection_elements[0].remove_nodes(None)
+        >>> msh.intersection_elements[0].remove_nodes([])
+        >>> print(msh.intersection_elements[0].nodes)
+        [5, 6]
+
+        >>> # try to remove some invalid nodes
+        >>> msh.intersection_elements[0].remove_nodes('one')
+        Traceback (most recent call last):
+            ...
+        ValueError: invalid literal for int() with base 10: 'one'
+        >>> msh.intersection_elements[0].remove_nodes([5, 8])
+        Traceback (most recent call last):
+            ...
+        ValueError: list.remove(x): x not in list
+        >>> print(msh.intersection_elements[0].nodes)
+        [5, 6]
+        >>> msh.intersection_elements[0].remove_nodes(
+        ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        ValueError: ...
+        """
+        if remove_nodes is None:
+            return
+        remove_nodes = np.array(remove_nodes, dtype=int, ndmin=1)
+        if len(remove_nodes) == 0:
+            return
+        self.invalidate_properties()
+        remove_nodes = remove_nodes.ravel()
+        old_nodes = list(self.nodes)
+        try:
+            for rn in remove_nodes:
+                self.nodes.remove(rn)
+        except ValueError:
+            self._nodes = old_nodes
+            raise
+
+    @property
+    def num_neighbors(self):
+        """Number of neighboring :c:`PolyElement2D` elements to the
+        :c:`IntersectionElement2D`.
+
+        Returns
+        -------
+        `int`
+            The number of neighbors to the :c:`IntersectionElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.intersection_elements[0].num_neighbors)
+        3
+        """
+        return len(self.neighbors)
+
+    @property
+    def neighbors(self):
+        """The list of neighboring :c:`PolyElement2D` elements to the
+        :c:`IntersectionElement2D`.
+
+        Returns
+        -------
+        `list` of :c:`PolyElement2D`
+            The list of neighbors to the :c:`IntersectionElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        """
+        return self._neighbors
+
+    def add_neighbors(self, neighbors):
+        """Add neighboring :c:`PolyElement2D` to the
+        :c:`IntersectionElement2D`.
+
+        Parameters
+        ----------
+        neighbors : `list` of :c:`PolyElement2D`
+            The list of neighboring :c:`PolyElement2D` to the
+            :c:`IntersectionElement2D`.
+
+        Raises
+        ------
+        ValueError
+            If any values in **neighbors** are not :c:`PolyElement2D`,
+            are already in :a:`neighbors`,
+            or do not have the same :a:`mesh` as the
+            :c:`IntersectionElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+
+        >>> # create a new element
+        >>> # note, this is normally not done explicitly, but is shown here
+        >>> # for testing and documentation
+        >>> e = vcfempy.meshgen.IntersectionElement2D(msh)
+        >>> print(e.neighbors)
+        []
+        >>> e.add_neighbors(msh.elements[0:3])
+        >>> print([msh.elements.index(n) for n in e.neighbors])
+        [0, 1, 2]
+
+        >>> # add no neighbors in multiple ways
+        >>> e.add_neighbors(None)
+        >>> e.add_neighbors([])
+        >>> print([msh.elements.index(n) for n in e.neighbors])
+        [0, 1, 2]
+
+        >>> # try to add some invalid neighbors
+        >>> e.add_neighbors(msh.elements[0:2])
+        Traceback (most recent call last):
+            ...
+        ValueError: at least one element is already a neighbor
+        """
+        if neighbors is None:
+            return
+        if len(neighbors) == 0:
+            return
+        old_neighbors = list(self.neighbors)
+        try:
+            for n in neighbors:
+                if n.mesh is not self.mesh:
+                    raise ValueError(f'{n} does not have the same parent mesh')
+                if n in self.neighbors:
+                    raise ValueError(f'element {self.mesh.elements.index(n)}'
+                                     + ' is already a neighbor')
+                self.neighbors.append(n)
+        except ValueError:
+            self._neighbors = old_neighbors
+            raise
+
+    @property
+    def area(self):
+        """The area of the :c:`IntersectionElement2D`.
+
+        Returns
+        -------
+        `float`
+            The area of the :c:`IntersectionElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(np.round(msh.intersection_elements[0].area, 14))
+        0.0
+        """
+        if self._area is None:
+            self._area = shp.Polygon(self.mesh.nodes[self.nodes]).area
+        return self._area
+
+    @property
+    def centroid(self):
+        """The centroid coordinates of the :c:`IntersectionElement2D`.
+
+        Returns
+        -------
+        `numpy.ndarray`, shape = (2, )
+            The coordinates of the centroid of the :c:`IntersectionElement2D`.
+
+        Examples
+        --------
+        >>> # create a simple mesh and check the element properties
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.intersection_elements[0].centroid)
+        [0.65  0.825]
+        """
+        if self._centroid is None:
+            if self.num_nodes:
+                if self.num_nodes == 1:
+                    c = shp.Point(self.mesh.nodes[self.nodes[0]]).centroid
+                elif self.num_nodes == 2:
+                    c = shp.LineString(self.mesh.nodes[self.nodes]).centroid
+                else:
+                    c = shp.Polygon(self.mesh.nodes[self.nodes]).centroid
+                self._centroid = np.array([c.x, c.y], dtype=float)
+        return self._centroid
+
+    def invalidate_properties(self):
+        """Resets cached value of computed attributes :a:`area`,
+        and :a:`centroid`.
+
+        Note
+        ----
+        The :m:`invalidate_properties` method should be called whenever
+        :a:`nodes` is changed.
+        This is done by :m:`insert_nodes` and :m:`remove_nodes`,
+        but needs to be done explicitly if making manual changes to
+        :a:`nodes`.
+
+        Examples
+        --------
+        >>> # create a simple mesh, check the element properties
+        >>> # invalidate properties and check the values of (private) cache
+        >>> # attributes
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> msh.mesh_scale = 0.4
+        >>> msh.add_seed_points([0.5, 0.5])
+        >>> msh.generate_mesh()
+        >>> print(msh.intersection_elements[0]._area)
+        None
+        >>> print(msh.intersection_elements[0]._centroid)
+        None
+        >>> print(msh.intersection_elements[0].area)
+        0.0
+        >>> print(msh.intersection_elements[0].centroid.round(14))
+        [0.65  0.825]
+        >>> msh.intersection_elements[0].invalidate_properties()
+        >>> print(msh.intersection_elements[0]._area)
+        None
+        >>> print(msh.intersection_elements[0]._centroid)
+        None
+        """
+        self._centroid = None
+        self._area = None
+
+    def plot(self, ax=None, **kwargs):
+        """Plot the :c:`IntersectionElement2D` using
+        :m:`matplotlib.pyplot.fill`.
+
+        Parameters
+        ----------
+        ax : None | :c:`matplotlib.axes.Axes`
+            The axes to plot on. If not provided, will try to get one using
+            :m:`matplotlib.pyplot.gca`.
+
+        Other Parameters
+        ----------------
+        **kwargs : :c:`matplotlib.patches.Polygon` properties, optional
+            Default values:
+            `edgecolor` = :a:`material` `color` with alpha = 1.0 (or 'black'
+            with alpha = 1.0 if :a:`material` is ``None``),
+            `facecolor` = :a:`material` `color` with alpha = 0.3 (or 'black'
+            with alpha = 0.3 if :a:`material` is ``None``),
+            `linewidth` = 2.0,
+            `linestyle` = '--'.
+
+        Returns
+        -------
+        :c:`matplotlib.axes.Axes`
+            The axes that the :c:`IntersectionElement2D` was plotted on.
+
+        Examples
+        --------
+        >>> # initialize a mesh and a material region, then generate a mesh
+        >>> # and plot the elements, interfaces, and intersections
+        >>> import matplotlib.pyplot as plt
+        >>> import vcfempy.materials
+        >>> import vcfempy.meshgen
+        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
+        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> rock = vcfempy.materials.Material('rock', color='xkcd:clay')
+        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
+        ...                                       rock, 'rock region')
+        >>> msh.mesh_scale = 0.2
+        >>> msh.mesh_rand = 0.2
+        >>> msh.generate_mesh()
+        >>> fig = plt.figure()
+        >>> for e in msh.elements:
+        ...     ax = e.plot(edgecolor=None)
+        ...     ax = e.plot_quad_points()
+        >>> for e in msh.interface_elements:
+        ...     ax = e.plot()
+        >>> for e in msh.intersection_elements:
+        ...     ax = e.plot()
+        >>> xmin, xmax, ymin, ymax = ax.axis('equal')
+        >>> xtext = ax.set_xlabel('x')
+        >>> ytext = ax.set_ylabel('y')
+        >>> ttext = ax.set_title('IntersectionElement2D Test Plot')
+        >>> plt.savefig('IntersectionElement2D_test_plot.png')
+        """
+        if ax is None or not isinstance(ax, plt.Axes):
+            ax = plt.gca()
+        if self.material is not None:
+            color = mplclr.to_rgb(self.material.color)
+        else:
+            color = mplclr.to_rgb('black')
+        if 'facecolor' not in kwargs.keys():
+            kwargs['facecolor'] = color + (0.3, )
+        if 'edgecolor' not in kwargs.keys():
+            kwargs['edgecolor'] = color + (1.0, )
+        if 'linewidth' not in kwargs.keys():
+            kwargs['linewidth'] = 2.0
+        if 'linestyle' not in kwargs.keys():
+            kwargs['linestyle'] = '--'
+        ax.fill(self.mesh.nodes[self.nodes, 0],
+                self.mesh.nodes[self.nodes, 1],
+                **kwargs)
+        return ax
+
+
 def _get_unit_tangent_normal(v0, v1):
     tt = v1 - v0
     tt_len = np.linalg.norm(tt)
@@ -7857,3 +9234,10 @@ def _get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
         ref_points.append(rp)
         ref_points.append(_reflect_point_across_edge(rp, v, tt))
     return np.array(ref_points)
+
+
+def _points_in_polygon(points, verts):
+    bpoly = shp.Polygon(verts)
+    point_coll = shp.MultiPoint(points).geom
+    in_points = np.array([bpoly.contains(x) for x in point_coll], dtype=bool)
+    return in_points
