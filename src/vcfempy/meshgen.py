@@ -3137,35 +3137,64 @@ self.nodes is empty
                 flag = distutils.util.strtobool(flag)
         flag = bool(flag)
 
-        # if invalidating mesh,
-        # then reset mesh properties
+        # if invalidating mesh, then reset mesh properties
         if not flag:
             self._mesh_valid = False
             self._nodes = np.empty((0, 2))
             self._points = np.empty((0, 2))
             self._elements = []
-            self._interface_elements = []
             self._boundary_elements = []
-        # otherwise, trying to validate mesh
-        # check that mesh properties have been set
+            self._interface_elements = []
+            self._intersection_elements = []
+        # otherwise, try to validate mesh
         else:
-            if not self.num_nodes:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.nodes is empty')
-            if not self.num_elements:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.elements is empty')
-            if len(self.points) != self.num_elements:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but len(self.points) '
-                                 + '!= self.num_elements')
-            if (not self.num_interface_elements
-                    and not self.num_boundary_elements):
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.interface_elements and '
-                                 + 'self.boundary_elements are both empty')
-            # if here, then all checks for mesh validity succeeded
-            # set the mesh valid flag
+            assert(self.num_nodes)
+            for k, n in enumerate(self.nodes):
+                ne = 0
+                for e in self.elements:
+                    if k in e.nodes:
+                        ne += 1
+                assert(ne >= 1)
+            assert(len(self.points) == self.num_elements)
+            for e in self.elements:
+                assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
+                assert(e.num_nodes == len(e.interface_elements))
+                assert(e.num_nodes == len(e.boundary_elements))
+            assert(self.num_boundary_elements)
+            for e in self.boundary_elements:
+                tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[0]],
+                                                  self.nodes[e.nodes[1]])
+                c = e.centroid
+                p = self.points[self.elements.index(e.neighbor)]
+                assert(np.dot(nn, p - c) < 0)
+                for n in e.nodes:
+                    assert(n in e.neighbor.nodes)
+            for e in self.interface_elements:
+                assert(e.num_nodes == 4)
+                assert(len(np.unique(e.nodes)) > 2)
+                assert(self.elements.index(e.neighbors[0])
+                       < self.elements.index(e.neighbors[1]))
+                tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[0]],
+                                                  self.nodes[e.nodes[1]])
+                c = e.centroid
+                p = self.points[self.elements.index(e.neighbors[0])]
+                assert(np.dot(nn, p - c) > 0)
+                assert(e.nodes[0] in e.neighbors[0].nodes)
+                assert(e.nodes[1] in e.neighbors[0].nodes)
+                tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[2]],
+                                                  self.nodes[e.nodes[3]])
+                p = self.points[self.elements.index(e.neighbors[1])]
+                assert(np.dot(nn, p - c) > 0)
+                assert(e.nodes[2] in e.neighbors[1].nodes)
+                assert(e.nodes[3] in e.neighbors[1].nodes)
+            for e in self.intersection_elements:
+                assert(e.num_nodes > 2)
+                assert(e.num_nodes == len(e.neighbors))
+                inb = [self.elements.index(n) for n in e.neighbors]
+                assert(shp.LinearRing(self.points[inb]).is_ccw)
+                assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
+                for n, nb in zip(e.nodes, e.neighbors):
+                    assert(n in nb.nodes)
             self._mesh_valid = True
 
     @property
@@ -3480,31 +3509,22 @@ self.nodes is empty
         return xmin, xmax, ymin, ymax
 
     def _create_points_grid(self):
-        # get grid dimensions
+        # generate regular grid of x and y coords
         shift = self.mesh_scale if self.mesh_scale_shift else None
         xmin, xmax, ymin, ymax = self._get_limits(shift)
-        Lx = xmax - xmin
-        Ly = ymax - ymin
-        nx = int(np.round(Lx / self.mesh_scale)) + 1
-        ny = int(np.round(Ly / self.mesh_scale)) + 1
-        # generate regular grid of x and y coords
-        gx = np.linspace(xmin, xmax, nx)
-        gy = np.linspace(ymin, ymax, ny)
-        gx, gy = np.meshgrid(gx, gy)
-        # shift for hexagonal grid
+        Lx, Ly = (xmax - xmin), (ymax - ymin)
+        nx, ny = (int(np.round(Lx / self.mesh_scale)) + 1,
+                  int(np.round(Ly / self.mesh_scale)) + 1)
+        gx, gy = np.meshgrid(np.linspace(xmin, xmax, nx),
+                             np.linspace(ymin, ymax, ny))
         if self.hex_shift:
             for k, _ in enumerate(gx):
-                if k % 2:
-                    gx[k, :] -= 0.25 * self.mesh_scale
-                else:
-                    gx[k, :] += 0.25 * self.mesh_scale
-        # create point list from x and y coords
-        self._points = np.vstack([gx.ravel(), gy.ravel()]).T
-        # perform random point shifting for irregular grid
+                gx[k, :] += (-1 if (k % 2) else +1) * 0.25 * self.mesh_scale
+        points = np.vstack([gx.ravel(), gy.ravel()]).T
         if self.mesh_rand:
-            grd_shift = (self.mesh_rand * self.mesh_scale
-                         * (2. * np.random.random((gx.size, 2)) - 1.))
-            self._points += grd_shift
+            points += (self.mesh_rand * self.mesh_scale
+                       * (2. * np.random.random((gx.size, 2)) - 1.))
+        return points
 
     def _check_edge_scale(self, edge_verts):
         d_scale = self.mesh_scale
@@ -3516,7 +3536,7 @@ self.nodes is empty
         return d_scale
 
     def _delete_points_near_edge(self, edge_verts, d_scale):
-        # no vertices, do not do anything
+        # no vertices, do nothing
         if len(edge_verts) == 0:
             return
         # single vertex, just delete points within d_scale
@@ -3548,7 +3568,7 @@ self.nodes is empty
             self._points = self.points[keep_points]
 
     def _create_edge_points(self, edge_verts, closed=False):
-        # no vertices, do not do anything
+        # no vertices, do nothing
         if len(edge_verts) == 0:
             return
         # single vertex, just insert points near the vertex
@@ -3562,12 +3582,10 @@ self.nodes is empty
                                       v + 0.5 * d_scale * np.array([+1, -1]),
                                       v + 0.5 * d_scale * np.array([+1, +1])])
             return
-
         # multiple vertices, create reflections along each segment
         top_points = np.empty((0, 2))
         bot_points = np.empty((0, 2))
         ref_points = np.empty((0, 2))
-        # ensure local d_scale is small enough for edge vertex spacing
         # eliminate points near the edge
         check_verts = edge_verts + [edge_verts[0]] if closed else edge_verts
         d_scale = self._check_edge_scale(check_verts)
@@ -3642,8 +3660,7 @@ self.nodes is empty
                 else:
                     # find intersection point on concave side
                     vv = 0.5 * (-tt0 + tt1)
-                    vv_len = np.linalg.norm(vv)
-                    vv /= vv_len
+                    vv /= np.linalg.norm(vv)
                     ss = 0.5 * d_scale * np.cross(nn0, tt0) / np.cross(vv, tt0)
                     # concave vertex, insert bot_point, reflect x2 top_points
                     if tt_cross > 0:
@@ -3751,13 +3768,13 @@ self.nodes is empty
             c = e.centroid
             tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[kk]],
                                               self.nodes[e.nodes[kk + 1]])
-            p = self.points[self.elements.index[e.neighbors[0]]]
+            p = self.points[self.elements.index(e.neighbors[0])]
             if np.dot(nn, p - c) < 0.:
                 e.nodes[kk], e.nodes[kk + 1] = e.nodes[kk + 1], e.nodes[kk]
 
     def _sort_boundary_nodes(self):
+        # order nodes so normal points outward (away from neighbor)
         for e in self.boundary_elements:
-            # order nodes so normal points outward (away from neighbor)
             c = e.centroid
             tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[0]],
                                               self.nodes[e.nodes[1]])
@@ -3777,6 +3794,7 @@ self.nodes is empty
         m0 = mtl.Material('NULL')
         element_materials = [m0 for _ in enumerate(self.elements)]
         element_materials = np.array(element_materials, dtype=mtl.Material)
+        # assign materials from material regions if seed point inside polygon
         for mr in self.material_regions:
             if mr.material is None:
                 continue
@@ -3793,13 +3811,17 @@ self.nodes is empty
         interface_centroids = [e.centroid for e in self.interface_elements]
         interface_centroids = np.array(interface_centroids,
                                        dtype=float, ndmin=2)
+        # assign materials from material regions if centroid inside the
+        # polygon, which may be overwritten for interfaces on mesh edges
         for mr in self.material_regions:
             if mr.material is None:
                 continue
             in_mtl = _points_in_polygon(interface_centroids,
                                         self.vertices[mr.vertices])
             interface_materials[in_mtl] = mr.material
+        # assign materials from mesh edges if intersecting the edge
         for edge in self.mesh_edges:
+            # skip edges with no material information or insufficient geometry
             if (edge.material is None
                     or edge.is_hole or len(edge.vertices <= 1)):
                 continue
@@ -3811,6 +3833,7 @@ self.nodes is empty
                                shp.LineString(self.nodes[e.nodes]))
                                for e in self.interface_elements], dtype=bool)
             interface_materials[in_mtl] = edge.material
+        # finally, assign the materials to the intersection elements
         for e, m in zip(self.interface_elements, interface_materials):
             e.material = m if m is not m0 else None
 
@@ -3824,13 +3847,17 @@ self.nodes is empty
                                   in self.intersection_elements]
         intersection_centroids = np.array(intersection_centroids,
                                           dtype=float, ndmin=2)
+        # assign materials from material regions if centroid inside the
+        # polygon, which may be overwritten for intersections on mesh edges
         for mr in self.material_regions:
             if mr.material is None:
                 continue
             in_mtl = _points_in_polygon(intersection_centroids,
                                         self.vertices[mr.vertices])
             intersection_materials[in_mtl] = mr.material
+        # assign materials from mesh edges if intersecting the edge
         for edge in self.mesh_edges:
+            # skip edges with no material information or insufficient geometry
             if (edge.material is None
                     or edge.is_hole or len(edge.vertices <= 1)):
                 continue
@@ -3843,6 +3870,7 @@ self.nodes is empty
                                for e in self.intersection_elements],
                               dtype=bool)
             intersection_materials[in_mtl] = edge.material
+        # finally, assign the materials to the intersection elements
         for e, m in zip(self.intersection_elements, intersection_materials):
             e.material = m if m is not m0 else None
 
@@ -3886,9 +3914,9 @@ self.nodes is empty
 
     def _split_nodes_and_intersections(self):
         # split each node based on how many elements it is in
-        old_nodes = np.array(self.nodes)
         self._intersection_elements = []
-        for k, n in enumerate(old_nodes):
+        interface_nodes = [e.nodes.copy() for e in self.interface_elements]
+        for k, n in enumerate(self.nodes):
             # find element indices that the node is in
             ne = []
             for j, e in enumerate(self.elements):
@@ -3913,56 +3941,124 @@ self.nodes is empty
             for jj, j in enumerate(ne):
                 ne[jj] = self.elements[j]
             # create a new node for each element that the node is in
-            # replace the old node number with the new node number in:
-            #   element
-            #   element boundary elements
-            #   element interface elements where element is the first neighbor
-            # append the new node number in element interface elements where
-            # element is the second neighbor
             nnii = []
             for e in ne:
-                # create the new node
+                # create new node, replace in element, append to intersection
                 nn = self.num_nodes
                 self._nodes = np.vstack([self.nodes, n])
-                # replace node in element
                 kk = e.nodes.index(k)
                 e.nodes[kk] = nn
-                # add the node to the intersection element
                 nnii.append(nn)
-                # replace node in element boundary elements
+                # replace node in boundary elements
                 for be in e.boundary_elements:
                     if be is None:
                         continue
                     if k in be.nodes:
                         kk = be.nodes.index(k)
                         be.nodes[kk] = nn
-                # replace or append node in element interface elements
-                for ie in e.interface_elements:
+                # replace or append node in interface elements
+                for jj, ie in enumerate(e.interface_elements):
                     if ie is None:
                         continue
-                    if k in ie.nodes:
+                    if k in interface_nodes[jj]:
                         # first neighbor, replace the node
                         if ie.neighbors[0] is e:
-                            kk = ie.nodes.index(k)
+                            kk = interface_nodes[jj].index(k)
                             ie.nodes[kk] = nn
                         # second neighbor, append the node
                         else:
                             ie.nodes.append(nn)
-            # create an intersection element
+            # create intersection element
             if len(ne) > 2:
                 IntersectionElement2D(mesh=self, nodes=nnii, neighbors=ne)
 
     def _merge_non_interface_nodes(self):
-        pass
+        merge_nodes = []
+        merged_some = False
+        for e in self.interface_elements:
+            if e.material.has_interfaces:
+                continue
+            merged_some = True
+            # assume interface nodes are sorted, merge nodes 0+3 and 1+2
+            found0 = False
+            found1 = False
+            for mn in merge_nodes:
+                if e.nodes[0] in mn or e.nodes[3] in mn:
+                    mn.add(e.nodes[0])
+                    mn.add(e.nodes[3])
+                    found0 = True
+                if e.nodes[1] in mn or e.nodes[2] in mn:
+                    mn.add(e.nodes[1])
+                    mn.add(e.nodes[2])
+                    found1 = True
+            if not found0:
+                merge_nodes.append(set([e.nodes[0], e.nodes[3]]))
+            if not found1:
+                merge_nodes.append(set([e.nodes[1], e.nodes[2]]))
+        # bail out early, if no nodes were merged
+        if not merged_some:
+            return
+        # check for nodes that are in multiple sets and unionize them
+        for k, n in enumerate(self.nodes):
+            mnn = []
+            for j, mn in enumerate(merge_nodes):
+                if k in mn:
+                    mnn.append(j)
+            nn = len(mnn)
+            for j in mnn[-1:-nn:-1]:
+                mnj = merge_nodes.pop(j)
+                merge_nodes[mnn[0]] = merge_nodes[mnn[0]].union(mnj)
+        # mark each node for replacement with the lowest node in its set
+        node_dict = {k: k for k, _ in enumerate(self.nodes)}
+        for mn in merge_nodes:
+            mns = sorted(mn)
+            for k in mns:
+                node_dict[k] = mns[0]
+        self._replace_nodes(node_dict)
+
+    def _replace_nodes(self, node_dict):
+        for e in [self.elements + self.interface_elements
+                  + self.boundary_elements + self.intersection_elements]:
+            for k, n in enumerate(e.nodes):
+                e.nodes[k] = node_dict[n]
+
+    def _delete_null_interfaces(self):
+        for e in self.interface_elements:
+            if len(np.unique(e.nodes)) < 3:
+                self.remove_interface_element(e)
+        for e in self.elements:
+            for k, ie in enumerate(e.interface_elements):
+                if ie not in self.interface_elements:
+                    e.interface_elements[k] = None
+
+    def _delete_null_intersections(self):
+        for e in self.intersection_elements:
+            if len(np.unique(e.nodes)) < 2:
+                self.remove_intersection_element(e)
+
+    def _get_nodes_in_elements(self):
+        nodes_to_keep = []
+        for e in self.elements:
+            nodes_to_keep += e.nodes
+        nodes_to_keep = np.unique(nodes_to_keep)
+        self._nodes = self.nodes[nodes_to_keep]
+        node_dict = {n: k for k, n in enumerate(nodes_to_keep)}
+        self._replace_nodes(node_dict)
+
+    def _sort_nodes(self):
+        xmin, xmax, ymin, ymax = self._get_limits()
+        sort_by_x = (xmax - xmin) > (ymax - ymin)
+        node_order = (np.argsort(self.nodes[:, 0]) if sort_by_x
+                      else np.argsort(self.nodes[:, 1]))
+        self._nodes = self.nodes[node_order]
+        node_dict = {n: k for k, n in enumerate(node_order)}
+        self._replace_nodes(node_dict)
 
     def generate_mesh(self):
         """ Generate polygonal mesh. """
-        # if no seed points, generate seed points on a regular grid
-        if not self.num_seed_points:
-            self._create_points_grid()
-        # if seed points provided, initialize points with those
-        else:
-            self._points = np.array(self.seed_points)
+        # initialize mesh points using seed points or on a regular grid
+        self._points = (np.array(self.seed_points) if self.num_seed_points
+                        else self._create_points_grid())
         # generate points for mesh edges
         for edge in self.mesh_edges:
             self._create_edge_points(edge.vertices, closed=edge.is_closed)
@@ -3971,35 +4067,30 @@ self.nodes is empty
                                     self.vertices[self.boundary_vertices])
         self._points = self.points[in_bnd]
         self._create_edge_points(self.boundary_vertices, closed=True)
-        # get Voronoi diagram, eliminate points outside the boundary,
-        # and initialize mesh information
+        # initialize mesh information
         self._get_mesh_from_voronoi()
-        # sort nodes in elements, interfaces, and boundaries
         self._sort_element_nodes()
         self._sort_interface_nodes_and_neighbors()
         self._sort_boundary_nodes()
-        # assign materials to elements and interfaces
         self._get_element_materials()
         self._get_interface_materials()
-        # get interface and boundary elements neighboring elements
         self._get_element_interfaces_and_boundaries()
         # process node splitting at interfaces and generate intersections
-        self._intersection_elements = []
         some_interfaces, all_interfaces = self._check_material_interfaces()
         if some_interfaces:
-            # split nodes and create intersection elements
             self._split_nodes_and_intersections()
-            # sort interface nodes on second side and sort intersections ccw
             self._sort_interface_nodes_and_neighbors(side=1)
             self._sort_intersection_nodes_and_neighbors()
-            # merge nodes for non-interface materials
             if not all_interfaces:
-                # TODO: pick up here by writing this method
                 self._merge_non_interface_nodes()
-            # TODO: assign materials to intersections
-        # TODO: eliminate unnecessary interfaces and intersections
-        # TODO: eliminate nodes not in elements
-        # TODO: sort nodes based on geometry, to reduce matrix bandwidth
+        else:
+            self._intersection_elements = []
+        self._get_intersection_materials()
+        # tidy up the mesh
+        self._delete_null_interfaces()
+        self._delete_null_intersections()
+        self._get_nodes_in_elements()
+        self._sort_nodes()
         self.mesh_valid = True
 
     @property
@@ -9238,6 +9329,6 @@ def _get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
 
 def _points_in_polygon(points, verts):
     bpoly = shp.Polygon(verts)
-    point_coll = shp.MultiPoint(points).geom
+    point_coll = shp.MultiPoint(points).geoms
     in_points = np.array([bpoly.contains(x) for x in point_coll], dtype=bool)
     return in_points
