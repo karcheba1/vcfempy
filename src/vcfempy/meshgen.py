@@ -3768,7 +3768,7 @@ self.nodes is empty
             c = e.centroid
             tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[kk]],
                                               self.nodes[e.nodes[kk + 1]])
-            p = self.points[self.elements.index(e.neighbors[0])]
+            p = self.points[self.elements.index(e.neighbors[k])]
             if np.dot(nn, p - c) < 0.:
                 e.nodes[kk], e.nodes[kk + 1] = e.nodes[kk + 1], e.nodes[kk]
 
@@ -3819,19 +3819,29 @@ self.nodes is empty
             in_mtl = _points_in_polygon(interface_centroids,
                                         self.vertices[mr.vertices])
             interface_materials[in_mtl] = mr.material
-        # assign materials from mesh edges if intersecting the edge
+        # assign materials from mesh edges if centroid inside a buffer around
+        # the mesh edge, with buffer width determined by interface width
         for edge in self.mesh_edges:
             # skip edges with no material information or insufficient geometry
             if (edge.material is None
-                    or edge.is_hole or len(edge.vertices <= 1)):
+                    or edge.is_hole or len(edge.vertices) <= 1):
                 continue
+            width = 0.5 * edge.material.interface_width
             if edge.is_closed:
-                edge_geom = shp.LinearRing(self.vertices[edge.vertices])
+                edge_buf = shp.Polygon(shp.LinearRing(self
+                                                      .vertices[edge
+                                                                .vertices])
+                                       .buffer(width))
             else:
-                edge_geom = shp.LineString(self.vertices[edge.vertices])
-            in_mtl = np.array([edge_geom.intersects(
-                               shp.LineString(self.nodes[e.nodes]))
-                               for e in self.interface_elements], dtype=bool)
+                edge_buf = shp.Polygon(shp.LineString(self
+                                                      .vertices[edge
+                                                                .vertices])
+                                       .buffer(width))
+            in_mtl = _points_in_polygon(interface_centroids,
+                                        np.array(edge_buf.exterior.coords))
+            for edge_int in edge_buf.interiors:
+                in_mtl &= ~_points_in_polygon(interface_centroids,
+                                              np.array(edge_int.coords))
             interface_materials[in_mtl] = edge.material
         # finally, assign the materials to the intersection elements
         for e, m in zip(self.interface_elements, interface_materials):
@@ -3855,21 +3865,38 @@ self.nodes is empty
             in_mtl = _points_in_polygon(intersection_centroids,
                                         self.vertices[mr.vertices])
             intersection_materials[in_mtl] = mr.material
-        # assign materials from mesh edges if intersecting the edge
+        # assign materials from mesh edges if centroid inside a buffer around
+        # the mesh edge, with buffer width determined by interface width
         for edge in self.mesh_edges:
             # skip edges with no material information or insufficient geometry
             if (edge.material is None
-                    or edge.is_hole or len(edge.vertices <= 1)):
+                    or edge.is_hole or len(edge.vertices) <= 1):
                 continue
+            width = 0.5 * edge.material.interface_width
             if edge.is_closed:
-                edge_geom = shp.LinearRing(self.vertices[edge.vertices])
+                edge_buf = shp.Polygon(shp.LinearRing(self
+                                                      .vertices[edge
+                                                                .vertices])
+                                       .buffer(width))
             else:
-                edge_geom = shp.LineString(self.vertices[edge.vertices])
-            in_mtl = np.array([edge_geom.intersects(
-                               shp.Polygon(self.nodes[e.nodes]))
-                               for e in self.intersection_elements],
-                              dtype=bool)
+                edge_buf = shp.Polygon(shp.LineString(self
+                                                      .vertices[edge
+                                                                .vertices])
+                                       .buffer(width))
+            in_mtl = _points_in_polygon(intersection_centroids,
+                                        np.array(edge_buf.exterior.coords))
+            for edge_int in edge_buf.interiors:
+                in_mtl &= ~_points_in_polygon(intersection_centroids,
+                                              np.array(edge_int.coords))
             intersection_materials[in_mtl] = edge.material
+            # if edge.is_closed:
+            #     edge_geom = shp.LinearRing(self.vertices[edge.vertices])
+            # else:
+            #     edge_geom = shp.LineString(self.vertices[edge.vertices])
+            # in_mtl = np.array([edge_geom.intersects(
+            #                    shp.Polygon(self.nodes[e.nodes]))
+            #                    for e in self.intersection_elements],
+            #                   dtype=bool)
         # finally, assign the materials to the intersection elements
         for e, m in zip(self.intersection_elements, intersection_materials):
             e.material = m if m is not m0 else None
@@ -3957,9 +3984,10 @@ self.nodes is empty
                         kk = be.nodes.index(k)
                         be.nodes[kk] = nn
                 # replace or append node in interface elements
-                for jj, ie in enumerate(e.interface_elements):
+                for ie in e.interface_elements:
                     if ie is None:
                         continue
+                    jj = self.interface_elements.index(ie)
                     if k in interface_nodes[jj]:
                         # first neighbor, replace the node
                         if ie.neighbors[0] is e:
@@ -4017,24 +4045,30 @@ self.nodes is empty
         self._replace_nodes(node_dict)
 
     def _replace_nodes(self, node_dict):
-        for e in [self.elements + self.interface_elements
-                  + self.boundary_elements + self.intersection_elements]:
+        for e in (self.elements + self.interface_elements
+                  + self.boundary_elements + self.intersection_elements):
             for k, n in enumerate(e.nodes):
                 e.nodes[k] = node_dict[n]
 
     def _delete_null_interfaces(self):
+        del_interfaces = []
         for e in self.interface_elements:
             if len(np.unique(e.nodes)) < 3:
-                self.remove_interface_element(e)
+                del_interfaces.append(e)
+        for e in del_interfaces:
+            self.remove_interface_element(e)
         for e in self.elements:
             for k, ie in enumerate(e.interface_elements):
                 if ie not in self.interface_elements:
                     e.interface_elements[k] = None
 
     def _delete_null_intersections(self):
+        del_intersections = []
         for e in self.intersection_elements:
             if len(np.unique(e.nodes)) < 2:
-                self.remove_intersection_element(e)
+                del_intersections.append(e)
+        for e in del_intersections:
+            self.remove_intersection_element(e)
 
     def _get_nodes_in_elements(self):
         nodes_to_keep = []
@@ -5352,8 +5386,8 @@ class MeshEdge2D():
 
         self.material = material
 
-        self.is_closed = is_closed
         self.is_hole = is_hole
+        self.is_closed = is_closed
 
     @property
     def name(self):

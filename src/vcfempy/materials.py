@@ -2,6 +2,7 @@
 
 """
 
+import distutils.util
 import numpy as np
 import matplotlib.colors as mpl_col
 
@@ -136,6 +137,8 @@ bulk_modulus=6.9e5)
         self.shear_modulus = kwargs.get('shear_modulus', None)
         self.saturated_density = kwargs.get('saturated_density', None)
         self.porosity = kwargs.get('porosity', None)
+        self.has_interfaces = kwargs.get('has_interfaces', False)
+        self.interface_width = kwargs.get('interface_width', 0.)
 
     @property
     def name(self):
@@ -258,6 +261,30 @@ bulk_modulus=6.9e5)
         if not mpl_col.is_color_like(color):
             raise ValueError(f'{color} is not a matplotlib color_like value')
         self._color = color
+
+    @property
+    def has_interfaces(self):
+        return self._has_interfaces
+
+    @has_interfaces.setter
+    def has_interfaces(self, flag):
+        if isinstance(flag, (str, np.str_)):
+            try:
+                flag = float(flag)
+            except ValueError:
+                flag = distutils.util.strtobool(flag)
+        self._has_interfaces = bool(flag)
+
+    @property
+    def interface_width(self):
+        return self._interface_width
+
+    @interface_width.setter
+    def interface_width(self, val):
+        val = float(val)
+        if val < 0.:
+            raise ValueError('interface width must be non-negative')
+        self._interface_width = float(val)
 
     @property
     def hydraulic_conductivity(self):
