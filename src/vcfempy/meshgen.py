@@ -4593,18 +4593,22 @@ self.nodes is empty
             edge.plot(ax)
         return ax
 
-    def plot_mesh(self, ax=None, elements=True, interface_elements=True,
-                  boundary_elements=True, element_quad_points=False):
+    def plot_mesh(self, ax=None, elements=True, boundary_elements=True,
+                  interface_elements=True, intersection_elements=True,
+                  element_quad_points=False, show_text=False):
         if ax is None:
             ax = plt.gca()
         if elements:
             for e in self.elements:
+                e.plot(ax, show_text=show_text)
+        if boundary_elements:
+            for e in self.boundary_elements:
                 e.plot(ax)
         if interface_elements:
             for e in self.interface_elements:
                 e.plot(ax)
-        if boundary_elements:
-            for e in self.boundary_elements:
+        if intersection_elements:
+            for e in self.intersection_elements:
                 e.plot(ax)
         if element_quad_points:
             for e in self.elements:
@@ -7104,7 +7108,7 @@ class PolyElement2D():
         self._quad_weights = wq
         self._quad_integrals = phi
 
-    def plot(self, ax=None, **kwargs):
+    def plot(self, ax=None, show_text=False, **kwargs):
         """Plot the :c:`PolyElement2D` using :m:`matplotlib.pyplot.fill`.
 
         Parameters
@@ -7160,7 +7164,7 @@ class PolyElement2D():
         else:
             color = mplclr.to_rgb('black')
         if 'edgecolor' not in kwargs.keys():
-            kwargs['edgecolor'] = color + (1.0, )
+            kwargs['edgecolor'] = color
         if 'facecolor' not in kwargs.keys():
             kwargs['facecolor'] = color + (0.6, )
         if 'linewidth' not in kwargs.keys():
@@ -7170,6 +7174,19 @@ class PolyElement2D():
         ax.fill(self.mesh.nodes[self.nodes, 0],
                 self.mesh.nodes[self.nodes, 1],
                 **kwargs)
+        if show_text:
+            p_ind = self.mesh.elements.index(self)
+            p = self.mesh.points[p_ind]
+            ax.plot(p[0], p[1], marker='H', markersize=15.0,
+                    markerfacecolor='w', markeredgecolor=color)
+            ax.text(p[0], p[1], p_ind, fontsize=8,
+                    ha='center', va='center', c=color)
+            alpha_p = 0.3
+            alpha_n = 1 - alpha_p
+            for n in self.nodes:
+                pp = (alpha_p * p) + (alpha_n * self.mesh.nodes[n])
+                ax.text(pp[0], pp[1], n, fontsize=8,
+                        ha='center', va='center', c=color)
         return ax
 
     def plot_quad_points(self, ax=None, **kwargs):
@@ -8024,7 +8041,7 @@ can only be 0 or 2
             `facecolor` = :a:`material` `color` with alpha = 0.6 (or 'black'
             with alpha = 0.6 if :a:`material` is ``None``),
             `linewidth` = 2.0,
-            `linestyle` = '--'.
+            `linestyle` = ':'.
 
         Returns
         -------
@@ -8072,7 +8089,7 @@ can only be 0 or 2
         if 'linewidth' not in kwargs.keys():
             kwargs['linewidth'] = 2.0
         if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = '--'
+            kwargs['linestyle'] = ':'
         ax.fill(self.mesh.nodes[self.nodes, 0],
                 self.mesh.nodes[self.nodes, 1],
                 **kwargs)
@@ -9327,6 +9344,8 @@ class IntersectionElement2D():
         ax.fill(self.mesh.nodes[self.nodes, 0],
                 self.mesh.nodes[self.nodes, 1],
                 **kwargs)
+        c = self.centroid
+        ax.plot(c[0], c[1], marker='^', color=color, markersize=4.0)
         return ax
 
 

@@ -11,12 +11,6 @@ import sys
 sys.path.insert(0, os.path.abspath('../src/'))
 
 
-def test_mesh():
-    """An example demonstrating plotting options and for graphical testing
-    of output from generate_mesh()."""
-    pass
-
-
 def rectangular_mesh():
     """An example demonstrating mesh generation for a simple rectangular
     domain with a single material
@@ -33,10 +27,16 @@ def rectangular_mesh():
                                            in range(rect_mesh.num_vertices)])
     # add material type and region
     # note: the MaterialRegion2D adds itself to the parent mesh by default
-    clay = mtl.Material(name='clay', color='xkcd:clay', has_interfaces=True)
+    clay = mtl.Material(name='clay', color='xkcd:clay',
+                        has_interfaces=True, interface_width=0.05)
+    sand = mtl.Material(name='sand', color='xkcd:greenish')
     msh.MaterialRegion2D(mesh=rect_mesh,
-                         vertices=rect_mesh.boundary_vertices,
+                         vertices=[0, 1, 4, 5],
                          material=clay)
+    msh.MaterialRegion2D(mesh=rect_mesh,
+                         vertices=[1, 2, 3, 4],
+                         material=sand)
+    msh.MeshEdge2D(mesh=rect_mesh, vertices=[1, 4], material=clay)
     # set mesh generation properties, generate mesh, and print mesh properties
     rect_mesh.mesh_scale = 5.0
     rect_mesh.mesh_rand = 0.2
@@ -58,9 +58,8 @@ def rectangular_mesh():
     fig = plt.figure()
     fig.set_size_inches((10, 10))
     ax = rect_mesh.plot_boundaries()
-    rect_mesh.plot_mesh(ax, element_quad_points=True)
     rect_mesh.plot_vertices()
-    rect_mesh.plot_nodes()
+    rect_mesh.plot_mesh(ax, element_quad_points=False, show_text=True)
     ax.set_xlabel('x', fontsize=12, fontweight='bold')
     ax.set_ylabel('y', fontsize=12, fontweight='bold')
     ax.set_title('Rectangular Mesh', fontsize=14, fontweight='bold')
@@ -171,9 +170,8 @@ def dam_mesh():
     fig = plt.figure()
     fig.set_size_inches((10, 10))
     ax = dam_mesh.plot_boundaries()
-    dam_mesh.plot_mesh(ax)
     dam_mesh.plot_vertices(ax)
-
+    dam_mesh.plot_mesh(ax)
     ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')
     ax.set_ylabel('y [m]', fontsize=12, fontweight='bold')
     ax.set_title('Dam Mesh', fontsize=14, fontweight='bold')
@@ -271,9 +269,8 @@ def tunnel_mesh():
     fig = plt.figure()
     fig.set_size_inches((10, 10))
     ax = tunnel_mesh.plot_boundaries()
-    tunnel_mesh.plot_mesh(ax)
     tunnel_mesh.plot_vertices(ax)
-
+    tunnel_mesh.plot_mesh(ax)
     ax.set_xlabel('x [m]', fontsize=12, fontweight='bold')
     ax.set_ylabel('y [m]', fontsize=12, fontweight='bold')
     ax.set_title('Tunnel Mesh', fontsize=14, fontweight='bold')
@@ -326,7 +323,6 @@ if __name__ == '__main__':
     print('Mesh and quadrature generation:')
     print('========================================\n')
 
-    test_mesh()
     rectangular_mesh()
     dam_mesh()
     tunnel_mesh()
