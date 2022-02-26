@@ -3526,56 +3526,52 @@ self.nodes is empty
                        * (2. * np.random.random((gx.size, 2)) - 1.))
         return points
 
-    def _check_edge_scale(self, edge_verts):
+    def _check_edge_scale(self, verts, closed):
+        num_verts = len(verts)
+        k_max = num_verts if closed else -1
         d_scale = self.mesh_scale
-        for k, v0 in enumerate(self.vertices[edge_verts[:-1]]):
-            dd = self.vertices[edge_verts[k+1]] - v0
+        for k, v0 in enumerate(self.vertices[verts[:k_max]]):
+            dd = self.vertices[verts[(k+1) % num_verts]] - v0
             dd = 0.4 * np.linalg.norm(dd)
             if dd < d_scale:
                 d_scale = dd
         return d_scale
 
-    def _delete_points_near_edge(self, edge_verts, d_scale):
+    def _delete_points_near_edge(self, verts, d_scale, closed):
         # no vertices, do nothing
-        if len(edge_verts) == 0:
+        if len(verts) == 0:
             return
         # single vertex, just delete points within d_scale
-        elif len(edge_verts) == 1:
-            v = self.vertices[edge_verts[0]]
-            keep_points = np.ones(len(self.points), dtype=bool)
-            for j, p in enumerate(self.points):
-                d = np.linalg.norm(v - p)
-                if d < d_scale:
-                    keep_points[j] = False
-            self._points = self.points[keep_points]
+        elif len(verts) == 1:
+            edge_buf = np.array(shp.Polygon(shp.Point(self.vertices[verts])
+                                            .buffer(d_scale))
+                                .exterior.coords)
+            near_edge = _points_in_polygon(self.points, edge_buf)
+            self._points = self.points[~near_edge]
             return
-        # multiple vertices, delete points near each segment
-        dv_min = -d_scale
-        dd_max = +d_scale
-        for k, v in enumerate(self.vertices[edge_verts[:-1]]):
-            tt = self.vertices[edge_verts[k+1]] - v
-            tt_len = np.linalg.norm(tt)
-            tt /= tt_len
-            dv_max = tt_len + d_scale
-            keep_points = np.ones(len(self.points), dtype=bool)
-            for j, p in enumerate(self.points):
-                vp = p - v
-                pp = v + np.dot(vp, tt) * tt
-                dd = np.linalg.norm(p - pp)
-                dv = np.sign(np.dot(pp - v, tt)) * np.linalg.norm(pp - v)
-                if dd < dd_max and dv >= dv_min and dv <= dv_max:
-                    keep_points[j] = False
-            self._points = self.points[keep_points]
+        # multiple vertices, delete points within edge buffer
+        if closed:
+            edge_buf = shp.Polygon(shp.LinearRing(self.vertices[verts])
+                                   .buffer(d_scale))
+        else:
+            edge_buf = shp.Polygon(shp.LineString(self.vertices[verts])
+                                   .buffer(d_scale))
+        near_edge = _points_in_polygon(self.points,
+                                       np.array(edge_buf.exterior.coords))
+        for edge_int in edge_buf.interiors:
+            near_edge &= ~_points_in_polygon(self.points,
+                                             np.array(edge_int.coords))
+        self._points = self.points[~near_edge]
 
-    def _create_edge_points(self, edge_verts, closed=False):
+    def _create_edge_points(self, verts, closed):
         # no vertices, do nothing
-        if len(edge_verts) == 0:
+        if len(verts) == 0:
             return
         # single vertex, just insert points near the vertex
-        elif len(edge_verts) == 1:
-            v = self.vertices[edge_verts[0]]
-            d_scale = self._check_edge_scale(edge_verts)
-            self._delete_points_near_edge(edge_verts, d_scale)
+        elif len(verts) == 1:
+            v = self.vertices[verts[0]]
+            d_scale = self._check_edge_scale(verts, closed)
+            self._delete_points_near_edge(verts, d_scale, closed)
             self._points = np.vstack([self.points,
                                       v + 0.5 * d_scale * np.array([-1, -1]),
                                       v + 0.5 * d_scale * np.array([-1, +1]),
@@ -3587,15 +3583,15 @@ self.nodes is empty
         bot_points = np.empty((0, 2))
         ref_points = np.empty((0, 2))
         # eliminate points near the edge
-        check_verts = edge_verts + [edge_verts[0]] if closed else edge_verts
-        d_scale = self._check_edge_scale(check_verts)
-        self._delete_points_near_edge(check_verts, d_scale)
+        # check_verts = edge_verts + [edge_verts[0]] if closed else edge_verts
+        d_scale = self._check_edge_scale(verts, closed)
+        self._delete_points_near_edge(verts, d_scale, closed)
         # insert points around the edge
-        num_verts = len(edge_verts)
-        for k, v in enumerate(self.vertices[edge_verts]):
+        num_verts = len(verts)
+        for k, v in enumerate(self.vertices[verts]):
             # first vertex, not closed, insert points before and after
             if not closed and k == 0:
-                vp1 = self.vertices[edge_verts[k+1]]
+                vp1 = self.vertices[verts[k+1]]
                 tt1, nn1 = _get_unit_tangent_normal(v, vp1)
                 top_points = np.vstack([top_points,
                                         v + 0.5 * d_scale * (-tt1 - nn1),
@@ -3606,7 +3602,7 @@ self.nodes is empty
             # last vertex, not closed, insert points before and after
             # also reflect points before
             elif not closed and k == num_verts - 1:
-                vm1 = self.vertices[edge_verts[k-1]]
+                vm1 = self.vertices[verts[k-1]]
                 tt0, nn0 = tt1, nn1
                 # insert points behind
                 top_points = np.vstack([top_points,
@@ -3626,8 +3622,8 @@ self.nodes is empty
                                         v + 0.5 * d_scale * (+tt0 + nn0)])
             # middle vertex (or first/last vertex of a closed edge)
             else:
-                vm1 = self.vertices[edge_verts[k-1]]
-                vp1 = self.vertices[edge_verts[(k+1) % num_verts]]
+                vm1 = self.vertices[verts[k-1]]
+                vp1 = self.vertices[verts[(k+1) % num_verts]]
                 tt0, nn0 = _get_unit_tangent_normal(vm1, v)
                 tt1, nn1 = _get_unit_tangent_normal(v, vp1)
                 tt_cross = np.cross(-tt0, tt1)
@@ -3889,14 +3885,6 @@ self.nodes is empty
                 in_mtl &= ~_points_in_polygon(intersection_centroids,
                                               np.array(edge_int.coords))
             intersection_materials[in_mtl] = edge.material
-            # if edge.is_closed:
-            #     edge_geom = shp.LinearRing(self.vertices[edge.vertices])
-            # else:
-            #     edge_geom = shp.LineString(self.vertices[edge.vertices])
-            # in_mtl = np.array([edge_geom.intersects(
-            #                    shp.Polygon(self.nodes[e.nodes]))
-            #                    for e in self.intersection_elements],
-            #                   dtype=bool)
         # finally, assign the materials to the intersection elements
         for e, m in zip(self.intersection_elements, intersection_materials):
             e.material = m if m is not m0 else None
