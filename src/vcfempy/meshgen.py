@@ -4107,7 +4107,7 @@ class MaterialRegion2D():
         >>> mr.mesh = new_mesh
         Traceback (most recent call last):
             ...
-        AttributeError: can't set attribute
+        AttributeError: can't set attribute 'mesh'
         """
         return self._mesh
 
@@ -4709,7 +4709,7 @@ class MeshEdge2D():
         >>> me.mesh = new_mesh
         Traceback (most recent call last):
             ...
-        AttributeError: can't set attribute
+        AttributeError: can't set attribute 'mesh'
         """
         return self._mesh
 
@@ -6614,7 +6614,7 @@ class InterfaceElement2D():
         >>> msh.interface_elements[0].width = None
         Traceback (most recent call last):
             ...
-        TypeError: float() argument must be a string or a number, \
+        TypeError: float() argument must be a string or a real number, \
 not 'NoneType'
         >>> msh.interface_elements[0].width = -0.1
         Traceback (most recent call last):
