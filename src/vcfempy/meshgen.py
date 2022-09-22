@@ -4076,6 +4076,81 @@ self.nodes is empty
         node_dict = {n: k for k, n in enumerate(node_order)}
         self._replace_nodes(node_dict)
 
+    def _shift_nodes(self):
+        # print some mesh information for checking node cases
+        num_node_elements = np.zeros(self.num_nodes, dtype=int)
+        num_node_interfaces = np.zeros(self.num_nodes, dtype=int)
+        num_node_boundaries = np.zeros(self.num_nodes, dtype=int)
+        num_case_nodes = np.zeros(6, dtype=int)
+        for e in self.elements:
+            for n in e.nodes:
+                num_node_elements[n] += 1
+        for ie in self.interface_elements:
+            for n in np.unique(ie.nodes):
+                num_node_interfaces[n] += 1
+        for be in self.boundary_elements:
+            for n in np.unique(be.nodes):
+                num_node_boundaries[n] += 1
+        for n, (e, i, b) in enumerate(zip(num_node_elements,
+                                          num_node_interfaces,
+                                          num_node_boundaries)):
+            # Case 0: nodes that are not in any interface elements
+            #           these nodes do not need to be shifted
+            if not i:
+                num_case_nodes[0] += 1
+            # Cases 1 and 2: nodes that are part of 2 interface elements
+            #                   these nodes need to have two shift points
+            #                   calculated, which are averaged
+            elif i == 2:
+                if not b:
+                    if e == 1:
+                        num_case_nodes[1] += 1
+                    elif e == 2:
+                        num_case_nodes[2] += 1
+                    # Degenerate Case: this node is not clearly classified
+                    #                   in 2 interface elements
+                    #                   and >2 body elements
+                    else:
+                        num_case_nodes[-1] += 1
+                        print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
+                                + f'{self.nodes[n]}')
+                # Degenerate Case: this node is not clearly classified
+                #                   in 2 interface elements
+                #                   and >0 boundary elements
+                else:
+                    num_case_nodes[-1] += 1
+                    print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
+                            + f'{self.nodes[n]}')
+            elif i == 1:
+                # Case 3: nodes that are in 1 interface element
+                #           and 1-2 body elements
+                #           these nodes need to be shifted
+                #           along an adjacent edge
+                if e >= 1 and e <= 2 and b <= 1:
+                    num_case_nodes[3] += 1
+                # Case 4: nodes that are in 1 interface element
+                #           and >2 body elements
+                #           these nodes should not be shifted
+                #           because there are too many constraints
+                #           typically at the end of a mesh edge
+                elif e > 2 and b <= 1:
+                    num_case_nodes[4] += 1
+                # Degenerate Case: this node is not clearly classified
+                #                       in 1 interface element
+                #                       and >1 boundary element
+                else:
+                    num_case_nodes[-1] += 1
+                    print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
+                            + f'{self.nodes[n]}')
+            # Degenerate Case: this node is not clearly classified
+            #                   in >2 interface elements
+            else:
+                num_case_nodes[-1] += 1
+                print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
+                        + f'{self.nodes[n]}')
+        print(f'num_case_nodes : {num_case_nodes}')
+        print(f'sum(num_case_nodes) : {np.sum(num_case_nodes)}')
+
     def generate_mesh(self):
         """ Generate polygonal mesh. """
         # initialize mesh points using seed points or on a regular grid
@@ -4113,6 +4188,10 @@ self.nodes is empty
         self._delete_null_intersections()
         self._get_nodes_in_elements()
         self._sort_nodes()
+        # TODO: shift nodes according to interface thickness
+        self._shift_nodes()
+        # try to validate mesh
+        # (mesh_valid setter runs checks)
         self.mesh_valid = True
 
     @property
