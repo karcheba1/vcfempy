@@ -48,7 +48,8 @@ def main():
     print(t)
     print('')
 
-    print(f'Testing complete... failed_tests = {failed_tests}, total_tests = {total_tests}')
+    print([f'Testing complete... failed_tests = {failed_tests}, ',
+           f'total_tests = {total_tests}'])
     print('')
 
 
