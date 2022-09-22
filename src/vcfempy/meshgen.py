@@ -4077,11 +4077,12 @@ self.nodes is empty
         self._replace_nodes(node_dict)
 
     def _shift_nodes(self):
-        # print some mesh information for checking node cases
+        # get mesh information for node cases
         num_node_elements = np.zeros(self.num_nodes, dtype=int)
         num_node_interfaces = np.zeros(self.num_nodes, dtype=int)
         num_node_boundaries = np.zeros(self.num_nodes, dtype=int)
         num_case_nodes = np.zeros(6, dtype=int)
+        node_cases = np.zeros(self.num_nodes, dtype=int)
         for e in self.elements:
             for n in e.nodes:
                 num_node_elements[n] += 1
@@ -4105,13 +4106,16 @@ self.nodes is empty
                 if not b:
                     if e == 1:
                         num_case_nodes[1] += 1
+                        node_cases[n] = 1
                     elif e == 2:
                         num_case_nodes[2] += 1
+                        node_cases[n] = 2
                     # Degenerate Case: this node is not clearly classified
                     #                   in 2 interface elements
                     #                   and >2 body elements
                     else:
                         num_case_nodes[-1] += 1
+                        node_cases[n] = -1
                         print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
                                 + f'{self.nodes[n]}')
                 # Degenerate Case: this node is not clearly classified
@@ -4119,6 +4123,7 @@ self.nodes is empty
                 #                   and >0 boundary elements
                 else:
                     num_case_nodes[-1] += 1
+                    node_cases[n] = -1
                     print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
                             + f'{self.nodes[n]}')
             elif i == 1:
@@ -4128,6 +4133,7 @@ self.nodes is empty
                 #           along an adjacent edge
                 if e >= 1 and e <= 2 and b <= 1:
                     num_case_nodes[3] += 1
+                    node_cases[n] = 3
                 # Case 4: nodes that are in 1 interface element
                 #           and >2 body elements
                 #           these nodes should not be shifted
@@ -4135,21 +4141,24 @@ self.nodes is empty
                 #           typically at the end of a mesh edge
                 elif e > 2 and b <= 1:
                     num_case_nodes[4] += 1
+                    node_cases[n] = 4
                 # Degenerate Case: this node is not clearly classified
                 #                       in 1 interface element
                 #                       and >1 boundary element
                 else:
                     num_case_nodes[-1] += 1
+                    node_cases[n] = -1
                     print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
                             + f'{self.nodes[n]}')
             # Degenerate Case: this node is not clearly classified
             #                   in >2 interface elements
             else:
                 num_case_nodes[-1] += 1
+                node_cases[n] = -1
                 print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
                         + f'{self.nodes[n]}')
-        print(f'num_case_nodes : {num_case_nodes}')
-        print(f'sum(num_case_nodes) : {np.sum(num_case_nodes)}')
+        # make sure that there are no degenerate nodes
+        assert((not num_case_nodes[-1]) and (not np.any(node_cases < 0)))
 
     def generate_mesh(self):
         """ Generate polygonal mesh. """
