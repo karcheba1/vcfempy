@@ -4079,19 +4079,25 @@ self.nodes is empty
     def _shift_nodes(self):
         # get mesh information for node cases
         num_node_elements = np.zeros(self.num_nodes, dtype=int)
+        node_elements = [[] for n in self.nodes]
         num_node_interfaces = np.zeros(self.num_nodes, dtype=int)
+        node_interfaces = [[] for n in self.nodes]
         num_node_boundaries = np.zeros(self.num_nodes, dtype=int)
+        node_boundaries = [[] for n in self.nodes]
         num_case_nodes = np.zeros(6, dtype=int)
         node_cases = np.zeros(self.num_nodes, dtype=int)
         for e in self.elements:
             for n in e.nodes:
                 num_node_elements[n] += 1
+                node_elements[n].append(e)
         for ie in self.interface_elements:
             for n in np.unique(ie.nodes):
                 num_node_interfaces[n] += 1
+                node_interfaces[n].append(ie)
         for be in self.boundary_elements:
             for n in np.unique(be.nodes):
                 num_node_boundaries[n] += 1
+                node_boundaries[n].append(be)
         for n, (e, i, b) in enumerate(zip(num_node_elements,
                                           num_node_interfaces,
                                           num_node_boundaries)):
@@ -4102,11 +4108,18 @@ self.nodes is empty
             # Cases 1 and 2: nodes that are part of 2 interface elements
             #                   these nodes need to have two shift points
             #                   calculated, which are averaged
+            #                   (in case the interfaces have different widths)
             elif i == 2:
                 if not b:
+                    # Case 1: nodes that are part of 1 body element
+                    #           shift along line bisecting the angle
+                    #           between the 2 interface elements
                     if e == 1:
                         num_case_nodes[1] += 1
                         node_cases[n] = 1
+                    # Case 2: nodes that are part of 2 body elements
+                    #           shift along the edge
+                    #           between the neighboring body elements
                     elif e == 2:
                         num_case_nodes[2] += 1
                         node_cases[n] = 2
