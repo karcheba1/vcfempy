@@ -3842,6 +3842,8 @@ self.nodes is empty
         # finally, assign the materials to the intersection elements
         for e, m in zip(self.interface_elements, interface_materials):
             e.material = m if m is not m0 else None
+            e.width = m.interface_width if m is not m0 else 0.0
+
 
     def _get_intersection_materials(self):
         m0 = mtl.Material('NULL')
@@ -4172,6 +4174,99 @@ self.nodes is empty
                         + f'{self.nodes[n]}')
         # make sure that there are no degenerate nodes
         assert((not num_case_nodes[-1]) and (not np.any(node_cases < 0)))
+        # shift nodes
+        node_shifted = np.zeros(self.num_nodes, dtype=bool)
+        old_nodes = np.array(self.nodes)
+        for e in self.elements:
+            for i, n in enumerate(e.nodes):
+                # skip nodes that do not need to be shifted
+                if (node_shifted[n]
+                    or node_cases[n] == 0
+                    or node_cases[n] == 4):
+                    continue
+                # Case 1: Node in 2 interface elements and 1 body element
+                elif node_cases[n] == 1:
+                    s_max = np.inf
+                    # get angle bisector direction
+                    p_i = old_nodes[n]
+                    p_im1 = old_nodes[e.nodes[(i - 1) % e.num_nodes]]
+                    a_i_im1 = p_im1 - p_i
+                    a_i_im1_hat = a_i_im1 / np.linalg.norm(a_i_im1)
+                    p_ip1 = old_nodes[e.nodes[(i + 1) % e.num_nodes]]
+                    a_i_ip1 = p_ip1 - p_i
+                    a_i_ip1_hat = a_i_ip1 / np.linalg.norm(a_i_ip1)
+                    v_i = a_i_im1_hat + a_i_ip1_hat
+                    # check previous node for Case 1, get smax
+                    if node_cases[e.nodes[(i - 1) % e.num_nodes]] == 1:
+                        p_im2 = old_nodes[e.nodes[(i - 2) % e.num_nodes]]
+                        a_im1_im2 = p_im2 - p_im1
+                        a_im1_im2_hat = a_im1_im2 / np.linalg.norm(a_im1_im2)
+                        v_im1 = a_im1_im2_hat - a_i_im1_hat
+                        s_new = ((v_im1[0] * a_i_im1[1]
+                                      - v_im1[1] * a_i_im1[0])
+                                     / (v_im1[0] * v_i[1]
+                                        - v_im1[1] * v_i[0]))
+                        s_max = np.min([s_max, 0.5 * s_new])
+                    # check next node for Case 1, get smax
+                    if node_cases[e.nodes[(i + 1) % e.num_nodes]] == 1:
+                        p_ip2 = old_nodes[e.nodes[(i + 2) % e.num_nodes]]
+                        a_ip1_ip2 = p_ip2 - p_ip1
+                        a_ip1_ip2_hat = a_ip1_ip2 / np.linalg.norm(a_ip1_ip2)
+                        v_ip1 = a_ip1_ip2_hat - a_i_ip1_hat
+                        s_new = ((v_ip1[0] * a_i_ip1[1]
+                                      - v_ip1[1] * a_i_ip1[0])
+                                     / (v_ip1[0] * v_i[1]
+                                        - v_ip1[1] * v_i[0]))
+                        s_max = np.min([s_max, 0.5 * s_new])
+                    # get intersection with element boundary, get smax
+                    for k in range(e.num_nodes):
+                        kp1 = (k + 1) % e.num_nodes
+                        p_k = old_nodes[e.nodes[k]]
+                        p_kp1 = old_nodes[e.nodes[kp1]]
+                        a_k_kp1 = p_kp1 - p_k
+                        a_i_k = p_k - p_i
+                        t_k_kp1 = ((v_i[0] * a_i_k[1]
+                                    - v_i[1] * a_i_k[0])
+                                   / (v_i[1] * a_k_kp1[0]
+                                      - v_i[0] * a_k_kp1[1]))
+                        if t_k_kp1 >= 0.0 and t_k_kp1 <= 1.0:
+                            x_k_kp1 = p_k + t_k_kp1 * a_k_kp1
+                            d_k_kp1 = x_k_kp1 - p_i
+                            s_new = np.dot(v_i, d_k_kp1) / np.dot(v_i, v_i)
+                            s_max = np.min([s_max, 0.25 * s_new])
+                            break
+                    # set which interface is which
+                    if (e.nodes[(i - 1) % e.num_nodes]
+                        in node_interfaces[n][0].nodes):
+                        ie_im1 = node_interfaces[n][0]
+                        ie_ip1 = node_interfaces[n][1]
+                    else:
+                        ie_im1 = node_interfaces[n][1]
+                        ie_ip1 = node_interfaces[n][0]
+                    # get first joint element intersection
+                    n_i_im1_hat = np.array([-a_i_im1_hat[1], a_i_im1_hat[0]])
+                    n_i_im1 = 0.5 * ie_im1.width * n_i_im1_hat
+                    s_im1 = ((a_i_im1[0] * n_i_im1[1]
+                              - a_i_im1[1] * n_i_im1[0])
+                             / (a_i_im1[0] * v_i[1]
+                                - a_i_im1[1] * v_i[0]))
+                    s_im1 = np.min([s_im1, s_max])
+                    # get second joint element intersection
+                    n_i_ip1_hat = np.array([a_i_ip1_hat[1], -a_i_ip1_hat[0]])
+                    n_i_ip1 = 0.5 * ie_ip1.width * n_i_ip1_hat
+                    s_ip1 = ((a_i_ip1[0] * n_i_ip1[1]
+                              - a_i_ip1[1] * n_i_ip1[0])
+                             / (a_i_ip1[0] * v_i[1]
+                                - a_i_ip1[1] * v_i[0]))
+                    s_ip1 = np.min([s_ip1, s_max])
+                    # get average point, set new node coordinate
+                    s = 0.5 * (s_im1 + s_ip1)
+                    self.nodes[n] = p_i + s * v_i
+                    node_shifted[n] = True
+                    d_i = np.linalg.norm(s * v_i)
+                    print(f"shifted node {n} by {d_i}")
+                    print(f"im1_width : {ie_im1.width}")
+
 
     def generate_mesh(self):
         """ Generate polygonal mesh. """
