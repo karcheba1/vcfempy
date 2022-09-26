@@ -4,11 +4,12 @@ run as a standalone script since it has the __name__ == '__main__' idiom.
 
 """
 
-import os
-import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import shapely.geometry as shp
 
-# add relative path to package, in case it is not installed
-sys.path.insert(0, os.path.abspath('../src/'))
+import vcfempy.materials as mtl
+import vcfempy.meshgen as msh
 
 
 def rectangular_mesh():
@@ -309,14 +310,6 @@ def tunnel_mesh():
 
 
 if __name__ == '__main__':
-    """ If called as a standalone script, run all examples. """
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import shapely.geometry as shp
-
-    import vcfempy.materials as mtl
-    import vcfempy.meshgen as msh
-
     print('\nRunning all examples:\n')
 
     print('========================================')

@@ -4,21 +4,16 @@ has the if __name__ == '__main__': idiom.
 
 """
 
-import os
-import sys
 import doctest
 
-# add relative path to package, in case it is not installed
-sys.path.insert(0, os.path.abspath('../src/'))
+import vcfempy.materials as mtl
+import vcfempy.meshgen as msh
+import vcfempy.flow as flw
 
 
 def main():
     """Run all unit tests for vcfempy modules.
     """
-    import vcfempy.materials as mtl
-    import vcfempy.meshgen as msh
-    import vcfempy.flow as flw
-
     # initialize counters for tests
     total_tests = 0
     failed_tests = 0

@@ -5,11 +5,9 @@ Summary: A Python package for the Voronoi Cell Finite Element Method
 Home-page: https://github.com/karcheba1/vcfempy
 Author: Brandon Karchewski
 Author-email: brandon.karchewski@ucalgary.ca
-License: UNKNOWN
 Project-URL: GitHub Repo, https://github.com/karcheba1/vcfempy
 Project-URL: Bug Tracker, https://github.com/karcheba1/vcfempy/issues/
 Project-URL: Documentation, https://vcfempy.readthedocs.io/en/latest/
-Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -31,5 +29,3 @@ For information on how to install the package and to read the documentation,
 visit the RTD_ page. For information about the project, to view source code,
 and to report issues visit the project repo page on GitHub_. For more
 information and to discuss collaboration contact `Brandon Karchewski`_.
-
-
