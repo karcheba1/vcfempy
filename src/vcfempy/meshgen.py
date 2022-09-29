@@ -4229,7 +4229,7 @@ self.nodes is empty
                                     - v_i[1] * a_i_k[0])
                                    / (v_i[1] * a_k_kp1[0]
                                       - v_i[0] * a_k_kp1[1]))
-                        if t_k_kp1 >= 0.0 and t_k_kp1 <= 1.0:
+                        if t_k_kp1 > 0.0 and t_k_kp1 < 1.0:
                             x_k_kp1 = p_k + t_k_kp1 * a_k_kp1
                             d_k_kp1 = x_k_kp1 - p_i
                             s_new = np.dot(v_i, d_k_kp1) / np.dot(v_i, v_i)
@@ -4244,7 +4244,7 @@ self.nodes is empty
                         ie_im1 = node_interfaces[n][1]
                         ie_ip1 = node_interfaces[n][0]
                     # get first joint element intersection
-                    n_i_im1_hat = np.array([-a_i_im1_hat[1], a_i_im1_hat[0]])
+                    n_i_im1_hat = np.array([a_i_im1_hat[1], -a_i_im1_hat[0]])
                     n_i_im1 = 0.5 * ie_im1.width * n_i_im1_hat
                     s_im1 = ((a_i_im1[0] * n_i_im1[1]
                               - a_i_im1[1] * n_i_im1[0])
@@ -4252,7 +4252,7 @@ self.nodes is empty
                                 - a_i_im1[1] * v_i[0]))
                     s_im1 = np.min([s_im1, s_max])
                     # get second joint element intersection
-                    n_i_ip1_hat = np.array([a_i_ip1_hat[1], -a_i_ip1_hat[0]])
+                    n_i_ip1_hat = np.array([-a_i_ip1_hat[1], a_i_ip1_hat[0]])
                     n_i_ip1 = 0.5 * ie_ip1.width * n_i_ip1_hat
                     s_ip1 = ((a_i_ip1[0] * n_i_ip1[1]
                               - a_i_ip1[1] * n_i_ip1[0])
@@ -4263,9 +4263,6 @@ self.nodes is empty
                     s = 0.5 * (s_im1 + s_ip1)
                     self.nodes[n] = p_i + s * v_i
                     node_shifted[n] = True
-                    d_i = np.linalg.norm(s * v_i)
-                    print(f"shifted node {n} by {d_i}")
-                    print(f"im1_width : {ie_im1.width}")
 
 
     def generate_mesh(self):
@@ -4576,7 +4573,7 @@ self.nodes is empty
         if self.num_mesh_edges:
             mesh_string += '\n\nMesh Edges'
             for e in self.mesh_edges:
-                mesh_string += '\n{e}'
+                mesh_string += f'\n{e.vertices}'
         if self.num_nodes:
             mesh_string += f'\n\nNodes\n{self.nodes}'
         if self.num_elements:
@@ -8123,7 +8120,7 @@ can only be 0 or 2
         0.0
         """
         if self._area is None:
-            self._area = self.length * self.width
+            self._area = shp.Polygon(self.mesh.nodes[self.nodes]).area
         return self._area
 
     @property

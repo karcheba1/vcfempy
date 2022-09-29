@@ -29,7 +29,7 @@ def rectangular_mesh():
     # add material type and region
     # note: the MaterialRegion2D adds itself to the parent mesh by default
     clay = mtl.Material(name='clay', color='xkcd:clay',
-                        has_interfaces=True, interface_width=0.5)
+                        has_interfaces=True, interface_width=0.3)
     sand = mtl.Material(name='sand', color='xkcd:greenish')
     msh.MaterialRegion2D(mesh=rect_mesh,
                          vertices=[0, 1, 4, 5],
@@ -42,6 +42,7 @@ def rectangular_mesh():
     rect_mesh.mesh_scale = 5.0
     rect_mesh.mesh_rand = 0.2
     rect_mesh.generate_mesh()
+    #rect_mesh.verbose_printing = True
     print(rect_mesh)
     # plot histogram of number of nodes per element
     fig = plt.figure()
@@ -97,6 +98,10 @@ def rectangular_mesh():
                                        + xq_k[1] * cent[0]
                                        + cent[0] * cent[1])
             int_tst_y2 += area * wk * (xq_k[1] + cent[1])**2
+    for ie in rect_mesh.interface_elements:
+        int_tst_0 += ie.area
+    for ie in rect_mesh.intersection_elements:
+        int_tst_0 += ie.area
     int_tst = np.array([int_tst_0, int_tst_x, int_tst_y,
                         int_tst_x2, int_tst_xy, int_tst_y2])
     int_exp = np.array([int_exp_0, int_exp_x, int_exp_y,
