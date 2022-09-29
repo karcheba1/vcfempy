@@ -99,9 +99,9 @@ def rectangular_mesh():
                                        + cent[0] * cent[1])
             int_tst_y2 += area * wk * (xq_k[1] + cent[1])**2
     for ie in rect_mesh.interface_elements:
-        int_tst_0 += ie.area
+        int_tst_0 += np.abs(ie.area)
     for ie in rect_mesh.intersection_elements:
-        int_tst_0 += ie.area
+        int_tst_0 += np.abs(ie.area)
     int_tst = np.array([int_tst_0, int_tst_x, int_tst_y,
                         int_tst_x2, int_tst_xy, int_tst_y2])
     int_exp = np.array([int_exp_0, int_exp_x, int_exp_y,
@@ -196,6 +196,10 @@ def dam_mesh():
         area = e.area
 
         int_test[0] += np.abs(area) * np.sum(wq)
+    for ie in dam_mesh.interface_elements:
+        int_test[0] += np.abs(ie.area)
+    for ie in dam_mesh.intersection_elements:
+        int_test[0] += np.abs(ie.area)
 
     print('Tst Ints: ', int_test)
     print('Exp Ints: ', int_exp)
@@ -307,6 +311,10 @@ def tunnel_mesh():
             int_test[4] += np.abs(area) * wk * (xq_k[1] + cent[1])**2
             int_test[5] += np.abs(area) * wk * ((xq_k[0] + cent[0])
                                                 * (xq_k[1] + cent[1]))
+    for ie in tunnel_mesh.interface_elements:
+        int_test[0] += np.abs(ie.area)
+    for ie in tunnel_mesh.intersection_elements:
+        int_test[0] += np.abs(ie.area)
 
     print('Tst Ints: ', int_test)
     print('Exp Ints: ', int_exp)
