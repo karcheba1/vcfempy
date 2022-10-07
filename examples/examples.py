@@ -224,7 +224,7 @@ def tunnel_mesh():
     tunnel_mesh.add_vertices([[0, 15.], [0, 20.], [20, 20], [20, 0], [15, 0]])
 
     # create circular arc (concave)
-    theta = np.linspace(0, 0.5*np.pi, 20)
+    theta = np.linspace(0, 0.5*np.pi, 10)
     for t in theta:
         tunnel_mesh.add_vertices(10.*np.array([np.cos(t), np.sin(t)]))
 
@@ -243,7 +243,7 @@ def tunnel_mesh():
     #       they can also be used to force element edge alignment
     #       (e.g. with joints in rock or existing planes of failure)
     rock_joint = mtl.Material(name='rock joint', color='xkcd:brown',
-                              has_interfaces=True, interface_width=0.003)
+                              has_interfaces=True, interface_width=0.5)
     nv = tunnel_mesh.num_vertices
     tunnel_mesh.add_vertices([[2.5, 17.5],
                               [10., 12.5],
@@ -257,7 +257,7 @@ def tunnel_mesh():
                    material=rock_joint)
 
     # generate mesh and show properties
-    tunnel_mesh.mesh_scale = 0.5
+    tunnel_mesh.mesh_scale = 1.5
     tunnel_mesh.mesh_rand = 0.3
     tunnel_mesh.generate_mesh()
     print(tunnel_mesh)

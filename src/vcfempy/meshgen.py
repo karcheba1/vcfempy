@@ -3192,7 +3192,7 @@ self.nodes is empty
                 assert(e.num_nodes == len(e.neighbors))
                 inb = [self.elements.index(n) for n in e.neighbors]
                 assert(shp.LinearRing(self.points[inb]).is_ccw)
-                assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
+                #assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
                 for n, nb in zip(e.nodes, e.neighbors):
                     assert(n in nb.nodes)
             self._mesh_valid = True
@@ -4107,6 +4107,13 @@ self.nodes is empty
             #           these nodes do not need to be shifted
             if not i:
                 num_case_nodes[0] += 1
+            # Case 4: nodes that are in >2 body elements
+            #           these nodes should not be shifted
+            #           because there are too many constraints
+            #           typically at the end of a mesh edge
+            elif e > 2:
+                num_case_nodes[4] += 1
+                node_cases[n] = 4
             # Cases 1 and 2: nodes that are part of 2 interface elements
             #                   these nodes need to have two shift points
             #                   calculated, which are averaged
@@ -4125,14 +4132,6 @@ self.nodes is empty
                     elif e == 2:
                         num_case_nodes[2] += 1
                         node_cases[n] = 2
-                    # Degenerate Case: this node is not clearly classified
-                    #                   in 2 interface elements
-                    #                   and >2 body elements
-                    else:
-                        num_case_nodes[-1] += 1
-                        node_cases[n] = -1
-                        print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
-                                + f'{self.nodes[n]}')
                 # Degenerate Case: this node is not clearly classified
                 #                   in 2 interface elements
                 #                   and >0 boundary elements
@@ -4146,17 +4145,9 @@ self.nodes is empty
                 #           and 1-2 body elements
                 #           these nodes need to be shifted
                 #           along an adjacent edge
-                if e >= 1 and e <= 2 and b <= 1:
+                if e >= 1 and b <= 1:
                     num_case_nodes[3] += 1
                     node_cases[n] = 3
-                # Case 4: nodes that are in 1 interface element
-                #           and >2 body elements
-                #           these nodes should not be shifted
-                #           because there are too many constraints
-                #           typically at the end of a mesh edge
-                elif e > 2 and b <= 1:
-                    num_case_nodes[4] += 1
-                    node_cases[n] = 4
                 # Degenerate Case: this node is not clearly classified
                 #                       in 1 interface element
                 #                       and >1 boundary element
@@ -4173,7 +4164,7 @@ self.nodes is empty
                 print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
                         + f'{self.nodes[n]}')
         # make sure that there are no degenerate nodes
-        assert((not num_case_nodes[-1]) and (not np.any(node_cases < 0)))
+        assert ((not num_case_nodes[-1]) and (not np.any(node_cases < 0)))
         # shift nodes
         node_shifted = np.zeros(self.num_nodes, dtype=bool)
         old_nodes = np.array(self.nodes)
@@ -4262,6 +4253,63 @@ self.nodes is empty
                     # get average point, set new node coordinate
                     s = 0.5 * (s_im1 + s_ip1)
                     self.nodes[n] = p_i + s * v_i
+                    node_shifted[n] = True
+                # Case 2: Node in 2 interface elements and 2 body elements
+                elif node_cases[n] == 2:
+                    p_i = old_nodes[n]
+                    # find the node on the shared non-interface edge
+                    for k in node_elements[n][0].nodes:
+                        if k == n:
+                            continue
+                        if k in node_elements[n][1].nodes:
+                            p_k = old_nodes[k]
+                            break
+                    # find interface-body element node pairs
+                    for k in node_interfaces[n][0].nodes:
+                        if k == n:
+                            continue
+                        if (k in node_elements[n][0].nodes
+                                or k in node_elements[n][1].nodes):
+                            p_im1 = old_nodes[k]
+                            break
+                    for k in node_interfaces[n][1].nodes:
+                        if k == n:
+                            continue
+                        if (k in node_elements[n][0].nodes
+                                or k in node_elements[n][1].nodes):
+                            p_ip1 = old_nodes[k]
+                            break
+                    # get normal vectors
+                    a_i_k = p_k - p_i
+                    a_i_im1 = p_im1 - p_i
+                    a_i_im1_hat = a_i_im1 / np.linalg.norm(a_i_im1)
+                    n_i_im1_hat = np.array([a_i_im1_hat[1],
+                                            -a_i_im1_hat[0]])
+                    if np.dot(n_i_im1_hat, a_i_k) < 0:
+                        n_i_im1_hat = -n_i_im1_hat
+                    n_i_im1 = 0.5 * node_interfaces[n][0].width * n_i_im1_hat
+                    a_i_ip1 = p_ip1 - p_i
+                    a_i_ip1_hat = a_i_ip1 / np.linalg.norm(a_i_ip1)
+                    n_i_ip1_hat = np.array([a_i_ip1_hat[1],
+                                            -a_i_ip1_hat[0]])
+                    if np.dot(n_i_ip1_hat, a_i_k) < 0:
+                        n_i_ip1_hat = -n_i_ip1_hat
+                    n_i_ip1 = 0.5 * node_interfaces[n][1].width * n_i_ip1_hat
+                    # get offset distances
+                    s_max = 0.4
+                    s_im1 = ((a_i_im1[0] * n_i_im1[1]
+                              - a_i_im1[1] * n_i_im1[0])
+                             / (a_i_im1[0] * a_i_k[1]
+                                - a_i_im1[1] * a_i_k[0]))
+                    s_im1 = np.min([s_im1, s_max])
+                    s_ip1 = ((a_i_ip1[0] * n_i_ip1[1]
+                              - a_i_ip1[1] * n_i_ip1[0])
+                             / (a_i_ip1[0] * a_i_k[1]
+                                - a_i_ip1[1] * a_i_k[0]))
+                    s_ip1 = np.min([s_ip1, s_max])
+                    # get average point, set new node coordinate
+                    s = 0.5 * (s_im1 + s_ip1)
+                    self.nodes[n] = p_i + s * a_i_k
                     node_shifted[n] = True
 
 
