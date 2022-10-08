@@ -3148,53 +3148,53 @@ self.nodes is empty
             self._intersection_elements = []
         # otherwise, try to validate mesh
         else:
-            assert(self.num_nodes)
+            assert (self.num_nodes)
             for k, n in enumerate(self.nodes):
                 ne = 0
                 for e in self.elements:
                     if k in e.nodes:
                         ne += 1
-                assert(ne >= 1)
-            assert(len(self.points) == self.num_elements)
+                assert (ne >= 1)
+            assert (len(self.points) == self.num_elements)
             for e in self.elements:
-                assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
-                assert(e.num_nodes == len(e.interface_elements))
-                assert(e.num_nodes == len(e.boundary_elements))
-            assert(self.num_boundary_elements)
+                assert (shp.LinearRing(self.nodes[e.nodes]).is_ccw)
+                assert (e.num_nodes == len(e.interface_elements))
+                assert (e.num_nodes == len(e.boundary_elements))
+            assert (self.num_boundary_elements)
             for e in self.boundary_elements:
                 tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[0]],
                                                   self.nodes[e.nodes[1]])
                 c = e.centroid
                 p = self.points[self.elements.index(e.neighbor)]
-                assert(np.dot(nn, p - c) < 0)
+                assert (np.dot(nn, p - c) < 0)
                 for n in e.nodes:
-                    assert(n in e.neighbor.nodes)
+                    assert (n in e.neighbor.nodes)
             for e in self.interface_elements:
-                assert(e.num_nodes == 4)
-                assert(len(np.unique(e.nodes)) > 2)
-                assert(self.elements.index(e.neighbors[0])
+                assert (e.num_nodes == 4)
+                assert (len(np.unique(e.nodes)) > 2)
+                assert (self.elements.index(e.neighbors[0])
                        < self.elements.index(e.neighbors[1]))
                 tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[0]],
                                                   self.nodes[e.nodes[1]])
                 c = e.centroid
                 p = self.points[self.elements.index(e.neighbors[0])]
-                assert(np.dot(nn, p - c) > 0)
-                assert(e.nodes[0] in e.neighbors[0].nodes)
-                assert(e.nodes[1] in e.neighbors[0].nodes)
+                assert (np.dot(nn, p - c) > 0)
+                assert (e.nodes[0] in e.neighbors[0].nodes)
+                assert (e.nodes[1] in e.neighbors[0].nodes)
                 tt, nn = _get_unit_tangent_normal(self.nodes[e.nodes[2]],
                                                   self.nodes[e.nodes[3]])
                 p = self.points[self.elements.index(e.neighbors[1])]
-                assert(np.dot(nn, p - c) > 0)
-                assert(e.nodes[2] in e.neighbors[1].nodes)
-                assert(e.nodes[3] in e.neighbors[1].nodes)
+                assert (np.dot(nn, p - c) > 0)
+                assert (e.nodes[2] in e.neighbors[1].nodes)
+                assert (e.nodes[3] in e.neighbors[1].nodes)
             for e in self.intersection_elements:
-                assert(e.num_nodes > 2)
-                assert(e.num_nodes == len(e.neighbors))
+                assert (e.num_nodes > 2)
+                assert (e.num_nodes == len(e.neighbors))
                 inb = [self.elements.index(n) for n in e.neighbors]
-                assert(shp.LinearRing(self.points[inb]).is_ccw)
-                #assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
+                assert (shp.LinearRing(self.points[inb]).is_ccw)
+                # assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
                 for n, nb in zip(e.nodes, e.neighbors):
-                    assert(n in nb.nodes)
+                    assert (n in nb.nodes)
             self._mesh_valid = True
 
     @property
@@ -3844,7 +3844,6 @@ self.nodes is empty
             e.material = m if m is not m0 else None
             e.width = m.interface_width if m is not m0 else 0.0
 
-
     def _get_intersection_materials(self):
         m0 = mtl.Material('NULL')
         intersection_materials = [m0 for _ in
@@ -4139,7 +4138,7 @@ self.nodes is empty
                     num_case_nodes[-1] += 1
                     node_cases[n] = -1
                     print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
-                            + f'{self.nodes[n]}')
+                          + f'{self.nodes[n]}')
             elif i == 1:
                 # Case 3: nodes that are in 1 interface element
                 #           and 1-2 body elements
@@ -4155,14 +4154,14 @@ self.nodes is empty
                     num_case_nodes[-1] += 1
                     node_cases[n] = -1
                     print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
-                            + f'{self.nodes[n]}')
+                          + f'{self.nodes[n]}')
             # Degenerate Case: this node is not clearly classified
             #                   in >2 interface elements
             else:
                 num_case_nodes[-1] += 1
                 node_cases[n] = -1
                 print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
-                        + f'{self.nodes[n]}')
+                      + f'{self.nodes[n]}')
         # make sure that there are no degenerate nodes
         assert ((not num_case_nodes[-1]) and (not np.any(node_cases < 0)))
         # shift nodes
@@ -4172,8 +4171,8 @@ self.nodes is empty
             for i, n in enumerate(e.nodes):
                 # skip nodes that do not need to be shifted
                 if (node_shifted[n]
-                    or node_cases[n] == 0
-                    or node_cases[n] == 4):
+                        or node_cases[n] == 0
+                        or node_cases[n] == 4):
                     continue
                 # Case 1: Node in 2 interface elements and 1 body element
                 elif node_cases[n] == 1:
@@ -4194,9 +4193,9 @@ self.nodes is empty
                         a_im1_im2_hat = a_im1_im2 / np.linalg.norm(a_im1_im2)
                         v_im1 = a_im1_im2_hat - a_i_im1_hat
                         s_new = ((v_im1[0] * a_i_im1[1]
-                                      - v_im1[1] * a_i_im1[0])
-                                     / (v_im1[0] * v_i[1]
-                                        - v_im1[1] * v_i[0]))
+                                  - v_im1[1] * a_i_im1[0])
+                                 / (v_im1[0] * v_i[1]
+                                    - v_im1[1] * v_i[0]))
                         s_max = np.min([s_max, 0.5 * s_new])
                     # check next node for Case 1, get smax
                     if node_cases[e.nodes[(i + 1) % e.num_nodes]] == 1:
@@ -4205,9 +4204,9 @@ self.nodes is empty
                         a_ip1_ip2_hat = a_ip1_ip2 / np.linalg.norm(a_ip1_ip2)
                         v_ip1 = a_ip1_ip2_hat - a_i_ip1_hat
                         s_new = ((v_ip1[0] * a_i_ip1[1]
-                                      - v_ip1[1] * a_i_ip1[0])
-                                     / (v_ip1[0] * v_i[1]
-                                        - v_ip1[1] * v_i[0]))
+                                  - v_ip1[1] * a_i_ip1[0])
+                                 / (v_ip1[0] * v_i[1]
+                                    - v_ip1[1] * v_i[0]))
                         s_max = np.min([s_max, 0.5 * s_new])
                     # get intersection with element boundary, get smax
                     for k in range(e.num_nodes):
@@ -4228,7 +4227,7 @@ self.nodes is empty
                             break
                     # set which interface is which
                     if (e.nodes[(i - 1) % e.num_nodes]
-                        in node_interfaces[n][0].nodes):
+                            in node_interfaces[n][0].nodes):
                         ie_im1 = node_interfaces[n][0]
                         ie_ip1 = node_interfaces[n][1]
                     else:
@@ -4311,7 +4310,6 @@ self.nodes is empty
                     s = 0.5 * (s_im1 + s_ip1)
                     self.nodes[n] = p_i + s * a_i_k
                     node_shifted[n] = True
-
 
     def generate_mesh(self):
         """ Generate polygonal mesh. """

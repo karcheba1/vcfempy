@@ -42,7 +42,7 @@ def rectangular_mesh():
     rect_mesh.mesh_scale = 5.0
     rect_mesh.mesh_rand = 0.2
     rect_mesh.generate_mesh()
-    #rect_mesh.verbose_printing = True
+    # rect_mesh.verbose_printing = True
     print(rect_mesh)
     # plot histogram of number of nodes per element
     fig = plt.figure()

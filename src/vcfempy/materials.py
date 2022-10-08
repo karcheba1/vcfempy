@@ -105,7 +105,8 @@ bulk_modulus=6.9e5)
     >>> m = vcfempy.materials.Material()
     Traceback (most recent call last):
     ...
-    TypeError: Material.__init__() missing 1 required positional argument: 'name'
+    TypeError: Material.__init__() missing 1 required positional \
+argument: 'name'
     """
 
     def __init__(self, name, **kwargs):
