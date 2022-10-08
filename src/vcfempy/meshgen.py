@@ -2414,36 +2414,42 @@ class PolyMesh2D():
         Examples
         --------
         >>> # create a mesh and add some vertices but no mesh generated yet
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> test_mesh = msh.PolyMesh2D()
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
         >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
-        >>> msh.add_vertices(new_verts)
-        >>> msh.insert_boundary_vertices(0, bnd_verts)
-        >>> print(msh.num_interface_elements)
+        >>> test_mesh.add_vertices(new_verts)
+        >>> test_mesh.insert_boundary_vertices(0, bnd_verts)
+        >>> test_mtl = mtl.Material('test material',
+        ...                         has_interfaces=True, interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(mesh=test_mesh,
+        ...                           vertices=bnd_verts,
+        ...                           material=test_mtl)
+        >>> print(test_mesh.num_interface_elements)
         0
 
         >>> # generate a simple mesh
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.num_interface_elements)
+        >>> test_mesh.mesh_scale = 0.4
+        >>> test_mesh.add_seed_points([0.5, 0.5])
+        >>> test_mesh.generate_mesh()
+        >>> print(test_mesh.num_interface_elements)
         12
 
         >>> # explicitly resetting the mesh clears the interface elements
-        >>> msh.mesh_valid = False
-        >>> print(msh.num_interface_elements)
+        >>> test_mesh.mesh_valid = False
+        >>> print(test_mesh.num_interface_elements)
         0
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh()
-        >>> print(msh.num_interface_elements)
+        >>> test_mesh.generate_mesh()
+        >>> print(test_mesh.num_interface_elements)
         12
 
         >>> # adding a boundary vertex also resets the mesh
-        >>> msh.add_vertices([1.5, 0.5])
-        >>> msh.insert_boundary_vertices(3, 4)
-        >>> print(msh.num_interface_elements)
+        >>> test_mesh.add_vertices([1.5, 0.5])
+        >>> test_mesh.insert_boundary_vertices(3, 4)
+        >>> print(test_mesh.num_interface_elements)
         0
         """
         return len(self.interface_elements)
@@ -2857,36 +2863,42 @@ class PolyMesh2D():
         Examples
         --------
         >>> # create a mesh and add some vertices but no mesh generated yet
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> test_mesh = msh.PolyMesh2D()
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
         >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
-        >>> msh.add_vertices(new_verts)
-        >>> msh.insert_boundary_vertices(0, bnd_verts)
-        >>> print(msh.num_intersection_elements)
+        >>> test_mesh.add_vertices(new_verts)
+        >>> test_mesh.insert_boundary_vertices(0, bnd_verts)
+        >>> test_mtl = mtl.Material('test material',
+        ...                         has_interfaces=True, interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(mesh=test_mesh,
+        ...                           vertices=bnd_verts,
+        ...                           material=test_mtl)
+        >>> print(test_mesh.num_intersection_elements)
         0
 
         >>> # generate a simple mesh
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.num_intersection_elements)
-        12
+        >>> test_mesh.mesh_scale = 0.4
+        >>> test_mesh.add_seed_points([0.5, 0.5])
+        >>> test_mesh.generate_mesh()
+        >>> print(test_mesh.num_intersection_elements)
+        4
 
         >>> # explicitly resetting the mesh clears the intersection elements
-        >>> msh.mesh_valid = False
-        >>> print(msh.num_intersection_elements)
+        >>> test_mesh.mesh_valid = False
+        >>> print(test_mesh.num_intersection_elements)
         0
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh()
-        >>> print(msh.num_intersection_elements)
-        12
+        >>> test_mesh.generate_mesh()
+        >>> print(test_mesh.num_intersection_elements)
+        4
 
         >>> # adding a boundary vertex also resets the mesh
-        >>> msh.add_vertices([1.5, 0.5])
-        >>> msh.insert_boundary_vertices(3, 4)
-        >>> print(msh.num_intersection_elements)
+        >>> test_mesh.add_vertices([1.5, 0.5])
+        >>> test_mesh.insert_boundary_vertices(3, 4)
+        >>> print(test_mesh.num_intersection_elements)
         0
         """
         return len(self.intersection_elements)
