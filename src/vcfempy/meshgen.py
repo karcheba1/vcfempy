@@ -3113,8 +3113,7 @@ class PolyMesh2D():
         >>> msh.mesh_valid = 'yes'
         Traceback (most recent call last):
         ...
-        ValueError: trying to set PolyMesh2D.mesh_valid = True, but \
-self.nodes is empty
+        AssertionError: self.nodes is empty
         >>> print(msh.mesh_valid)
         False
 
@@ -3148,14 +3147,16 @@ self.nodes is empty
             self._intersection_elements = []
         # otherwise, try to validate mesh
         else:
-            assert (self.num_nodes)
-            for k, n in enumerate(self.nodes):
+            assert (self.num_nodes), "self.nodes is empty"
+            for k, _ in enumerate(self.nodes):
                 ne = 0
                 for e in self.elements:
                     if k in e.nodes:
                         ne += 1
-                assert (ne >= 1)
-            assert (len(self.points) == self.num_elements)
+                assert (ne >= 1), f"node {k} is in 0 elements"
+            assert (len(self.points) == self.num_elements), \
+                   (f"number of points : {len(self.points)}, "
+                    + f"number of elements : {self.num_elements}")
             for e in self.elements:
                 assert (shp.LinearRing(self.nodes[e.nodes]).is_ccw)
                 assert (e.num_nodes == len(e.interface_elements))
@@ -4492,11 +4493,12 @@ self.nodes is empty
         [[0, 1], [1, 2], [2, 3], [3, 0]]
 
         >>> # turn off verbose printing and add some vertices
-        >>> # and two material regions
+        >>> # and two material regions, one with interfaces
         >>> msh.verbose_printing = 'off'
         >>> msh.add_vertices([[0, 0.5], [1, 0.5]])
         >>> rock = vcfempy.materials.Material('rock')
-        >>> sand = vcfempy.materials.Material('sand')
+        >>> sand = vcfempy.materials.Material('sand',
+        ...         has_interfaces=True, interface_width=0.05)
         >>> rock_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
         ...     vertices=[0, 1, 2, 3], name='rock region', material=rock)
         >>> sand_region = vcfempy.meshgen.MaterialRegion2D(mesh=msh,
@@ -4525,9 +4527,9 @@ self.nodes is empty
         Verbose Printing = True
         High Order Quadrature = False
         Mesh Generated = True
-        Number of Nodes = 16
+        Number of Nodes = 24
         Number of Elements = 9
-        Number of Interface Elements = 12
+        Number of Interface Elements = 5
         Number of Boundary Elements = 12
         <BLANKLINE>
         Vertices
@@ -4551,61 +4553,62 @@ self.nodes is empty
         [4, 1, 2, 5]
         <BLANKLINE>
         Nodes
-        [[-2.77555756e-17  1.00000000e+00]
-         [ 3.50000000e-01  1.00000000e+00]
+        [[ 6.50000000e-01 -2.77555756e-17]
+         [ 1.00000000e+00 -2.77555756e-17]
          [ 0.00000000e+00  2.77555756e-17]
          [ 3.50000000e-01  2.77555756e-17]
-         [ 1.00000000e+00  1.00000000e+00]
-         [ 6.50000000e-01  1.00000000e+00]
-         [ 6.50000000e-01  6.50000000e-01]
-         [ 1.00000000e+00  6.50000000e-01]
-         [ 1.00000000e+00 -2.77555756e-17]
-         [ 6.50000000e-01 -2.77555756e-17]
-         [ 6.50000000e-01  3.50000000e-01]
+         [ 3.50000000e-01  3.50000000e-01]
          [ 1.00000000e+00  3.50000000e-01]
-         [ 2.77555756e-17  6.50000000e-01]
+         [ 6.50000000e-01  3.50000000e-01]
          [ 2.77555756e-17  3.50000000e-01]
-         [ 3.50000000e-01  6.50000000e-01]
-         [ 3.50000000e-01  3.50000000e-01]]
+         [ 3.75000000e-01  6.75000000e-01]
+         [ 3.50000000e-01  6.25000000e-01]
+         [ 2.77555756e-17  6.25000000e-01]
+         [ 2.37904934e-17  6.75000000e-01]
+         [ 1.00000000e+00  6.75000000e-01]
+         [ 3.25000000e-01  6.75000000e-01]
+         [ 6.25000000e-01  6.75000000e-01]
+         [ 6.75000000e-01  6.75000000e-01]
+         [ 6.50000000e-01  6.25000000e-01]
+         [ 1.00000000e+00  6.25000000e-01]
+         [ 6.25000000e-01  1.00000000e+00]
+         [ 6.75000000e-01  1.00000000e+00]
+         [ 1.00000000e+00  1.00000000e+00]
+         [ 3.75000000e-01  1.00000000e+00]
+         [ 3.25000000e-01  1.00000000e+00]
+         [-2.77555756e-17  1.00000000e+00]]
         <BLANKLINE>
         Element Nodes, Areas, Points, Centroids, Materials
-        [15, 14, 6, 10], 0.09000000000000002, [0.5 0.5], [0.5 0.5], rock
-        [15, 3, 2, 13], 0.12249999999999998, [0.2 0.2], [0.175 0.175], rock
-        [12, 0, 1, 14], 0.1225, [0.2 0.8], [0.175 0.825], sand
-        [7, 4, 5, 6], 0.1225, [0.8 0.8], [0.825 0.825], sand
-        [11, 8, 9, 10], 0.12249999999999998, [0.8 0.2], [0.825 0.175], rock
-        [15, 13, 12, 14], 0.10500000000000001, [0.2 0.5], [0.175 0.5  ], rock
-        [5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], sand
-        [10, 6, 7, 11], 0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock
-        [3, 15, 10, 9], 0.10500000000000001, [0.5 0.2], [0.5   0.175], rock
+        [6, 16, 9, 4], 0.08250000000000002, [0.5 0.5], [0.5    0.4875], rock
+        [7, 2, 3, 4], 0.1225, [0.2 0.2], [0.175 0.175], rock
+        [13, 22, 23, 11], 0.10562499999999997, [0.2 0.8], [0.1625 0.8375], sand
+        [12, 20, 19, 15], 0.105625, [0.8 0.8], [0.8375 0.8375], sand
+        [6, 0, 1, 5], 0.12249999999999998, [0.8 0.2], [0.825 0.175], rock
+        [9, 10, 7, 4], 0.09625, [0.2 0.5], [0.175  0.4875], rock
+        [18, 21, 8, 14], 0.08124999999999996, [0.5 0.8], [0.5    0.8375], sand
+        [5, 17, 16, 6], 0.09625, [0.8 0.5], [0.825  0.4875], rock
+        [0, 6, 4, 3], 0.10500000000000001, [0.5 0.2], [0.5   0.175], rock
         <BLANKLINE>
         Interface Element Nodes and Neighbors
-        [5, 6], [3, 6]
-        [6, 7], [3, 7]
-        [9, 10], [4, 8]
-        [10, 11], [4, 7]
-        [6, 10], [7, 0]
-        [12, 14], [5, 2]
-        [13, 15], [5, 1]
-        [14, 15], [5, 0]
-        [1, 14], [2, 6]
-        [3, 15], [1, 8]
-        [6, 14], [0, 6]
-        [10, 15], [0, 8]
+        [15, 19, 18, 14], [3, 6]
+        [12, 15, 16, 17], [3, 7]
+        [13, 11, 10, 9], [2, 5]
+        [22, 13, 8, 21], [2, 6]
+        [9, 16, 14, 8], [0, 6]
         <BLANKLINE>
         Boundary Element Nodes and Neighbors
-        [0, 1], 2
+        [22, 23], 2
         [2, 3], 1
-        [4, 5], 3
-        [4, 7], 3
-        [1, 5], 6
-        [8, 9], 4
-        [8, 11], 4
-        [7, 11], 7
-        [3, 9], 8
-        [12, 13], 5
-        [0, 12], 2
-        [2, 13], 1
+        [20, 19], 3
+        [12, 20], 3
+        [18, 21], 6
+        [0, 1], 4
+        [1, 5], 4
+        [5, 17], 7
+        [3, 0], 8
+        [10, 7], 5
+        [23, 11], 2
+        [7, 2], 1
 
         >>> # attempting to set verbose_printing
         >>> # to a non-truth-like str value
