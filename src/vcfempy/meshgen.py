@@ -3192,7 +3192,7 @@ self.nodes is empty
                 assert (e.num_nodes == len(e.neighbors))
                 inb = [self.elements.index(n) for n in e.neighbors]
                 assert (shp.LinearRing(self.points[inb]).is_ccw)
-                # assert(shp.LinearRing(self.nodes[e.nodes]).is_ccw)
+                assert (shp.LinearRing(self.nodes[e.nodes]).is_ccw)
                 for n, nb in zip(e.nodes, e.neighbors):
                     assert (n in nb.nodes)
             self._mesh_valid = True
@@ -4054,7 +4054,7 @@ self.nodes is empty
     def _delete_null_intersections(self):
         del_intersections = []
         for e in self.intersection_elements:
-            if len(np.unique(e.nodes)) < 2:
+            if len(np.unique(e.nodes)) < 3:
                 del_intersections.append(e)
         for e in del_intersections:
             self.remove_intersection_element(e)
