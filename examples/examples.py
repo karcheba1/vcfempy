@@ -29,7 +29,7 @@ def rectangular_mesh():
     # add material type and region
     # note: the MaterialRegion2D adds itself to the parent mesh by default
     clay = mtl.Material(name='clay', color='xkcd:clay',
-                        has_interfaces=True, interface_width=0.3)
+                        has_interfaces=True, interface_width=0.5)
     sand = mtl.Material(name='sand', color='xkcd:greenish')
     msh.MaterialRegion2D(mesh=rect_mesh,
                          vertices=[0, 1, 4, 5],

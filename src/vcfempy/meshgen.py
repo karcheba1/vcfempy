@@ -8265,10 +8265,10 @@ can only be 0 or 2
             Default values:
             `edgecolor` = :a:`material` `color` with alpha = 1.0 (or 'black'
             with alpha = 1.0 if :a:`material` is ``None``),
-            `facecolor` = :a:`material` `color` with alpha = 0.6 (or 'black'
-            with alpha = 0.6 if :a:`material` is ``None``),
-            `linewidth` = 2.0,
-            `linestyle` = ':'.
+            `facecolor` = :a:`material` `color` with alpha = 0.4 (or 'black'
+            with alpha = 0.4 if :a:`material` is ``None``),
+            `linewidth` = 1.0,
+            `linestyle` = '--'.
 
         Returns
         -------
@@ -8310,13 +8310,13 @@ can only be 0 or 2
         else:
             color = mplclr.to_rgb('black')
         if 'facecolor' not in kwargs.keys():
-            kwargs['facecolor'] = color + (0.6, )
+            kwargs['facecolor'] = color + (0.4, )
         if 'edgecolor' not in kwargs.keys():
             kwargs['edgecolor'] = color + (1.0, )
         if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 2.0
+            kwargs['linewidth'] = 1.0
         if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = ':'
+            kwargs['linestyle'] = '--'
         ax.fill(self.mesh.nodes[self.nodes, 0],
                 self.mesh.nodes[self.nodes, 1],
                 **kwargs)
@@ -9514,10 +9514,10 @@ class IntersectionElement2D():
             Default values:
             `edgecolor` = :a:`material` `color` with alpha = 1.0 (or 'black'
             with alpha = 1.0 if :a:`material` is ``None``),
-            `facecolor` = :a:`material` `color` with alpha = 0.3 (or 'black'
-            with alpha = 0.3 if :a:`material` is ``None``),
-            `linewidth` = 2.0,
-            `linestyle` = '--'.
+            `facecolor` = :a:`material` `color` with alpha = 0.2 (or 'black'
+            with alpha = 0.2 if :a:`material` is ``None``),
+            `linewidth` = 1.0,
+            `linestyle` = '-'.
 
         Returns
         -------
@@ -9561,18 +9561,16 @@ class IntersectionElement2D():
         else:
             color = mplclr.to_rgb('black')
         if 'facecolor' not in kwargs.keys():
-            kwargs['facecolor'] = color + (0.3, )
+            kwargs['facecolor'] = color + (0.2, )
         if 'edgecolor' not in kwargs.keys():
             kwargs['edgecolor'] = color + (1.0, )
         if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 2.0
+            kwargs['linewidth'] = 1.0
         if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = '--'
+            kwargs['linestyle'] = '-'
         ax.fill(self.mesh.nodes[self.nodes, 0],
                 self.mesh.nodes[self.nodes, 1],
                 **kwargs)
-        c = self.centroid
-        ax.plot(c[0], c[1], marker='^', color=color, markersize=4.0)
         return ax
 
 
