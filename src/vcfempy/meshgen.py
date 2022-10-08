@@ -4310,6 +4310,53 @@ self.nodes is empty
                     s = 0.5 * (s_im1 + s_ip1)
                     self.nodes[n] = p_i + s * a_i_k
                     node_shifted[n] = True
+                # Case 3: Node in 1 interface element and 1-2 body elements
+                elif node_cases[n] == 3:
+                    p_i = old_nodes[n]
+                    # find shared edge between body elements
+                    if len(node_elements[n]) > 1:
+                        for k in node_elements[n][0].nodes:
+                            if k == n:
+                                continue
+                            if k in node_elements[n][1].nodes:
+                                p_k = old_nodes[k]
+                                break
+                    # otherwise, there must be 1 body element
+                    # and 1 boundary element
+                    else:
+                        assert (len(node_elements[n]) == 1)
+                        for k in node_boundaries[n][0].nodes:
+                            if k == n:
+                                continue
+                            p_k = old_nodes[k]
+                            break
+                    # find adjacent interface element node
+                    found_j = False
+                    for ee in node_elements[n]:
+                        for j in ee.nodes:
+                            if j == n:
+                                continue
+                            if j in node_interfaces[n][0].nodes:
+                                p_j = old_nodes[j]
+                                found_j = True
+                                break
+                        if found_j:
+                            break
+                    # get normal vectors
+                    a_i_k = p_k - p_i
+                    a_i_j = p_j - p_i
+                    a_i_j_hat = a_i_j / np.linalg.norm(a_i_j)
+                    n_i_j_hat = np.array([-a_i_j_hat[1], a_i_j_hat[0]])
+                    if np.dot(a_i_k, n_i_j_hat) < 0:
+                        n_i_j_hat = -n_i_j_hat
+                    n_i_j = 0.5 * node_interfaces[n][0].width * n_i_j_hat
+                    s_max = 0.4
+                    s = ((a_i_j[0] * n_i_j[1] - a_i_j[1] * n_i_j[0])
+                         / (a_i_j[0] * a_i_k[1] - a_i_j[1] * a_i_k[0]))
+                    s = np.min([s, s_max])
+                    # set new node coordinate
+                    self.nodes[n] = p_i + s * a_i_k
+                    node_shifted[n] = True
 
     def generate_mesh(self):
         """ Generate polygonal mesh. """
@@ -4348,7 +4395,7 @@ self.nodes is empty
         self._delete_null_intersections()
         self._get_nodes_in_elements()
         self._sort_nodes()
-        # TODO: shift nodes according to interface thickness
+        # shift nodes according to interface thickness
         self._shift_nodes()
         # try to validate mesh
         # (mesh_valid setter runs checks)
