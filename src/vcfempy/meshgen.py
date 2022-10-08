@@ -3845,6 +3845,9 @@ self.nodes is empty
             e.width = m.interface_width if m is not m0 else 0.0
 
     def _get_intersection_materials(self):
+        # return early if no intersection elements
+        if not self.intersection_elements:
+            return
         m0 = mtl.Material('NULL')
         intersection_materials = [m0 for _ in
                                   enumerate(self.intersection_elements)]
@@ -3922,8 +3925,10 @@ self.nodes is empty
         some_interfaces = False
         all_interfaces = True
         for e in self.interface_elements:
-            some_interfaces |= e.material.has_interfaces
-            all_interfaces &= e.material.has_interfaces
+            has_interfaces = (False if e.material is None
+                              else e.material.has_interfaces)
+            some_interfaces |= has_interfaces
+            all_interfaces &= has_interfaces
             if some_interfaces and not all_interfaces:
                 break
         return some_interfaces, all_interfaces
