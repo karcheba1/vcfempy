@@ -2467,13 +2467,18 @@ class PolyMesh2D():
         Examples
         --------
         >>> # create a mesh and add some vertices but no mesh generated yet
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
         >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
-        >>> msh.add_vertices(new_verts)
-        >>> msh.insert_boundary_vertices(0, bnd_verts)
-        >>> print(msh.interface_elements)
+        >>> tst_msh.add_vertices(new_verts)
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> tst_mtl = mtl.Material('test material',
+        ...                        has_interfaces=True, interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, vertices=bnd_verts,
+        ...                           material=tst_mtl)
+        >>> print(tst_msh.interface_elements)
         []
 
         >>> # generate a simple mesh and print the interface elements
@@ -2481,98 +2486,118 @@ class PolyMesh2D():
         >>> # and the neighbor element indices are all < msh.num_elements
         >>> # also note that interface elements all include at least one
         >>> # node that is not on the boundary
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.num_nodes)
-        16
-        >>> print(msh.nodes.round(14))
-        [[-0.    1.  ]
-         [ 0.35  1.  ]
-         [ 0.    0.  ]
-         [ 0.35  0.  ]
-         [ 1.    1.  ]
-         [ 0.65  1.  ]
-         [ 0.65  0.65]
-         [ 1.    0.65]
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.num_nodes)
+        36
+        >>> print(tst_msh.nodes.round(14))
+        [[ 0.64 -0.  ]
+         [ 0.66 -0.  ]
          [ 1.   -0.  ]
-         [ 0.65 -0.  ]
-         [ 0.65  0.35]
-         [ 1.    0.35]
-         [ 0.    0.65]
-         [ 0.    0.35]
-         [ 0.35  0.65]
-         [ 0.35  0.35]]
-        >>> for e in msh.interface_elements:
+         [ 0.    0.  ]
+         [ 0.34  0.  ]
+         [ 0.36  0.  ]
+         [ 0.34  0.36]
+         [ 0.36  0.36]
+         [ 1.    0.36]
+         [ 1.    0.34]
+         [ 0.66  0.36]
+         [ 0.66  0.34]
+         [ 0.64  0.34]
+         [ 0.64  0.36]
+         [ 0.34  0.34]
+         [ 0.36  0.34]
+         [ 0.    0.36]
+         [ 0.    0.34]
+         [ 1.    0.66]
+         [ 0.34  0.64]
+         [ 0.34  0.66]
+         [ 0.36  0.66]
+         [ 0.36  0.64]
+         [ 1.    0.64]
+         [ 0.    0.64]
+         [ 0.64  0.64]
+         [ 0.66  0.64]
+         [ 0.66  0.66]
+         [ 0.64  0.66]
+         [ 0.    0.66]
+         [ 1.    1.  ]
+         [ 0.66  1.  ]
+         [ 0.64  1.  ]
+         [ 0.36  1.  ]
+         [ 0.34  1.  ]
+         [-0.    1.  ]]
+        >>> for e in tst_msh.interface_elements:
         ...     print(e.nodes)
-        [5, 6]
-        [6, 7]
-        [9, 10]
-        [10, 11]
-        [6, 10]
-        [12, 14]
-        [13, 15]
-        [14, 15]
-        [1, 14]
-        [3, 15]
-        [6, 14]
-        [10, 15]
-        >>> print(msh.num_elements)
+        [27, 31, 32, 28]
+        [18, 27, 26, 23]
+        [1, 11, 12, 0]
+        [11, 9, 8, 10]
+        [25, 13, 10, 26]
+        [20, 29, 24, 19]
+        [17, 14, 6, 16]
+        [7, 22, 19, 6]
+        [34, 20, 21, 33]
+        [14, 4, 5, 15]
+        [22, 25, 28, 21]
+        [13, 7, 15, 12]
+        >>> print(tst_msh.num_elements)
         9
-        >>> for e in msh.interface_elements:
-        ...     print([msh.elements.index(n) for n in e.neighbors])
+        >>> for e in tst_msh.interface_elements:
+        ...     print([tst_msh.elements.index(n) for n in e.neighbors])
         [3, 6]
         [3, 7]
         [4, 8]
         [4, 7]
-        [7, 0]
-        [5, 2]
-        [5, 1]
-        [5, 0]
+        [0, 7]
+        [2, 5]
+        [1, 5]
+        [0, 5]
         [2, 6]
         [1, 8]
         [0, 6]
         [0, 8]
         >>> # explicitly resetting the mesh clears the interface elements
-        >>> msh.mesh_valid = False
-        >>> print(msh.interface_elements)
+        >>> tst_msh.mesh_valid = False
+        >>> print(tst_msh.interface_elements)
         []
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh()
-        >>> for e in msh.interface_elements:
+        >>> tst_msh.generate_mesh()
+        >>> for e in tst_msh.interface_elements:
         ...     print(e.nodes)
-        [5, 6]
-        [6, 7]
-        [9, 10]
-        [10, 11]
-        [6, 10]
-        [12, 14]
-        [13, 15]
-        [14, 15]
-        [1, 14]
-        [3, 15]
-        [6, 14]
-        [10, 15]
-        >>> for e in msh.interface_elements:
-        ...     print([msh.elements.index(n) for n in e.neighbors])
+        [27, 31, 32, 28]
+        [18, 27, 26, 23]
+        [1, 11, 12, 0]
+        [11, 9, 8, 10]
+        [25, 13, 10, 26]
+        [20, 29, 24, 19]
+        [17, 14, 6, 16]
+        [7, 22, 19, 6]
+        [34, 20, 21, 33]
+        [14, 4, 5, 15]
+        [22, 25, 28, 21]
+        [13, 7, 15, 12]
+        >>> for e in tst_msh.interface_elements:
+        ...     print([tst_msh.elements.index(n) for n in e.neighbors])
         [3, 6]
         [3, 7]
         [4, 8]
         [4, 7]
-        [7, 0]
-        [5, 2]
-        [5, 1]
-        [5, 0]
+        [0, 7]
+        [2, 5]
+        [1, 5]
+        [0, 5]
         [2, 6]
         [1, 8]
         [0, 6]
         [0, 8]
 
         >>> # adding a boundary vertex also resets the mesh
-        >>> msh.add_vertices([1.5, 0.5])
-        >>> msh.insert_boundary_vertices(3, 4)
-        >>> print(msh.interface_elements)
+        >>> tst_msh.add_vertices([1.5, 0.5])
+        >>> tst_msh.insert_boundary_vertices(3, 4)
+        >>> print(tst_msh.interface_elements)
         []
         """
         return self._interface_elements
@@ -2916,13 +2941,18 @@ class PolyMesh2D():
         Examples
         --------
         >>> # create a mesh and add some vertices but no mesh generated yet
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
         >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
         >>> bnd_verts = [k for k, _ in enumerate(new_verts)]
-        >>> msh.add_vertices(new_verts)
-        >>> msh.insert_boundary_vertices(0, bnd_verts)
-        >>> print(msh.intersection_elements)
+        >>> tst_msh.add_vertices(new_verts)
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> tst_mtl = mtl.Material('test material',
+        ...                        has_interfaces=True, interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, vertices=bnd_verts,
+        ...                           material=tst_mtl)
+        >>> print(tst_msh.intersection_elements)
         []
 
         >>> # generate a simple mesh and print the intersection elements
@@ -2930,51 +2960,87 @@ class PolyMesh2D():
         >>> # and the neighbor element indices are all < msh.num_elements
         >>> # also note that intersection elements all include at least one
         >>> # node that is not on the boundary
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.num_nodes)
-        16
-        >>> print(msh.nodes.round(14))
-        [[-0.    1.  ]
-         [ 0.35  1.  ]
-         [ 0.    0.  ]
-         [ 0.35  0.  ]
-         [ 1.    1.  ]
-         [ 0.65  1.  ]
-         [ 0.65  0.65]
-         [ 1.    0.65]
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.num_nodes)
+        36
+        >>> print(tst_msh.nodes.round(14))
+        [[ 0.64 -0.  ]
+         [ 0.66 -0.  ]
          [ 1.   -0.  ]
-         [ 0.65 -0.  ]
-         [ 0.65  0.35]
-         [ 1.    0.35]
-         [ 0.    0.65]
-         [ 0.    0.35]
-         [ 0.35  0.65]
-         [ 0.35  0.35]]
-        >>> for e in msh.intersection_elements:
+         [ 0.    0.  ]
+         [ 0.34  0.  ]
+         [ 0.36  0.  ]
+         [ 0.34  0.36]
+         [ 0.36  0.36]
+         [ 1.    0.36]
+         [ 1.    0.34]
+         [ 0.66  0.36]
+         [ 0.66  0.34]
+         [ 0.64  0.34]
+         [ 0.64  0.36]
+         [ 0.34  0.34]
+         [ 0.36  0.34]
+         [ 0.    0.36]
+         [ 0.    0.34]
+         [ 1.    0.66]
+         [ 0.34  0.64]
+         [ 0.34  0.66]
+         [ 0.36  0.66]
+         [ 0.36  0.64]
+         [ 1.    0.64]
+         [ 0.    0.64]
+         [ 0.64  0.64]
+         [ 0.66  0.64]
+         [ 0.66  0.66]
+         [ 0.64  0.66]
+         [ 0.    0.66]
+         [ 1.    1.  ]
+         [ 0.66  1.  ]
+         [ 0.64  1.  ]
+         [ 0.36  1.  ]
+         [ 0.34  1.  ]
+         [-0.    1.  ]]
+        >>> print(tst_msh.num_intersection_elements)
+        4
+        >>> for e in tst_msh.intersection_elements:
         ...     print(e.nodes)
-        >>> print(msh.num_elements)
-        9
-        >>> for e in msh.intersection_elements:
-        ...     print([msh.elements.index(n) for n in e.neighbors])
+        [25, 26, 27, 28]
+        [13, 12, 11, 10]
+        [22, 21, 20, 19]
+        [7, 6, 14, 15]
+        >>> for e in tst_msh.intersection_elements:
+        ...     print([tst_msh.elements.index(n) for n in e.neighbors])
+        [0, 7, 3, 6]
+        [0, 8, 4, 7]
+        [0, 6, 2, 5]
+        [0, 5, 1, 8]
 
         >>> # explicitly resetting the mesh clears the interface elements
-        >>> msh.mesh_valid = False
-        >>> print(msh.intersection_elements)
+        >>> tst_msh.mesh_valid = False
+        >>> print(tst_msh.intersection_elements)
         []
 
         >>> # regenerate the mesh
-        >>> msh.generate_mesh()
-        >>> for e in msh.intersection_elements:
+        >>> tst_msh.generate_mesh()
+        >>> for e in tst_msh.intersection_elements:
         ...     print(e.nodes)
-        >>> for e in msh.intersection_elements:
-        ...     print([msh.elements.index(n) for n in e.neighbors])
+        [25, 26, 27, 28]
+        [13, 12, 11, 10]
+        [22, 21, 20, 19]
+        [7, 6, 14, 15]
+        >>> for e in tst_msh.intersection_elements:
+        ...     print([tst_msh.elements.index(n) for n in e.neighbors])
+        [0, 7, 3, 6]
+        [0, 8, 4, 7]
+        [0, 6, 2, 5]
+        [0, 5, 1, 8]
 
         >>> # adding a boundary vertex also resets the mesh
-        >>> msh.add_vertices([1.5, 0.5])
-        >>> msh.insert_boundary_vertices(3, 4)
-        >>> print(msh.intersection_elements)
+        >>> tst_msh.add_vertices([1.5, 0.5])
+        >>> tst_msh.insert_boundary_vertices(3, 4)
+        >>> print(tst_msh.intersection_elements)
         []
         """
         return self._intersection_elements
