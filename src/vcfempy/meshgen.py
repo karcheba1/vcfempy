@@ -8503,6 +8503,36 @@ class BoundaryElement2D():
 
     Examples
     --------
+    >>> import vcfempy.meshgen as msh
+    >>> import vcfempy.materials as mtl
+    >>> tst_msh = msh.PolyMesh2D()
+    >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+    >>> bnd_verts = [0, 1, 2, 3]
+    >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+    >>> rock = mtl.Material('rock', has_interfaces=True,
+    ...                     interface_width=0.02)
+    >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+    ...                           vertices=bnd_verts)
+    >>> tst_msh.mesh_scale = 0.4
+    >>> tst_msh.add_seed_points([0.5, 0.5])
+    >>> tst_msh.generate_mesh()
+    >>> print(tst_msh.num_boundary_elements)
+    12
+    >>> for e in tst_msh.boundary_elements:
+    ...     print(f"{e.nodes}, {np.round(e.length, 14)}, "
+    ...           + f"{e.centroid.round(14)}")
+    [34, 35], 0.34, [0.175 1.   ]
+    [3, 4], 0.34, [0.175 0.   ]
+    [30, 31], 0.34, [0.825 1.   ]
+    [18, 30], 0.34, [1.    0.825]
+    [32, 33], 0.28, [0.5 1. ]
+    [1, 2], 0.34, [ 0.825 -0.   ]
+    [2, 9], 0.34, [1.    0.175]
+    [8, 23], 0.28, [1.  0.5]
+    [5, 0], 0.28, [0.5 0. ]
+    [24, 16], 0.28, [0.  0.5]
+    [35, 29], 0.34, [0.    0.825]
+    [17, 3], 0.34, [0.    0.175]
     """
 
     def __init__(self, mesh, nodes=None, neighbor=None, add_to_mesh=True):
@@ -8541,14 +8571,20 @@ class BoundaryElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.boundary_elements[0].mesh is msh)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.boundary_elements[0].mesh is tst_msh)
         True
         """
         return self._mesh
@@ -8565,14 +8601,20 @@ class BoundaryElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.boundary_elements[0].num_nodes)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.boundary_elements[0].num_nodes)
         2
         """
         return len(self.nodes)
@@ -8590,15 +8632,21 @@ class BoundaryElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.boundary_elements[0].nodes)
-        [0, 1]
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.boundary_elements[0].nodes)
+        [34, 35]
         """
         return self._nodes
 
@@ -8634,51 +8682,42 @@ class BoundaryElement2D():
         Examples
         --------
         >>> # create a simple mesh
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.nodes.round(14))
-        [[-0.    1.  ]
-         [ 0.35  1.  ]
-         [ 0.    0.  ]
-         [ 0.35  0.  ]
-         [ 1.    1.  ]
-         [ 0.65  1.  ]
-         [ 0.65  0.65]
-         [ 1.    0.65]
-         [ 1.   -0.  ]
-         [ 0.65 -0.  ]
-         [ 0.65  0.35]
-         [ 1.    0.35]
-         [ 0.    0.65]
-         [ 0.    0.35]
-         [ 0.35  0.65]
-         [ 0.35  0.35]]
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.boundary_elements[0].nodes)
+        [34, 35]
 
         >>> # create a new element
         >>> # note, this is normally not done explicitly, but is shown here
         >>> # for testing and documentation
-        >>> e = vcfempy.meshgen.BoundaryElement2D(msh)
+        >>> e = msh.BoundaryElement2D(tst_msh)
         >>> print(e.nodes)
         []
-        >>> e.insert_nodes(0, [0, 1])
+        >>> e.insert_nodes(0, [34, 35])
         >>> print(e.nodes)
-        [0, 1]
+        [34, 35]
         >>> print(np.round(e.length, 14))
-        0.35
+        0.34
 
         >>> # insert no nodes in multiple ways
         >>> e.insert_nodes(0, None)
         >>> e.insert_nodes(0, [])
         >>> print(e.nodes)
-        [0, 1]
+        [34, 35]
 
         >>> # try to insert some invalid nodes
-        >>> e = vcfempy.meshgen.BoundaryElement2D(msh)
+        >>> e = msh.BoundaryElement2D(tst_msh)
         >>> e.insert_nodes(0, 'one')
         Traceback (most recent call last):
             ...
@@ -8689,10 +8728,10 @@ class BoundaryElement2D():
         ValueError: 0 is already a node
         >>> print(e.nodes)
         []
-        >>> e.insert_nodes(0, [16, 17])
+        >>> e.insert_nodes(0, [16, 37])
         Traceback (most recent call last):
             ...
-        ValueError: node index 17 out of range
+        ValueError: node index 37 out of range
         >>> print(e.nodes)
         []
         >>> e.insert_nodes(0, [-1, -2])
@@ -8772,42 +8811,48 @@ class BoundaryElement2D():
         >>> # create a simple mesh, and remove nodes from an element
         >>> # this should not normally be done explicitly unless you know
         >>> # what you are doing
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.boundary_elements[0].nodes)
-        [0, 1]
-        >>> msh.boundary_elements[0].remove_nodes([0, 1])
-        >>> print(msh.boundary_elements[0].nodes)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.boundary_elements[0].nodes)
+        [34, 35]
+        >>> tst_msh.boundary_elements[0].remove_nodes([34, 35])
+        >>> print(tst_msh.boundary_elements[0].nodes)
         []
 
         >>> # remove no nodes, in two different ways
-        >>> msh.boundary_elements[0].insert_nodes(0, [0, 1])
-        >>> msh.boundary_elements[0].remove_nodes(None)
-        >>> msh.boundary_elements[0].remove_nodes([])
-        >>> print(msh.boundary_elements[0].nodes)
-        [0, 1]
+        >>> tst_msh.boundary_elements[0].insert_nodes(0, [34, 35])
+        >>> tst_msh.boundary_elements[0].remove_nodes(None)
+        >>> tst_msh.boundary_elements[0].remove_nodes([])
+        >>> print(tst_msh.boundary_elements[0].nodes)
+        [34, 35]
 
         >>> # try to remove some invalid nodes
-        >>> msh.boundary_elements[0].remove_nodes('one')
+        >>> tst_msh.boundary_elements[0].remove_nodes('one')
         Traceback (most recent call last):
             ...
         ValueError: invalid literal for int() with base 10: 'one'
-        >>> msh.boundary_elements[0].remove_nodes([5, 0])
+        >>> tst_msh.boundary_elements[0].remove_nodes([5, 0])
         Traceback (most recent call last):
             ...
         ValueError: list.remove(x): x not in list
-        >>> print(msh.boundary_elements[0].nodes)
-        [0, 1]
-        >>> msh.boundary_elements[0].remove_nodes(4)
+        >>> print(tst_msh.boundary_elements[0].nodes)
+        [34, 35]
+        >>> tst_msh.boundary_elements[0].remove_nodes(1)
         Traceback (most recent call last):
             ...
         ValueError: number of nodes in BoundaryElement2D can only be 0 or 2
-        >>> msh.boundary_elements[0].remove_nodes(
+        >>> tst_msh.boundary_elements[0].remove_nodes(
         ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
             ...
@@ -8863,22 +8908,28 @@ class BoundaryElement2D():
         Examples
         --------
         >>> # create a simple mesh
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
 
         >>> # create a new element
         >>> # note, this is normally not done explicitly, but is shown here
         >>> # for testing and documentation
-        >>> e = vcfempy.meshgen.BoundaryElement2D(msh)
+        >>> e = msh.BoundaryElement2D(tst_msh)
         >>> print(e.neighbor)
         None
-        >>> e.neighbor = msh.elements[0]
-        >>> print(msh.elements.index(e.neighbor))
+        >>> e.neighbor = tst_msh.elements[0]
+        >>> print(tst_msh.elements.index(e.neighbor))
         0
 
         >>> # try to add some invalid neighbors
@@ -8886,8 +8937,8 @@ class BoundaryElement2D():
         Traceback (most recent call last):
             ...
         TypeError: neighbor must be a PolyElement2D
-        >>> msh_new = vcfempy.meshgen.PolyMesh2D()
-        >>> pe = vcfempy.meshgen.PolyElement2D(msh_new)
+        >>> msh_new = msh.PolyMesh2D()
+        >>> pe = msh.PolyElement2D(msh_new)
         >>> e.neighbor = pe
         Traceback (most recent call last):
             ...
@@ -8915,15 +8966,21 @@ class BoundaryElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(np.round(msh.boundary_elements[0].length, 14))
-        0.35
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(np.round(tst_msh.boundary_elements[0].length, 14))
+        0.34
         """
         if self._length is None and self.num_nodes:
             self._length = shp.LineString(self.mesh.nodes[self.nodes]).length
@@ -8941,14 +8998,20 @@ class BoundaryElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.boundary_elements[0].centroid)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.boundary_elements[0].centroid)
         [0.175 1.   ]
         """
         if self._centroid is None and self.num_nodes:
@@ -8972,25 +9035,32 @@ class BoundaryElement2D():
         >>> # create a simple mesh, check the element properties
         >>> # invalidate properties and check the values of (private) cache
         >>> # attributes
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.boundary_elements[0]._length)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> tst_msh.boundary_elements[0].invalidate_properties()
+        >>> print(tst_msh.boundary_elements[0]._length)
         None
-        >>> print(msh.boundary_elements[0]._centroid)
+        >>> print(tst_msh.boundary_elements[0]._centroid)
         None
-        >>> print(np.round(msh.boundary_elements[0].length, 14))
-        0.35
-        >>> print(msh.boundary_elements[0].centroid.round(14))
-        [0.175 1.   ]
-        >>> msh.boundary_elements[0].invalidate_properties()
-        >>> print(msh.interface_elements[0]._length)
+        >>> print(np.round(tst_msh.boundary_elements[0].length, 14))
+        0.34
+        >>> print(tst_msh.boundary_elements[0].centroid.round(14))
+        [0.17 1.  ]
+        >>> tst_msh.boundary_elements[0].invalidate_properties()
+        >>> print(tst_msh.boundary_elements[0]._length)
         None
-        >>> print(msh.interface_elements[0]._centroid)
+        >>> print(tst_msh.boundary_elements[0]._centroid)
         None
         """
         self._length = None
@@ -9023,25 +9093,28 @@ class BoundaryElement2D():
         >>> # initialize a mesh and a material region, then generate a mesh
         >>> # and plot the elements, interface elements, and boundary
         >>> # elements
-        >>> import matplotlib.pyplot as plt
-        >>> import vcfempy.materials
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> rock = vcfempy.materials.Material('rock', color='xkcd:clay')
-        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
-        ...                                       rock, 'rock region')
-        >>> msh.mesh_scale = 0.2
-        >>> msh.mesh_rand = 0.2
-        >>> msh.generate_mesh()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.2
+        >>> tst_msh.mesh_rand = 0.2
+        >>> tst_msh.generate_mesh()
         >>> fig = plt.figure()
-        >>> for e in msh.elements:
+        >>> for e in tst_msh.elements:
         ...     ax = e.plot(edgecolor=None)
         ...     ax = e.plot_quad_points()
-        >>> for e in msh.interface_elements:
+        >>> for e in tst_msh.interface_elements:
         ...     ax = e.plot()
-        >>> for e in msh.boundary_elements:
+        >>> for e in tst_msh.intersection_elements:
+        ...     ax = e.plot()
+        >>> for e in tst_msh.boundary_elements:
         ...     ax = e.plot()
         >>> xmin, xmax, ymin, ymax = ax.axis('equal')
         >>> xtext = ax.set_xlabel('x')
