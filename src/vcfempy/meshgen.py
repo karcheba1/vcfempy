@@ -4013,7 +4013,7 @@ class PolyMesh2D():
         merge_nodes = []
         merged_some = False
         for e in self.interface_elements:
-            if e.material.has_interfaces:
+            if (not e.material is None) and e.material.has_interfaces:
                 continue
             merged_some = True
             # assume interface nodes are sorted, merge nodes 0+3 and 1+2
@@ -5610,22 +5610,23 @@ class MeshEdge2D():
     Examples
     --------
     >>> # initialize a mesh, no mesh edges added
-    >>> import vcfempy.meshgen
-    >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
-    >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-    >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-    >>> print(msh.num_mesh_edges)
+    >>> import vcfempy.meshgen as msh
+    >>> tst_msh = msh.PolyMesh2D('test mesh')
+    >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+    >>> tst_msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+    >>> print(tst_msh.num_mesh_edges)
     0
 
     >>> # create a mesh edge, this will add it to its parent mesh
-    >>> import vcfempy.materials
-    >>> rj_material = vcfempy.materials.Material('rock joint material')
-    >>> msh.add_vertices([[0.1, 0.1], [0.8, 0.8]])
-    >>> rock_joint = vcfempy.meshgen.MeshEdge2D(msh, [4, 5], rj_material,
-    ...                                         'rock joint')
-    >>> print(msh.num_mesh_edges)
+    >>> import vcfempy.materials as mtl
+    >>> rj_material = mtl.Material('rock joint material',
+    ...                            has_interfaces=True, interface_width=0.02)
+    >>> tst_msh.add_vertices([[0.1, 0.1], [0.8, 0.8]])
+    >>> rock_joint = msh.MeshEdge2D(tst_msh, [4, 5], rj_material,
+    ...                             'rock joint')
+    >>> print(tst_msh.num_mesh_edges)
     1
-    >>> print(rock_joint in msh.mesh_edges)
+    >>> print(rock_joint in tst_msh.mesh_edges)
     True
     >>> print(rock_joint.name)
     rock joint
@@ -5633,35 +5634,35 @@ class MeshEdge2D():
     rock joint material
     >>> print(rock_joint.vertices)
     [4, 5]
-    >>> print(msh.vertices[rock_joint.vertices, :])
+    >>> print(tst_msh.vertices[rock_joint.vertices, :])
     [[0.1 0.1]
      [0.8 0.8]]
 
     >>> # generate a mesh, then change mesh edge material
     >>> # this clears the mesh
-    >>> msh.mesh_scale = 0.4
-    >>> msh.add_seed_points([0.5, 0.5])
-    >>> msh.generate_mesh()
-    >>> print(msh.mesh_valid)
+    >>> tst_msh.mesh_scale = 0.4
+    >>> tst_msh.add_seed_points([0.5, 0.5])
+    >>> tst_msh.generate_mesh()
+    >>> print(tst_msh.mesh_valid)
     True
     >>> rock_joint.material = None
     >>> print(rock_joint.material)
     None
-    >>> print(msh.mesh_valid)
+    >>> print(tst_msh.mesh_valid)
     False
 
     >>> # regenerate the mesh, then change the mesh edge vertices
     >>> # this also clears the mesh
-    >>> msh.generate_mesh()
-    >>> print(msh.mesh_valid)
+    >>> tst_msh.generate_mesh()
+    >>> print(tst_msh.mesh_valid)
     True
-    >>> msh.add_vertices([0.5, 0.65])
-    >>> print(msh.mesh_valid)
+    >>> tst_msh.add_vertices([0.5, 0.65])
+    >>> print(tst_msh.mesh_valid)
     True
     >>> rock_joint.insert_vertices(1, 6)
     >>> print(rock_joint.vertices)
     [4, 6, 5]
-    >>> print(msh.mesh_valid)
+    >>> print(tst_msh.mesh_valid)
     False
     """
 
@@ -5917,45 +5918,49 @@ class MeshEdge2D():
         Examples
         --------
         >>> # create a mesh edge, no material type assigned
-        >>> import vcfempy.materials
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> me = vcfempy.meshgen.MeshEdge2D(msh)
-        >>> msh.add_vertices([[0.1, 0.1], [0.8, 0.8]])
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> tst_msh.insert_boundary_vertices(0, [0, 1, 2, 3])
+        >>> me = msh.MeshEdge2D(tst_msh)
+        >>> tst_msh.add_vertices([[0.1, 0.1], [0.8, 0.8]])
         >>> me.insert_vertices(0, [4, 5])
         >>> print(me.material)
         None
 
         >>> # create a mesh edge, assigning a material type
-        >>> rock_joint = vcfempy.materials.Material('rock joint')
-        >>> rj_edge = vcfempy.meshgen.MeshEdge2D(msh, material=rock_joint)
-        >>> msh.add_vertices([[0.1, 0.4], [0.3, 0.9]])
+        >>> rock_joint = mtl.Material('rock joint',
+        ...                           has_interfaces=True,
+        ...                           interface_width=0.02)
+        >>> rj_edge = msh.MeshEdge2D(tst_msh, material=rock_joint)
+        >>> tst_msh.add_vertices([[0.1, 0.4], [0.3, 0.9]])
         >>> rj_edge.insert_vertices(0, [6, 7])
-        >>> print(rj_edge in msh.mesh_edges)
+        >>> print(rj_edge in tst_msh.mesh_edges)
         True
         >>> print(rj_edge.material.name)
         rock joint
 
         >>> # assign a new material to an edge
-        >>> sandy_joint = vcfempy.materials.Material('sandy joint')
+        >>> sandy_joint = mtl.Material('sandy joint',
+        ...                            has_interfaces=True,
+        ...                            interface_width=0.05)
         >>> me.material = sandy_joint
-        >>> print(me in msh.mesh_edges)
+        >>> print(me in tst_msh.mesh_edges)
         True
         >>> print(me.material.name)
         sandy joint
 
         >>> # changing material type of an edge resets the mesh
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.mesh_valid)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.mesh_valid)
         True
         >>> me.material = None
         >>> print(me.material)
         None
-        >>> print(msh.mesh_valid)
+        >>> print(tst_msh.mesh_valid)
         False
 
         >>> # try to assign invalid materials to an edge
