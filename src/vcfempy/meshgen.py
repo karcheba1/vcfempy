@@ -6285,7 +6285,7 @@ class PolyElement2D():
     >>> print(msh.elements[0].num_nodes)
     4
     >>> print(msh.elements[0].nodes)
-    [15, 14, 6, 10]
+    [4, 8, 11, 6]
     >>> print(msh.elements[0].material.name)
     rock
     >>> print(np.round(msh.elements[0].area, 14))
@@ -6293,13 +6293,13 @@ class PolyElement2D():
     >>> print(msh.elements[0].centroid.round(14))
     [0.5 0.5]
     >>> print(msh.elements[0].quad_points.round(14))
-    [[-0.1125 -0.1125]
-     [-0.1125  0.1125]
+    [[ 0.1125 -0.1125]
      [ 0.1125  0.1125]
-     [ 0.1125 -0.1125]
-     [-0.075   0.    ]
-     [ 0.      0.075 ]
+     [-0.1125  0.1125]
+     [-0.1125 -0.1125]
      [ 0.075   0.    ]
+     [ 0.      0.075 ]
+     [-0.075   0.    ]
      [ 0.     -0.075 ]
      [ 0.      0.    ]]
     >>> print(msh.elements[0].quad_weights.round(14))
@@ -7031,20 +7031,20 @@ class PolyElement2D():
         >>> print(msh.elements[0]._centroid.round(14))
         [0.5 0.5]
         >>> print(msh.elements[0]._quad_points.round(14))
-        [[-0.1125 -0.1125]
-         [-0.1125  0.1125]
+        [[ 0.1125 -0.1125]
          [ 0.1125  0.1125]
-         [ 0.1125 -0.1125]
-         [-0.075   0.    ]
-         [ 0.      0.075 ]
+         [-0.1125  0.1125]
+         [-0.1125 -0.1125]
          [ 0.075   0.    ]
+         [ 0.      0.075 ]
+         [-0.075   0.    ]
          [ 0.     -0.075 ]
          [ 0.      0.    ]]
         >>> print(msh.elements[0]._quad_weights.round(14))
         [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
          0.10083037 0.10083037 0.09371293]
         >>> print(msh.elements[0]._quad_integrals.round(14))
-        [ 0.09     -0.        0.        0.000675  0.        0.000675]
+        [0.09     0.       0.       0.000675 0.       0.000675]
         """
 
         n = self.num_nodes
