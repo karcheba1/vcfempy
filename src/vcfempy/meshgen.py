@@ -52,28 +52,28 @@ class PolyMesh2D():
     --------
     >>> # initialize a mesh, no initial input provided
     >>> # (mainly for testing: reset _meshes_created counter)
-    >>> import vcfempy.meshgen
-    >>> vcfempy.meshgen.PolyMesh2D._num_created = 0
-    >>> msh = vcfempy.meshgen.PolyMesh2D()
-    >>> print(msh.name)
+    >>> import vcfempy.meshgen as msh
+    >>> msh.PolyMesh2D._num_created = 0
+    >>> tst_msh = msh.PolyMesh2D()
+    >>> print(tst_msh.name)
     Unnamed Mesh 0
-    >>> print(msh.num_vertices)
+    >>> print(tst_msh.num_vertices)
     0
 
     >>> # initialize another mesh, no initial input
-    >>> msh = vcfempy.meshgen.PolyMesh2D()
-    >>> print(msh.name)
+    >>> tst_msh = msh.PolyMesh2D()
+    >>> print(tst_msh.name)
     Unnamed Mesh 1
 
     >>> # give the mesh a descriptive name and add some vertices to the mesh
-    >>> msh.name = 'test mesh'
+    >>> tst_msh.name = 'test mesh'
     >>> new_verts = [[0, 0], [0, 1], [1, 1], [1, 0]]
-    >>> msh.add_vertices(new_verts)
-    >>> print(msh.name)
+    >>> tst_msh.add_vertices(new_verts)
+    >>> print(tst_msh.name)
     test mesh
-    >>> print(msh.num_vertices)
+    >>> print(tst_msh.num_vertices)
     4
-    >>> print(msh.vertices)
+    >>> print(tst_msh.vertices)
     [[0. 0.]
      [0. 1.]
      [1. 1.]
@@ -81,42 +81,43 @@ class PolyMesh2D():
 
     >>> # define the analysis boundary for the mesh
     >>> # this will also generate the boundary edges
-    >>> bnd_verts = [k for k, _ in enumerate(msh.vertices)]
-    >>> msh.insert_boundary_vertices(0, bnd_verts)
-    >>> print(msh.num_boundary_vertices)
+    >>> bnd_verts = [k for k, _ in enumerate(tst_msh.vertices)]
+    >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+    >>> print(tst_msh.num_boundary_vertices)
     4
-    >>> print(msh.boundary_vertices)
+    >>> print(tst_msh.boundary_vertices)
     [0, 1, 2, 3]
-    >>> print(msh.boundary_edges)
+    >>> print(tst_msh.boundary_edges)
     [[0, 1], [1, 2], [2, 3], [3, 0]]
 
     >>> # create a material and material region
-    >>> import vcfempy.materials
-    >>> m = vcfempy.materials.Material('rock')
-    >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, bnd_verts, m, 'rock region')
-    >>> print(msh.num_material_regions)
+    >>> import vcfempy.materials as mtl
+    >>> m = mtl.Material('rock', has_interfaces=True, interface_width=0.02)
+    >>> mr = msh.MaterialRegion2D(tst_msh, vertices=bnd_verts,
+    ...                           material=m, name='rock region')
+    >>> print(tst_msh.num_material_regions)
     1
-    >>> print(msh.material_regions[0].vertices)
+    >>> print(tst_msh.material_regions[0].vertices)
     [0, 1, 2, 3]
-    >>> print(msh.material_regions[0].name)
+    >>> print(tst_msh.material_regions[0].name)
     rock region
-    >>> print(msh.material_regions[0].material.name)
+    >>> print(tst_msh.material_regions[0].material.name)
     rock
 
     >>> # generate a simple mesh and check some mesh statistics
-    >>> msh.mesh_scale = 0.4
-    >>> msh.add_seed_points([0.5, 0.5])
-    >>> msh.generate_mesh()
-    >>> print(msh.num_nodes)
-    16
-    >>> print(msh.num_elements)
+    >>> tst_msh.mesh_scale = 0.4
+    >>> tst_msh.add_seed_points([0.5, 0.5])
+    >>> tst_msh.generate_mesh()
+    >>> print(tst_msh.num_nodes)
+    36
+    >>> print(tst_msh.num_elements)
     9
-    >>> print(msh.num_nodes_per_element)
+    >>> print(tst_msh.num_nodes_per_element)
     [4, 4, 4, 4, 4, 4, 4, 4, 4]
 
     >>> # print out detailed mesh information
-    >>> msh.verbose_printing = True
-    >>> print(msh)
+    >>> tst_msh.verbose_printing = True
+    >>> print(tst_msh) # doctest: +ELLIPSIS
     vcfempy.meshgen.PolyMesh2D 'test mesh'
     Number of Vertices = 4
     Number of Boundary Vertices = 4
@@ -125,7 +126,7 @@ class PolyMesh2D():
     Verbose Printing = True
     High Order Quadrature = False
     Mesh Generated = True
-    Number of Nodes = 16
+    Number of Nodes = 36
     Number of Elements = 9
     Number of Interface Elements = 12
     Number of Boundary Elements = 12
@@ -146,70 +147,41 @@ class PolyMesh2D():
     [0, 1, 2, 3]
     <BLANKLINE>
     Nodes
-    [[-2.77555756e-17  1.00000000e+00]
-     [ 3.50000000e-01  1.00000000e+00]
-     [ 0.00000000e+00  2.77555756e-17]
-     [ 3.50000000e-01  2.77555756e-17]
-     [ 1.00000000e+00  1.00000000e+00]
-     [ 6.50000000e-01  1.00000000e+00]
-     [ 6.50000000e-01  6.50000000e-01]
-     [ 1.00000000e+00  6.50000000e-01]
-     [ 1.00000000e+00 -2.77555756e-17]
-     [ 6.50000000e-01 -2.77555756e-17]
-     [ 6.50000000e-01  3.50000000e-01]
-     [ 1.00000000e+00  3.50000000e-01]
-     [ 2.77555756e-17  6.50000000e-01]
-     [ 2.77555756e-17  3.50000000e-01]
-     [ 3.50000000e-01  6.50000000e-01]
-     [ 3.50000000e-01  3.50000000e-01]]
+    [[ 6.40000000e-01 -2.59052039e-17]
+     [ 6.60000000e-01 -2.77555756e-17]
+     ...
+     [ 3.40000000e-01  1.00000000e+00]
+     [-2.77555756e-17  1.00000000e+00]]
     <BLANKLINE>
     Element Nodes, Areas, Points, Centroids, Materials
-    [15, 14, 6, 10], 0.09000000000000002, [0.5 0.5], [0.5 0.5], rock
-    [15, 3, 2, 13], 0.12249999999999998, [0.2 0.2], [0.175 0.175], rock
-    [12, 0, 1, 14], 0.1225, [0.2 0.8], [0.175 0.825], rock
-    [7, 4, 5, 6], 0.1225, [0.8 0.8], [0.825 0.825], rock
-    [11, 8, 9, 10], 0.12249999999999998, [0.8 0.2], [0.825 0.175], rock
-    [15, 13, 12, 14], 0.10500000000000001, [0.2 0.5], [0.175 0.5  ], rock
-    [5, 1, 14, 6], 0.10499999999999998, [0.5 0.8], [0.5   0.825], rock
-    [10, 6, 7, 11], 0.10500000000000001, [0.8 0.5], [0.825 0.5  ], rock
-    [3, 15, 10, 9], 0.10500000000000001, [0.5 0.2], [0.5   0.175], rock
+    [13, 25, 22, 7], 0.07840000000000001, [0.5 0.5], [0.5 0.5], rock
+    [17, 3, 4, 14], 0.11559999999999998, [0.2 0.2], [0.17 0.17], rock
+    ...
+    [8, 23, 26, 10], 0.0952, [0.8 0.5], [0.83 0.5 ], rock
+    [0, 12, 15, 5], 0.0952, [0.5 0.2], [0.5  0.17], rock
     <BLANKLINE>
     Interface Element Nodes and Neighbors
-    [5, 6], [3, 6]
-    [6, 7], [3, 7]
-    [9, 10], [4, 8]
-    [10, 11], [4, 7]
-    [6, 10], [7, 0]
-    [12, 14], [5, 2]
-    [13, 15], [5, 1]
-    [14, 15], [5, 0]
-    [1, 14], [2, 6]
-    [3, 15], [1, 8]
-    [6, 14], [0, 6]
-    [10, 15], [0, 8]
+    [27, 31, 32, 28], [3, 6]
+    [18, 27, 26, 23], [3, 7]
+    ...
+    [22, 25, 28, 21], [0, 6]
+    [13, 7, 15, 12], [0, 8]
     <BLANKLINE>
     Boundary Element Nodes and Neighbors
-    [0, 1], 2
-    [2, 3], 1
-    [4, 5], 3
-    [4, 7], 3
-    [1, 5], 6
-    [8, 9], 4
-    [8, 11], 4
-    [7, 11], 7
-    [3, 9], 8
-    [12, 13], 5
-    [0, 12], 2
-    [2, 13], 1
+    [34, 35], 2
+    [3, 4], 1
+    ...
+    [35, 29], 2
+    [17, 3], 1
 
     >>> # plot the mesh and save an image
     >>> import matplotlib.pyplot as plt
     >>> fig = plt.figure()
     >>> ax = plt.gca()
-    >>> ax = msh.plot_boundaries()
-    >>> ax = msh.plot_mesh()
-    >>> ax = msh.plot_vertices()
-    >>> ax = msh.plot_nodes()
+    >>> ax = tst_msh.plot_boundaries()
+    >>> ax = tst_msh.plot_mesh()
+    >>> ax = tst_msh.plot_vertices()
+    >>> ax = tst_msh.plot_nodes()
     >>> xmin, xmax, ymin, ymax = plt.axis('equal')
     >>> xlab_text = ax.set_xlabel('x', fontweight='bold')
     >>> ylab_text = ax.set_ylabel('y', fontweight='bold')
