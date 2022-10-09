@@ -3586,7 +3586,7 @@ class PolyMesh2D():
             return
         # single vertex, just delete points within d_scale
         elif len(verts) == 1:
-            edge_buf = np.array(shp.Polygon(shp.Point(self.vertices[verts])
+            edge_buf = np.array(shp.Polygon(shp.Point(self.vertices[verts][0])
                                             .buffer(d_scale))
                                 .exterior.coords)
             near_edge = _points_in_polygon(self.points, edge_buf)
