@@ -6448,7 +6448,7 @@ class PolyElement2D():
         >>> msh.add_seed_points([0.5, 0.5])
         >>> msh.generate_mesh()
         >>> print(msh.elements[0].nodes)
-        [15, 14, 6, 10]
+        [4, 8, 11, 6]
         """
         return self._nodes
 
@@ -6488,22 +6488,22 @@ class PolyElement2D():
         >>> msh.add_seed_points([0.5, 0.5])
         >>> msh.generate_mesh()
         >>> print(msh.nodes.round(14))
-        [[-0.    1.  ]
-         [ 0.35  1.  ]
+        [[ 1.   -0.  ]
+         [ 0.65 -0.  ]
          [ 0.    0.  ]
          [ 0.35  0.  ]
-         [ 1.    1.  ]
-         [ 0.65  1.  ]
-         [ 0.65  0.65]
-         [ 1.    0.65]
-         [ 1.   -0.  ]
-         [ 0.65 -0.  ]
          [ 0.65  0.35]
          [ 1.    0.35]
-         [ 0.    0.65]
+         [ 0.35  0.35]
          [ 0.    0.35]
+         [ 0.65  0.65]
+         [ 1.    0.65]
+         [ 0.    0.65]
          [ 0.35  0.65]
-         [ 0.35  0.35]]
+         [-0.    1.  ]
+         [ 0.35  1.  ]
+         [ 1.    1.  ]
+         [ 0.65  1.  ]]
 
         >>> # create a new element
         >>> # note, this is normally not done explicitly, but is shown here
@@ -6511,9 +6511,9 @@ class PolyElement2D():
         >>> e = vcfempy.meshgen.PolyElement2D(msh)
         >>> print(e.nodes)
         []
-        >>> e.insert_nodes(0, [0, 1, 14, 12])
+        >>> e.insert_nodes(0, [2, 3, 6, 7])
         >>> print(e.nodes)
-        [0, 1, 14, 12]
+        [2, 3, 6, 7]
         >>> print(np.round(e.area, 14))
         0.1225
 
@@ -6521,17 +6521,17 @@ class PolyElement2D():
         >>> e.insert_nodes(0, None)
         >>> e.insert_nodes(0, [])
         >>> print(e.nodes)
-        [0, 1, 14, 12]
+        [2, 3, 6, 7]
 
         >>> # try to insert some invalid nodes
         >>> e.insert_nodes(0, 'one')
         Traceback (most recent call last):
             ...
         ValueError: invalid literal for int() with base 10: 'one'
-        >>> e.insert_nodes(0, 1)
+        >>> e.insert_nodes(0, 3)
         Traceback (most recent call last):
             ...
-        ValueError: 1 is already a node
+        ValueError: 3 is already a node
         >>> e.insert_nodes(0, 16)
         Traceback (most recent call last):
             ...
@@ -6545,7 +6545,7 @@ class PolyElement2D():
         Traceback (most recent call last):
             ...
         ValueError: ...
-        >>> e.insert_nodes('one', 2)
+        >>> e.insert_nodes('one', 4)
         Traceback (most recent call last):
             ...
         TypeError: 'str' object cannot be interpreted as an integer
@@ -6956,20 +6956,20 @@ class PolyElement2D():
         >>> print(msh.elements[0].centroid.round(14))
         [0.5 0.5]
         >>> print(msh.elements[0].quad_points.round(14))
-        [[-0.1125 -0.1125]
-         [-0.1125  0.1125]
+        [[ 0.1125 -0.1125]
          [ 0.1125  0.1125]
-         [ 0.1125 -0.1125]
-         [-0.075   0.    ]
-         [ 0.      0.075 ]
+         [-0.1125  0.1125]
+         [-0.1125 -0.1125]
          [ 0.075   0.    ]
+         [ 0.      0.075 ]
+         [-0.075   0.    ]
          [ 0.     -0.075 ]
          [ 0.      0.    ]]
         >>> print(msh.elements[0].quad_weights.round(14))
         [0.1257414  0.1257414  0.1257414  0.1257414  0.10083037 0.10083037
          0.10083037 0.10083037 0.09371293]
         >>> print(msh.elements[0].quad_integrals.round(14))
-        [ 0.09     -0.        0.        0.000675  0.        0.000675]
+        [0.09     0.       0.       0.000675 0.       0.000675]
         >>> msh.elements[0].invalidate_properties()
         >>> print(msh.elements[0]._area)
         None
