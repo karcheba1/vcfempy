@@ -6762,13 +6762,13 @@ class PolyElement2D():
         >>> msh.add_seed_points([0.5, 0.5])
         >>> msh.generate_mesh()
         >>> print(msh.elements[0].quad_points.round(14))
-        [[-0.1125 -0.1125]
-         [-0.1125  0.1125]
+        [[ 0.1125 -0.1125]
          [ 0.1125  0.1125]
-         [ 0.1125 -0.1125]
-         [-0.075   0.    ]
-         [ 0.      0.075 ]
+         [-0.1125  0.1125]
+         [-0.1125 -0.1125]
          [ 0.075   0.    ]
+         [ 0.      0.075 ]
+         [-0.075   0.    ]
          [ 0.     -0.075 ]
          [ 0.      0.    ]]
         """
@@ -6909,7 +6909,7 @@ class PolyElement2D():
         >>> msh.add_seed_points([0.5, 0.5])
         >>> msh.generate_mesh()
         >>> print(msh.elements[0].quad_integrals.round(14))
-        [ 0.09     -0.        0.        0.000675  0.        0.000675]
+        [0.09     0.       0.       0.000675 0.       0.000675]
         >>> print(np.round(msh.elements[0].area, 14))
         0.09
         """
