@@ -9004,6 +9004,30 @@ class IntersectionElement2D():
 
     Examples
     --------
+    >>> # create a simple mesh and check the intersection element properties
+    >>> import vcfempy.meshgen as msh
+    >>> import vcfempy.materials as mtl
+    >>> tst_msh = msh.PolyMesh2D()
+    >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+    >>> bnd_verts = [0, 1, 2, 3]
+    >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+    >>> rock = mtl.Material('rock', has_interfaces=True,
+    ...                     interface_width=0.02)
+    >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+    ...                           vertices=bnd_verts)
+    >>> tst_msh.mesh_scale = 0.4
+    >>> tst_msh.add_seed_points([0.5, 0.5])
+    >>> tst_msh.generate_mesh()
+
+    >>> print(tst_msh.num_intersection_elements)
+    4
+    >>> for e in tst_msh.intersection_elements:
+    ...     print(f"{e.nodes}, {np.round(e.area, 14)}, "
+    ...           + f"{e.centroid.round(14)}, {e.material.name}")
+    [25, 26, 27, 28], 0.0004, [0.65 0.65], rock
+    [13, 12, 11, 10], 0.0004, [0.65 0.35], rock
+    [22, 21, 20, 19], 0.0004, [0.35 0.65], rock
+    [7, 6, 14, 15], 0.0004, [0.35 0.35], rock
     """
 
     def __init__(self, mesh, nodes=None, material=None, neighbors=None,
@@ -9046,14 +9070,20 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.intersection_elements[0].mesh is msh)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.intersection_elements[0].mesh is tst_msh)
         True
         """
         return self._mesh
@@ -9081,17 +9111,20 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.materials
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> rock = vcfempy.materials.Material('rock')
-        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, [0, 1, 2, 3], rock)
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.intersection_elements[0].material.name)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.intersection_elements[0].material.name)
         rock
         """
         return self._material
@@ -9115,15 +9148,21 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.interface_elements[0].num_nodes)
-        3
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.interface_elements[0].num_nodes)
+        4
         """
         return len(self.nodes)
 
@@ -9140,15 +9179,21 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.intersection_elements[0].nodes)
-        [5, 6]
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.intersection_elements[0].nodes)
+        [25, 26, 27, 28]
         """
         return self._nodes
 
@@ -9183,68 +9228,57 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.nodes.round(14))
-        [[-0.    1.  ]
-         [ 0.35  1.  ]
-         [ 0.    0.  ]
-         [ 0.35  0.  ]
-         [ 1.    1.  ]
-         [ 0.65  1.  ]
-         [ 0.65  0.65]
-         [ 1.    0.65]
-         [ 1.   -0.  ]
-         [ 0.65 -0.  ]
-         [ 0.65  0.35]
-         [ 1.    0.35]
-         [ 0.    0.65]
-         [ 0.    0.35]
-         [ 0.35  0.65]
-         [ 0.35  0.35]]
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
 
         >>> # create a new intersection element
         >>> # note, this is normally not done explicitly, but is shown here
         >>> # for testing and documentation
-        >>> e = vcfempy.meshgen.IntersectionElement2D(msh)
+        >>> e = msh.IntersectionElement2D(tst_msh)
         >>> print(e.nodes)
         []
-        >>> e.insert_nodes(0, [1, 14, 0])
+        >>> e.insert_nodes(0, [3, 2, 30])
         >>> print(e.nodes)
-        [1, 14, 0]
+        [3, 2, 30]
         >>> print(np.round(e.area, 14))
-        0.06125
+        0.5
 
         >>> # insert no nodes in multiple ways
         >>> e.insert_nodes(0, None)
         >>> e.insert_nodes(0, [])
         >>> print(e.nodes)
-        [1, 14, 0]
+        [3, 2, 30]
 
         >>> # try to insert some invalid nodes
         >>> e.insert_nodes(0, 'one')
         Traceback (most recent call last):
             ...
         ValueError: invalid literal for int() with base 10: 'one'
-        >>> e.insert_nodes(0, [1, 14])
+        >>> e.insert_nodes(0, [1, 30])
         Traceback (most recent call last):
             ...
-        ValueError: 14 is already a node
-        >>> e.insert_nodes(0, [14, 2])
+        ValueError: 30 is already a node
+        >>> e.insert_nodes(0, [30, 6])
         Traceback (most recent call last):
             ...
-        ValueError: 14 is already a node
+        ValueError: 30 is already a node
         >>> print(e.nodes)
-        [1, 14, 0]
-        >>> e.insert_nodes(0, [16, 17])
+        [3, 2, 30]
+        >>> e.insert_nodes(0, [16, 36])
         Traceback (most recent call last):
             ...
-        ValueError: node index 17 out of range
+        ValueError: node index 36 out of range
         >>> e.insert_nodes(0, [-1, -2])
         Traceback (most recent call last):
             ...
@@ -9254,7 +9288,7 @@ class IntersectionElement2D():
         Traceback (most recent call last):
             ...
         ValueError: ...
-        >>> e.insert_nodes('one', [2, 3])
+        >>> e.insert_nodes('one', [6, 7])
         Traceback (most recent call last):
             ...
         TypeError: 'str' object cannot be interpreted as an integer
@@ -9304,38 +9338,44 @@ class IntersectionElement2D():
         >>> # create a simple mesh, and remove nodes from an element
         >>> # this should not normally be done explicitly unless you know
         >>> # what you are doing
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.intersection_elements[0].nodes)
-        [5, 6]
-        >>> msh.intersection_elements[0].remove_nodes([5, 6])
-        >>> print(msh.intersection_elements[0].nodes)
-        []
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.intersection_elements[0].nodes)
+        [25, 26, 27, 28]
+        >>> tst_msh.intersection_elements[0].remove_nodes([25, 26])
+        >>> print(tst_msh.intersection_elements[0].nodes)
+        [27, 28]
 
         >>> # remove no nodes, in two different ways
-        >>> msh.intersection_elements[0].insert_nodes(0, [5, 6])
-        >>> msh.intersection_elements[0].remove_nodes(None)
-        >>> msh.intersection_elements[0].remove_nodes([])
-        >>> print(msh.intersection_elements[0].nodes)
-        [5, 6]
+        >>> tst_msh.intersection_elements[0].insert_nodes(0, [25, 26])
+        >>> tst_msh.intersection_elements[0].remove_nodes(None)
+        >>> tst_msh.intersection_elements[0].remove_nodes([])
+        >>> print(tst_msh.intersection_elements[0].nodes)
+        [25, 26, 27, 28]
 
         >>> # try to remove some invalid nodes
-        >>> msh.intersection_elements[0].remove_nodes('one')
+        >>> tst_msh.intersection_elements[0].remove_nodes('one')
         Traceback (most recent call last):
             ...
         ValueError: invalid literal for int() with base 10: 'one'
-        >>> msh.intersection_elements[0].remove_nodes([5, 8])
+        >>> tst_msh.intersection_elements[0].remove_nodes([5, 8])
         Traceback (most recent call last):
             ...
         ValueError: list.remove(x): x not in list
-        >>> print(msh.intersection_elements[0].nodes)
-        [5, 6]
-        >>> msh.intersection_elements[0].remove_nodes(
+        >>> print(tst_msh.intersection_elements[0].nodes)
+        [25, 26, 27, 28]
+        >>> tst_msh.intersection_elements[0].remove_nodes(
         ...                 [[1, 2], 3]) #doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
             ...
@@ -9369,15 +9409,21 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.intersection_elements[0].num_neighbors)
-        3
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.intersection_elements[0].num_neighbors)
+        4
         """
         return len(self.neighbors)
 
@@ -9394,13 +9440,22 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print([tst_msh.elements.index(n)
+        ...        for n in tst_msh.intersection_elements[0].neighbors])
+        [0, 7, 3, 6]
         """
         return self._neighbors
 
@@ -9425,35 +9480,41 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
 
         >>> # create a new element
         >>> # note, this is normally not done explicitly, but is shown here
         >>> # for testing and documentation
-        >>> e = vcfempy.meshgen.IntersectionElement2D(msh)
+        >>> e = msh.IntersectionElement2D(tst_msh)
         >>> print(e.neighbors)
         []
-        >>> e.add_neighbors(msh.elements[0:3])
-        >>> print([msh.elements.index(n) for n in e.neighbors])
+        >>> e.add_neighbors(tst_msh.elements[0:3])
+        >>> print([tst_msh.elements.index(n) for n in e.neighbors])
         [0, 1, 2]
 
         >>> # add no neighbors in multiple ways
         >>> e.add_neighbors(None)
         >>> e.add_neighbors([])
-        >>> print([msh.elements.index(n) for n in e.neighbors])
+        >>> print([tst_msh.elements.index(n) for n in e.neighbors])
         [0, 1, 2]
 
         >>> # try to add some invalid neighbors
-        >>> e.add_neighbors(msh.elements[0:2])
+        >>> e.add_neighbors(tst_msh.elements[0:2])
         Traceback (most recent call last):
             ...
-        ValueError: at least one element is already a neighbor
+        ValueError: element 0 is already a neighbor
         """
         if neighbors is None:
             return
@@ -9484,15 +9545,21 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(np.round(msh.intersection_elements[0].area, 14))
-        0.0
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(np.round(tst_msh.intersection_elements[0].area, 14))
+        0.0004
         """
         if self._area is None:
             self._area = shp.Polygon(self.mesh.nodes[self.nodes]).area
@@ -9510,15 +9577,21 @@ class IntersectionElement2D():
         Examples
         --------
         >>> # create a simple mesh and check the element properties
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.intersection_elements[0].centroid)
-        [0.65  0.825]
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> print(tst_msh.intersection_elements[0].centroid)
+        [0.65 0.65]
         """
         if self._centroid is None:
             if self.num_nodes:
@@ -9548,25 +9621,32 @@ class IntersectionElement2D():
         >>> # create a simple mesh, check the element properties
         >>> # invalidate properties and check the values of (private) cache
         >>> # attributes
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D()
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> msh.mesh_scale = 0.4
-        >>> msh.add_seed_points([0.5, 0.5])
-        >>> msh.generate_mesh()
-        >>> print(msh.intersection_elements[0]._area)
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
+        >>> tst_msh.intersection_elements[0].invalidate_properties()
+        >>> print(tst_msh.intersection_elements[0]._area)
         None
-        >>> print(msh.intersection_elements[0]._centroid)
+        >>> print(tst_msh.intersection_elements[0]._centroid)
         None
-        >>> print(msh.intersection_elements[0].area)
-        0.0
-        >>> print(msh.intersection_elements[0].centroid.round(14))
-        [0.65  0.825]
-        >>> msh.intersection_elements[0].invalidate_properties()
-        >>> print(msh.intersection_elements[0]._area)
+        >>> print(np.round(tst_msh.intersection_elements[0].area, 14))
+        0.0004
+        >>> print(tst_msh.intersection_elements[0].centroid.round(14))
+        [0.65 0.65]
+        >>> tst_msh.intersection_elements[0].invalidate_properties()
+        >>> print(tst_msh.intersection_elements[0]._area)
         None
-        >>> print(msh.intersection_elements[0]._centroid)
+        >>> print(tst_msh.intersection_elements[0]._centroid)
         None
         """
         self._centroid = None
@@ -9603,24 +9683,26 @@ class IntersectionElement2D():
         >>> # initialize a mesh and a material region, then generate a mesh
         >>> # and plot the elements, interfaces, and intersections
         >>> import matplotlib.pyplot as plt
-        >>> import vcfempy.materials
-        >>> import vcfempy.meshgen
-        >>> msh = vcfempy.meshgen.PolyMesh2D('test mesh')
-        >>> msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
-        >>> msh.insert_boundary_vertices(0, [0, 1, 2, 3])
-        >>> rock = vcfempy.materials.Material('rock', color='xkcd:clay')
-        >>> mr = vcfempy.meshgen.MaterialRegion2D(msh, msh.boundary_vertices,
-        ...                                       rock, 'rock region')
-        >>> msh.mesh_scale = 0.2
-        >>> msh.mesh_rand = 0.2
-        >>> msh.generate_mesh()
+        >>> import vcfempy.meshgen as msh
+        >>> import vcfempy.materials as mtl
+        >>> tst_msh = msh.PolyMesh2D()
+        >>> tst_msh.add_vertices([[0, 0], [0, 1], [1, 1], [1, 0]])
+        >>> bnd_verts = [0, 1, 2, 3]
+        >>> tst_msh.insert_boundary_vertices(0, bnd_verts)
+        >>> rock = mtl.Material('rock', has_interfaces=True,
+        ...                     interface_width=0.02)
+        >>> mr = msh.MaterialRegion2D(tst_msh, material=rock,
+        ...                           vertices=bnd_verts)
+        >>> tst_msh.mesh_scale = 0.4
+        >>> tst_msh.add_seed_points([0.5, 0.5])
+        >>> tst_msh.generate_mesh()
         >>> fig = plt.figure()
-        >>> for e in msh.elements:
+        >>> for e in tst_msh.elements:
         ...     ax = e.plot(edgecolor=None)
         ...     ax = e.plot_quad_points()
-        >>> for e in msh.interface_elements:
+        >>> for e in tst_msh.interface_elements:
         ...     ax = e.plot()
-        >>> for e in msh.intersection_elements:
+        >>> for e in tst_msh.intersection_elements:
         ...     ax = e.plot()
         >>> xmin, xmax, ymin, ymax = ax.axis('equal')
         >>> xtext = ax.set_xlabel('x')
