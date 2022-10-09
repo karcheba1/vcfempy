@@ -102,11 +102,10 @@ bulk_modulus=6.9e5)
     None
 
     >>> # trying to initialize a Material without a name
-    >>> m = vcfempy.materials.Material()
+    >>> m = vcfempy.materials.Material() # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
     ...
-    TypeError: Material.__init__() missing 1 required positional \
-argument: 'name'
+    TypeError: Material.__init__() missing 1 required positional argument
     """
 
     def __init__(self, name, **kwargs):

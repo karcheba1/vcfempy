@@ -5164,7 +5164,7 @@ class MaterialRegion2D():
 
         >>> # try to set parent mesh (immutable)
         >>> new_mesh = vcfempy.meshgen.PolyMesh2D()
-        >>> mr.mesh = new_mesh
+        >>> mr.mesh = new_mesh # doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
             ...
         AttributeError: can't set attribute 'mesh'
@@ -5776,7 +5776,7 @@ class MeshEdge2D():
 
         >>> # try to set parent mesh (immutable)
         >>> new_mesh = vcfempy.meshgen.PolyMesh2D()
-        >>> me.mesh = new_mesh
+        >>> me.mesh = new_mesh # doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
             ...
         AttributeError: can't set attribute 'mesh'
@@ -7776,16 +7776,16 @@ class InterfaceElement2D():
         >>> tst_msh.interface_elements[0].width = 0.5
         >>> print(tst_msh.interface_elements[0].width)
         0.5
-        >>> tst_msh.interface_elements[0].width = None
+        >>> e = tst_msh.interface_elements[0]
+        >>> e.width = None # doctest: +IGNORE_EXCEPTION_DETAIL
         Traceback (most recent call last):
             ...
-        TypeError: float() argument must be a string or a real number, \
-not 'NoneType'
-        >>> tst_msh.interface_elements[0].width = -0.1
+        TypeError: float() argument must be a string or a real number, ...
+        >>> e.width = -0.1
         Traceback (most recent call last):
             ...
         ValueError: width must be >= 0.0
-        >>> tst_msh.interface_elements[0].width = 'abc'
+        >>> e.width = 'abc'
         Traceback (most recent call last):
             ...
         ValueError: could not convert string to float: 'abc'
