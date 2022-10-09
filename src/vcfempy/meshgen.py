@@ -6597,32 +6597,32 @@ class PolyElement2D():
         >>> msh.mesh_scale = 0.02
         >>> msh.generate_mesh()
         >>> print(msh.elements[0].nodes)
-        [714, 710, 711, 712, 713]
-        >>> msh.elements[0].remove_nodes(714)
+        [137, 194, 250, 153, 102]
+        >>> msh.elements[0].remove_nodes(194)
         >>> print(msh.elements[0].nodes)
-        [710, 711, 712, 713]
+        [137, 250, 153, 102]
 
         >>> # remove multiple nodes
         >>> print(msh.elements[1].nodes)
-        [1328, 276, 81, 714, 710, 1327]
-        >>> msh.elements[1].remove_nodes([276, 81])
+        [232, 194, 137, 96, 113, 182]
+        >>> msh.elements[1].remove_nodes([232, 96])
         >>> print(msh.elements[1].nodes)
-        [1328, 714, 710, 1327]
+        [194, 137, 113, 182]
 
         >>> # the list of nodes to remove need not be 1d
         >>> # if not, it will be flattened
         >>> i7 = msh.num_nodes_per_element.index(7)
         >>> print(msh.elements[i7].nodes)
-        [446, 162, 7, 9, 8, 10, 445]
-        >>> msh.elements[i7].remove_nodes([[7, 8], [9, 10]])
+        [246, 183, 145, 68, 103, 152, 155]
+        >>> msh.elements[i7].remove_nodes([[155, 103], [246, 145]])
         >>> print(msh.elements[i7].nodes)
-        [446, 162, 445]
+        [183, 68, 152]
 
         >>> # remove no nodes, in two different ways
         >>> msh.elements[0].remove_nodes(None)
         >>> msh.elements[0].remove_nodes([])
         >>> print(msh.elements[0].nodes)
-        [710, 711, 712, 713]
+        [137, 250, 153, 102]
 
         >>> # try to remove some invalid nodes
         >>> msh.elements[0].remove_nodes('one')
