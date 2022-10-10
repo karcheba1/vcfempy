@@ -1719,6 +1719,22 @@ class PolyMesh2D():
         return self._nodes
 
     @property
+    def node_elements(self):
+        return self._node_elements
+
+    @property
+    def node_interfaces(self):
+        return self._node_interfaces
+
+    @property
+    def node_boundaries(self):
+        return self._node_boundaries
+
+    @property
+    def node_cases(self):
+        return self._node_cases
+
+    @property
     def num_elements(self):
         """Number of :a:`elements` in the generated mesh of the
         :c:`PolyMesh2D`.
@@ -3159,6 +3175,10 @@ class PolyMesh2D():
             self._boundary_elements = []
             self._interface_elements = []
             self._intersection_elements = []
+            self._node_elements = []
+            self._node_interfaces = []
+            self._node_boundaries = []
+            self._node_cases = []
         # otherwise, try to validate mesh
         else:
             assert (self.num_nodes), "self.nodes is empty"
@@ -4097,93 +4117,67 @@ class PolyMesh2D():
         node_dict = {n: k for k, n in enumerate(node_order)}
         self._replace_nodes(node_dict)
 
-    def _shift_nodes(self):
+    def _classify_nodes(self):
         # get mesh information for node cases
-        num_node_elements = np.zeros(self.num_nodes, dtype=int)
-        node_elements = [[] for n in self.nodes]
-        num_node_interfaces = np.zeros(self.num_nodes, dtype=int)
-        node_interfaces = [[] for n in self.nodes]
-        num_node_boundaries = np.zeros(self.num_nodes, dtype=int)
-        node_boundaries = [[] for n in self.nodes]
-        num_case_nodes = np.zeros(6, dtype=int)
-        node_cases = np.zeros(self.num_nodes, dtype=int)
+        # number of body elements per node
+        self._node_elements = [[] for n in self.nodes]
         for e in self.elements:
             for n in e.nodes:
-                num_node_elements[n] += 1
-                node_elements[n].append(e)
-        for ie in self.interface_elements:
-            for n in np.unique(ie.nodes):
-                num_node_interfaces[n] += 1
-                node_interfaces[n].append(ie)
-        for be in self.boundary_elements:
-            for n in np.unique(be.nodes):
-                num_node_boundaries[n] += 1
-                node_boundaries[n].append(be)
+                self.node_elements[n].append(e)
+        num_node_elements = [len(ne) for ne in self.node_elements]
+        # number of interface elements per node
+        self._node_interfaces = [[] for n in self.nodes]
+        for e in self.interface_elements:
+            for n in np.unique(e.nodes):
+                self.node_interfaces[n].append(e)
+        num_node_interfaces = [len(ni) for ni in self.node_interfaces]
+        # number of boundary elements per node
+        self._node_boundaries = [[] for n in self.nodes]
+        for e in self.boundary_elements:
+            for n in np.unique(e.nodes):
+                self._node_boundaries[n].append(e)
+        num_node_boundaries = [len(nb) for nb in self.node_boundaries]
+        # classify node cases
+        # Case 0:   in 0 interface elements
+        #           do not shift
+        # Case 1:   in 2 interface elements and 1 body element
+        #           shift along bisector line of node vertex in body element
+        # Case 2:   in 2 interface elements and 2 body elements
+        #           shift along shared non-interface edge of body elements
+        # Case 3:   in 1 interface element and 1-2 body elements
+        #           shift along adjacent non-interface edge
+        # Case 4:   in 1 interface element and >2 body elements
+        #           do not shift, too many constraints
+        #           typically at end of mesh edge
+        # Degenerate Case: num_interfaces + num_boundaries > 2
+        self._node_cases = -np.ones(self.num_nodes, dtype=int)
         for n, (e, i, b) in enumerate(zip(num_node_elements,
                                           num_node_interfaces,
                                           num_node_boundaries)):
-            # Case 0: nodes that are not in any interface elements
-            #           these nodes do not need to be shifted
-            if not i:
-                num_case_nodes[0] += 1
-            # Case 4: nodes that are in >2 body elements
-            #           these nodes should not be shifted
-            #           because there are too many constraints
-            #           typically at the end of a mesh edge
+            # Degenerate Case
+            if e == 0 or i + b > 2:
+                raise AssertionError(f"node {n} in e={e} body elements, "
+                                     + f"i={i} interfaces, "
+                                     + f"and b={b} boundaries, "
+                                     + "need e>=1 and (i+b)<2.")
+            # Case 0
+            elif i == 0:
+                self.node_cases[n] = 0
+            # Case 4
             elif e > 2:
-                num_case_nodes[4] += 1
-                node_cases[n] = 4
-            # Cases 1 and 2: nodes that are part of 2 interface elements
-            #                   these nodes need to have two shift points
-            #                   calculated, which are averaged
-            #                   (in case the interfaces have different widths)
+                self.node_cases[n] = 4
+            # Cases 1 and 2
             elif i == 2:
-                if not b:
-                    # Case 1: nodes that are part of 1 body element
-                    #           shift along line bisecting the angle
-                    #           between the 2 interface elements
-                    if e == 1:
-                        num_case_nodes[1] += 1
-                        node_cases[n] = 1
-                    # Case 2: nodes that are part of 2 body elements
-                    #           shift along the edge
-                    #           between the neighboring body elements
-                    elif e == 2:
-                        num_case_nodes[2] += 1
-                        node_cases[n] = 2
-                # Degenerate Case: this node is not clearly classified
-                #                   in 2 interface elements
-                #                   and >0 boundary elements
-                else:
-                    num_case_nodes[-1] += 1
-                    node_cases[n] = -1
-                    print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
-                          + f'{self.nodes[n]}')
+                self.node_cases[n] = e
             elif i == 1:
-                # Case 3: nodes that are in 1 interface element
-                #           and 1-2 body elements
-                #           these nodes need to be shifted
-                #           along an adjacent edge
-                if e >= 1 and b <= 1:
-                    num_case_nodes[3] += 1
-                    node_cases[n] = 3
-                # Degenerate Case: this node is not clearly classified
-                #                       in 1 interface element
-                #                       and >1 boundary element
-                else:
-                    num_case_nodes[-1] += 1
-                    node_cases[n] = -1
-                    print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
-                          + f'{self.nodes[n]}')
-            # Degenerate Case: this node is not clearly classified
-            #                   in >2 interface elements
-            else:
-                num_case_nodes[-1] += 1
-                node_cases[n] = -1
-                print(f'(n, e, i, b) : ({n}, {e}, {i}, {b}), '
-                      + f'{self.nodes[n]}')
+                self.node_cases[n] = 3
         # make sure that there are no degenerate nodes
-        assert ((not num_case_nodes[-1]) and (not np.any(node_cases < 0)))
+        if np.any(self.node_cases < 0):
+            raise AssertionError(
+                f"there are {np.count_nonzero(np.where(self.node_cases < 0))}"
+                + " unclassified nodes")
+
+    def _shift_nodes(self):
         # shift nodes
         node_shifted = np.zeros(self.num_nodes, dtype=bool)
         old_nodes = np.array(self.nodes)
@@ -4191,11 +4185,11 @@ class PolyMesh2D():
             for i, n in enumerate(e.nodes):
                 # skip nodes that do not need to be shifted
                 if (node_shifted[n]
-                        or node_cases[n] == 0
-                        or node_cases[n] == 4):
+                        or self.node_cases[n] == 0
+                        or self.node_cases[n] == 4):
                     continue
                 # Case 1: Node in 2 interface elements and 1 body element
-                elif node_cases[n] == 1:
+                elif self.node_cases[n] == 1:
                     s_max = np.inf
                     # get angle bisector direction
                     p_i = old_nodes[n]
@@ -4207,7 +4201,7 @@ class PolyMesh2D():
                     a_i_ip1_hat = a_i_ip1 / np.linalg.norm(a_i_ip1)
                     v_i = a_i_im1_hat + a_i_ip1_hat
                     # check previous node for Case 1, get smax
-                    if node_cases[e.nodes[(i - 1) % e.num_nodes]] == 1:
+                    if self.node_cases[e.nodes[(i - 1) % e.num_nodes]] == 1:
                         p_im2 = old_nodes[e.nodes[(i - 2) % e.num_nodes]]
                         a_im1_im2 = p_im2 - p_im1
                         a_im1_im2_hat = a_im1_im2 / np.linalg.norm(a_im1_im2)
@@ -4218,7 +4212,7 @@ class PolyMesh2D():
                                     - v_im1[1] * v_i[0]))
                         s_max = np.min([s_max, 0.5 * s_new])
                     # check next node for Case 1, get smax
-                    if node_cases[e.nodes[(i + 1) % e.num_nodes]] == 1:
+                    if self.node_cases[e.nodes[(i + 1) % e.num_nodes]] == 1:
                         p_ip2 = old_nodes[e.nodes[(i + 2) % e.num_nodes]]
                         a_ip1_ip2 = p_ip2 - p_ip1
                         a_ip1_ip2_hat = a_ip1_ip2 / np.linalg.norm(a_ip1_ip2)
@@ -4247,12 +4241,12 @@ class PolyMesh2D():
                             break
                     # set which interface is which
                     if (e.nodes[(i - 1) % e.num_nodes]
-                            in node_interfaces[n][0].nodes):
-                        ie_im1 = node_interfaces[n][0]
-                        ie_ip1 = node_interfaces[n][1]
+                            in self.node_interfaces[n][0].nodes):
+                        ie_im1 = self.node_interfaces[n][0]
+                        ie_ip1 = self.node_interfaces[n][1]
                     else:
-                        ie_im1 = node_interfaces[n][1]
-                        ie_ip1 = node_interfaces[n][0]
+                        ie_im1 = self.node_interfaces[n][1]
+                        ie_ip1 = self.node_interfaces[n][0]
                     # get first joint element intersection
                     n_i_im1_hat = np.array([a_i_im1_hat[1], -a_i_im1_hat[0]])
                     n_i_im1 = 0.5 * ie_im1.width * n_i_im1_hat
@@ -4274,28 +4268,28 @@ class PolyMesh2D():
                     self.nodes[n] = p_i + s * v_i
                     node_shifted[n] = True
                 # Case 2: Node in 2 interface elements and 2 body elements
-                elif node_cases[n] == 2:
+                elif self.node_cases[n] == 2:
                     p_i = old_nodes[n]
                     # find the node on the shared non-interface edge
-                    for k in node_elements[n][0].nodes:
+                    for k in self.node_elements[n][0].nodes:
                         if k == n:
                             continue
-                        if k in node_elements[n][1].nodes:
+                        if k in self.node_elements[n][1].nodes:
                             p_k = old_nodes[k]
                             break
                     # find interface-body element node pairs
-                    for k in node_interfaces[n][0].nodes:
+                    for k in self.node_interfaces[n][0].nodes:
                         if k == n:
                             continue
-                        if (k in node_elements[n][0].nodes
-                                or k in node_elements[n][1].nodes):
+                        if (k in self.node_elements[n][0].nodes
+                                or k in self.node_elements[n][1].nodes):
                             p_im1 = old_nodes[k]
                             break
-                    for k in node_interfaces[n][1].nodes:
+                    for k in self.node_interfaces[n][1].nodes:
                         if k == n:
                             continue
-                        if (k in node_elements[n][0].nodes
-                                or k in node_elements[n][1].nodes):
+                        if (k in self.node_elements[n][0].nodes
+                                or k in self.node_elements[n][1].nodes):
                             p_ip1 = old_nodes[k]
                             break
                     # get normal vectors
@@ -4306,14 +4300,16 @@ class PolyMesh2D():
                                             -a_i_im1_hat[0]])
                     if np.dot(n_i_im1_hat, a_i_k) < 0:
                         n_i_im1_hat = -n_i_im1_hat
-                    n_i_im1 = 0.5 * node_interfaces[n][0].width * n_i_im1_hat
+                    n_i_im1 = (0.5 * self.node_interfaces[n][0].width
+                               * n_i_im1_hat)
                     a_i_ip1 = p_ip1 - p_i
                     a_i_ip1_hat = a_i_ip1 / np.linalg.norm(a_i_ip1)
                     n_i_ip1_hat = np.array([a_i_ip1_hat[1],
                                             -a_i_ip1_hat[0]])
                     if np.dot(n_i_ip1_hat, a_i_k) < 0:
                         n_i_ip1_hat = -n_i_ip1_hat
-                    n_i_ip1 = 0.5 * node_interfaces[n][1].width * n_i_ip1_hat
+                    n_i_ip1 = (0.5 * self.node_interfaces[n][1].width
+                               * n_i_ip1_hat)
                     # get offset distances
                     s_max = 0.4
                     s_im1 = ((a_i_im1[0] * n_i_im1[1]
@@ -4331,32 +4327,32 @@ class PolyMesh2D():
                     self.nodes[n] = p_i + s * a_i_k
                     node_shifted[n] = True
                 # Case 3: Node in 1 interface element and 1-2 body elements
-                elif node_cases[n] == 3:
+                elif self.node_cases[n] == 3:
                     p_i = old_nodes[n]
                     # find shared edge between body elements
-                    if len(node_elements[n]) > 1:
-                        for k in node_elements[n][0].nodes:
+                    if len(self.node_elements[n]) > 1:
+                        for k in self.node_elements[n][0].nodes:
                             if k == n:
                                 continue
-                            if k in node_elements[n][1].nodes:
+                            if k in self.node_elements[n][1].nodes:
                                 p_k = old_nodes[k]
                                 break
                     # otherwise, there must be 1 body element
                     # and 1 boundary element
                     else:
-                        assert (len(node_elements[n]) == 1)
-                        for k in node_boundaries[n][0].nodes:
+                        assert (len(self.node_elements[n]) == 1)
+                        for k in self.node_boundaries[n][0].nodes:
                             if k == n:
                                 continue
                             p_k = old_nodes[k]
                             break
                     # find adjacent interface element node
                     found_j = False
-                    for ee in node_elements[n]:
+                    for ee in self.node_elements[n]:
                         for j in ee.nodes:
                             if j == n:
                                 continue
-                            if j in node_interfaces[n][0].nodes:
+                            if j in self.node_interfaces[n][0].nodes:
                                 p_j = old_nodes[j]
                                 found_j = True
                                 break
@@ -4369,7 +4365,7 @@ class PolyMesh2D():
                     n_i_j_hat = np.array([-a_i_j_hat[1], a_i_j_hat[0]])
                     if np.dot(a_i_k, n_i_j_hat) < 0:
                         n_i_j_hat = -n_i_j_hat
-                    n_i_j = 0.5 * node_interfaces[n][0].width * n_i_j_hat
+                    n_i_j = 0.5 * self.node_interfaces[n][0].width * n_i_j_hat
                     s_max = 0.4
                     s = ((a_i_j[0] * n_i_j[1] - a_i_j[1] * n_i_j[0])
                          / (a_i_j[0] * a_i_k[1] - a_i_j[1] * a_i_k[0]))
@@ -4416,6 +4412,7 @@ class PolyMesh2D():
         self._get_nodes_in_elements()
         self._sort_nodes()
         # shift nodes according to interface thickness
+        self._classify_nodes()
         self._shift_nodes()
         # try to validate mesh
         # (mesh_valid setter runs checks)
