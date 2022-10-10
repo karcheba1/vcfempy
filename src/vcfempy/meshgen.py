@@ -4171,7 +4171,6 @@ class PolyMesh2D():
 
     def _shift_nodes(self):
         # shift nodes
-        node_shifted = np.zeros(self.num_nodes, dtype=bool)
         old_nodes = np.array(self.nodes)
         for n, (p_i, nc, ne, ni, nb) in enumerate(
                                             zip(old_nodes,
@@ -4182,7 +4181,7 @@ class PolyMesh2D():
             # skip Cases 0 and 4, for nodes that should not be shifted
             if nc in [0, 4]:
                 continue
-            # Case 1: Node in 2 interface elements and 1 body element
+            # Case 1: shift along inward pointing bisector at node vertex
             elif nc == 1:
                 e = ne[0] # body element of current node
                 i = np.where(np.array(e.nodes) == n)[0][0] # index of n in e
@@ -4192,16 +4191,18 @@ class PolyMesh2D():
                 # get angle bisector direction
                 p_im1 = old_nodes[e.nodes[im1]]
                 a_i_im1 = p_im1 - p_i
-                a_i_im1_hat = a_i_im1 / np.linalg.norm(a_i_im1)
+                (a_i_im1_hat,
+                 n_i_im1_hat) = _get_unit_tangent_normal(p_i, p_im1)
                 p_ip1 = old_nodes[e.nodes[ip1]]
                 a_i_ip1 = p_ip1 - p_i
-                a_i_ip1_hat = a_i_ip1 / np.linalg.norm(a_i_ip1)
+                (a_i_ip1_hat,
+                 n_i_ip1_hat) = _get_unit_tangent_normal(p_i, p_ip1)
+                n_i_ip1_hat = -n_i_ip1_hat # flip to rotate inward
                 v_i = a_i_im1_hat + a_i_ip1_hat
                 # check previous node for Case 1, get smax
                 if self.node_cases[e.nodes[im1]] == 1:
                     p_im2 = old_nodes[e.nodes[(i - 2) % e.num_nodes]]
-                    a_im1_im2 = p_im2 - p_im1
-                    a_im1_im2_hat = a_im1_im2 / np.linalg.norm(a_im1_im2)
+                    a_im1_im2_hat = _get_unit_tangent_normal(p_im1, p_im2)[0]
                     v_im1 = a_im1_im2_hat - a_i_im1_hat
                     s_new = ((v_im1[0] * a_i_im1[1]
                               - v_im1[1] * a_i_im1[0])
@@ -4211,8 +4212,7 @@ class PolyMesh2D():
                 # check next node for Case 1, get smax
                 if self.node_cases[e.nodes[ip1]] == 1:
                     p_ip2 = old_nodes[e.nodes[(i + 2) % e.num_nodes]]
-                    a_ip1_ip2 = p_ip2 - p_ip1
-                    a_ip1_ip2_hat = a_ip1_ip2 / np.linalg.norm(a_ip1_ip2)
+                    a_ip1_ip2_hat = _get_unit_tangent_normal(p_ip1, p_ip2)[0]
                     v_ip1 = a_ip1_ip2_hat - a_i_ip1_hat
                     s_new = ((v_ip1[0] * a_i_ip1[1]
                               - v_ip1[1] * a_i_ip1[0])
@@ -4240,7 +4240,6 @@ class PolyMesh2D():
                 if (e.nodes[im1] in ni[1].nodes):
                     ni.reverse()
                 # get first joint element intersection
-                n_i_im1_hat = np.array([a_i_im1_hat[1], -a_i_im1_hat[0]])
                 n_i_im1 = 0.5 * ni[0].width * n_i_im1_hat
                 s_im1 = ((a_i_im1[0] * n_i_im1[1]
                           - a_i_im1[1] * n_i_im1[0])
@@ -4248,7 +4247,6 @@ class PolyMesh2D():
                             - a_i_im1[1] * v_i[0]))
                 s_im1 = np.min([s_im1, s_max])
                 # get second joint element intersection
-                n_i_ip1_hat = np.array([-a_i_ip1_hat[1], a_i_ip1_hat[0]])
                 n_i_ip1 = 0.5 * ni[1].width * n_i_ip1_hat
                 s_ip1 = ((a_i_ip1[0] * n_i_ip1[1]
                           - a_i_ip1[1] * n_i_ip1[0])
@@ -4283,17 +4281,15 @@ class PolyMesh2D():
                 # get normal vectors
                 a_i_k = p_k - p_i
                 a_i_im1 = p_im1 - p_i
-                a_i_im1_hat = a_i_im1 / np.linalg.norm(a_i_im1)
-                n_i_im1_hat = np.array([a_i_im1_hat[1],
-                                        -a_i_im1_hat[0]])
+                (a_i_im1_hat,
+                 n_i_im1_hat) = _get_unit_tangent_normal(p_i, p_im1)
                 # make sure normal vector is oriented correctly
                 if np.dot(n_i_im1_hat, a_i_k) < 0:
                     n_i_im1_hat = -n_i_im1_hat
                 n_i_im1 = 0.5 * ni[0].width * n_i_im1_hat
                 a_i_ip1 = p_ip1 - p_i
-                a_i_ip1_hat = a_i_ip1 / np.linalg.norm(a_i_ip1)
-                n_i_ip1_hat = np.array([a_i_ip1_hat[1],
-                                        -a_i_ip1_hat[0]])
+                (a_i_ip1_hat,
+                 n_i_ip1_hat) = _get_unit_tangent_normal(p_i, p_ip1)
                 # make sure normal vector is oriented correctly
                 if np.dot(n_i_ip1_hat, a_i_k) < 0:
                     n_i_ip1_hat = -n_i_ip1_hat
@@ -4345,8 +4341,7 @@ class PolyMesh2D():
                 # get normal vectors
                 a_i_k = p_k - p_i
                 a_i_j = p_j - p_i
-                a_i_j_hat = a_i_j / np.linalg.norm(a_i_j)
-                n_i_j_hat = np.array([-a_i_j_hat[1], a_i_j_hat[0]])
+                (a_i_j_hat, n_i_j_hat) = _get_unit_tangent_normal(p_i, p_j)
                 if np.dot(a_i_k, n_i_j_hat) < 0:
                     n_i_j_hat = -n_i_j_hat
                 n_i_j = 0.5 * ni[0].width * n_i_j_hat
