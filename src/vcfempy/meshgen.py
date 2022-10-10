@@ -4117,58 +4117,50 @@ class PolyMesh2D():
         node_dict = {n: k for k, n in enumerate(node_order)}
         self._replace_nodes(node_dict)
 
+    def _clear_node_elements(self):
+        self._node_elements = [[] for n in self.nodes]
+        self._node_interfaces = [[] for n in self.nodes]
+        self._node_boundaries = [[] for n in self.nodes]
+
+    def _find_nodes_in_elements(self, elements, node_elements):
+        for e in elements:
+            for n in np.unique(e.nodes):
+                node_elements[n].append(e)
+        return [len(ne) for ne in node_elements]
+
     def _classify_nodes(self):
         # get mesh information for node cases
-        # number of body elements per node
-        self._node_elements = [[] for n in self.nodes]
-        for e in self.elements:
-            for n in e.nodes:
-                self.node_elements[n].append(e)
-        num_node_elements = [len(ne) for ne in self.node_elements]
-        # number of interface elements per node
-        self._node_interfaces = [[] for n in self.nodes]
-        for e in self.interface_elements:
-            for n in np.unique(e.nodes):
-                self.node_interfaces[n].append(e)
-        num_node_interfaces = [len(ni) for ni in self.node_interfaces]
-        # number of boundary elements per node
-        self._node_boundaries = [[] for n in self.nodes]
-        for e in self.boundary_elements:
-            for n in np.unique(e.nodes):
-                self._node_boundaries[n].append(e)
-        num_node_boundaries = [len(nb) for nb in self.node_boundaries]
-        # classify node cases
-        # Case 0:   in 0 interface elements
-        #           do not shift
-        # Case 1:   in 2 interface elements and 1 body element
-        #           shift along bisector line of node vertex in body element
-        # Case 2:   in 2 interface elements and 2 body elements
-        #           shift along shared non-interface edge of body elements
-        # Case 3:   in 1 interface element and 1-2 body elements
-        #           shift along adjacent non-interface edge
-        # Case 4:   in 1 interface element and >2 body elements
-        #           do not shift, too many constraints
-        #           typically at end of mesh edge
-        # Degenerate Case: num_interfaces + num_boundaries > 2
+        self._clear_node_elements()
+        num_node_elements = self._find_nodes_in_elements(
+                                    self.elements,
+                                    self.node_elements)
+        num_node_interfaces = self._find_nodes_in_elements(
+                                    self.interface_elements,
+                                    self.node_interfaces)
+        num_node_boundaries = self._find_nodes_in_elements(
+                                    self.boundary_elements,
+                                    self.node_boundaries)
+        # classify node cases, initialize to -1 (degenerate node flag)
         self._node_cases = -np.ones(self.num_nodes, dtype=int)
         for n, (e, i, b) in enumerate(zip(num_node_elements,
                                           num_node_interfaces,
                                           num_node_boundaries)):
-            # Degenerate Case
+            # Degenerate Case: num_interfaces + num_boundaries > 2
             if e == 0 or i + b > 2:
                 raise AssertionError(f"node {n} in e={e} body elements, "
                                      + f"i={i} interfaces, "
                                      + f"and b={b} boundaries, "
                                      + "need e>=1 and (i+b)<2.")
-            # Case 0
+            # Case 0: in 0 interface elements
             elif i == 0:
                 self.node_cases[n] = 0
-            # Case 4
+            # Case 4: in 1 interface element and >2 body elements
             elif e > 2:
                 self.node_cases[n] = 4
-            # Cases 1 and 2
+            # Cases 1 and 2: in 2 interface elements and 1 or 2 body elements
             elif i == 2:
                 self.node_cases[n] = e
+            # Case 3: in 1 interface element and 1 or 2 body elements
             elif i == 1:
                 self.node_cases[n] = 3
         # make sure that there are no degenerate nodes
