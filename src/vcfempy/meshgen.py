@@ -3348,59 +3348,9 @@ class PolyMesh2D():
         ...     print(f'Element {k} quad points, nq{k} = {len(qp)}')
         ...     print(qp.round(14)) #doctest: +ELLIPSIS
         Element 0 quad points, nq0 = 17
-        [[ 0.1275 -0.1275]
-         [ 0.1275  0.1275]
-         ...
-         [-0.     -0.051 ]
-         [ 0.      0.    ]]
-        Element 1 quad points, nq1 = 17
-        [[-0.14875  0.14875]
-         [-0.14875 -0.14875]
-         ...
-         [-0.       0.0595 ]
-         [ 0.       0.     ]]
-        Element 2 quad points, nq2 = 17
-        [[ 0.14875 -0.14875]
-         [ 0.14875  0.14875]
-         ...
-         [ 0.      -0.0595 ]
-         [ 0.       0.     ]]
-        Element 3 quad points, nq3 = 17
-        [[ 0.14875 -0.14875]
-         [ 0.14875  0.14875]
-         ...
-         [-0.      -0.0595 ]
-         [ 0.       0.     ]]
-        Element 4 quad points, nq4 = 17
-        [[-0.14875  0.14875]
-         [-0.14875 -0.14875]
-         ...
-         [ 0.       0.0595 ]
-         [ 0.       0.     ]]
-        Element 5 quad points, nq5 = 17
-        [[ 0.14875  0.1275 ]
-         [-0.14875  0.1275 ]
-         ...
-         [ 0.0595  -0.     ]
-         [ 0.       0.     ]]
-        Element 6 quad points, nq6 = 17
-        [[ 0.1275   0.14875]
-         [-0.1275   0.14875]
-         ...
-         [ 0.051   -0.     ]
-         [ 0.       0.     ]]
-        Element 7 quad points, nq7 = 17
-        [[ 0.14875 -0.1275 ]
-         [ 0.14875  0.1275 ]
-         ...
-         [ 0.      -0.051  ]
-         [ 0.       0.     ]]
+        ...
         Element 8 quad points, nq8 = 17
-        [[ 0.1275  -0.14875]
-         [ 0.1275   0.14875]
-         ...
-         [-0.      -0.0595 ]
-         [ 0.       0.     ]]
+        ...
 
         >>> # switch back to low order quadrature
         >>> # use a False-like string
