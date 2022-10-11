@@ -4154,20 +4154,16 @@ class PolyMesh2D():
                     p_im2 = old_nodes[e.nodes[(i - 2) % e.num_nodes]]
                     a_im1_im2_hat = _get_unit_tangent_normal(p_im1, p_im2)[0]
                     v_im1 = a_im1_im2_hat - a_i_im1_hat
-                    s_new = ((v_im1[0] * a_i_im1[1]
-                              - v_im1[1] * a_i_im1[0])
-                             / (v_im1[0] * v_i[1]
-                                - v_im1[1] * v_i[0]))
+                    s_new = np.linalg.solve(np.vstack([v_i, -v_im1]).T,
+                                            a_i_im1)[0]
                     s_max = np.min([s_max, 0.5 * s_new])
                 # check next node for Case 1, get smax
                 if self.node_cases[e.nodes[ip1]] == 1:
                     p_ip2 = old_nodes[e.nodes[(i + 2) % e.num_nodes]]
                     a_ip1_ip2_hat = _get_unit_tangent_normal(p_ip1, p_ip2)[0]
                     v_ip1 = a_ip1_ip2_hat - a_i_ip1_hat
-                    s_new = ((v_ip1[0] * a_i_ip1[1]
-                              - v_ip1[1] * a_i_ip1[0])
-                             / (v_ip1[0] * v_i[1]
-                                - v_ip1[1] * v_i[0]))
+                    s_new = np.linalg.solve(np.vstack([v_i, -v_ip1]).T,
+                                            a_i_ip1)[0]
                     s_max = np.min([s_max, 0.5 * s_new])
                 # get intersection with element boundary, get smax
                 for k in range(e.num_nodes):
@@ -4176,10 +4172,8 @@ class PolyMesh2D():
                     p_kp1 = old_nodes[e.nodes[kp1]]
                     a_k_kp1 = p_kp1 - p_k
                     a_i_k = p_k - p_i
-                    t_k_kp1 = ((v_i[0] * a_i_k[1]
-                                - v_i[1] * a_i_k[0])
-                               / (v_i[1] * a_k_kp1[0]
-                                  - v_i[0] * a_k_kp1[1]))
+                    t_k_kp1 = np.linalg.solve(np.vstack([v_i, -a_k_kp1]).T,
+                                              a_i_k)[1]
                     if t_k_kp1 > 0.0 and t_k_kp1 < 1.0:
                         x_k_kp1 = p_k + t_k_kp1 * a_k_kp1
                         d_k_kp1 = x_k_kp1 - p_i
@@ -4191,17 +4185,13 @@ class PolyMesh2D():
                     ni.reverse()
                 # get first joint element intersection
                 n_i_im1 = 0.5 * ni[0].width * n_i_im1_hat
-                s_im1 = ((a_i_im1[0] * n_i_im1[1]
-                          - a_i_im1[1] * n_i_im1[0])
-                         / (a_i_im1[0] * v_i[1]
-                            - a_i_im1[1] * v_i[0]))
+                s_im1 = np.linalg.solve(np.vstack([v_i, -a_i_im1]).T,
+                                        n_i_im1)[0]
                 s_im1 = np.min([s_im1, s_max])
                 # get second joint element intersection
                 n_i_ip1 = 0.5 * ni[1].width * n_i_ip1_hat
-                s_ip1 = ((a_i_ip1[0] * n_i_ip1[1]
-                          - a_i_ip1[1] * n_i_ip1[0])
-                         / (a_i_ip1[0] * v_i[1]
-                            - a_i_ip1[1] * v_i[0]))
+                s_ip1 = np.linalg.solve(np.vstack([v_i, -a_i_ip1]).T,
+                                        n_i_ip1)[0]
                 s_ip1 = np.min([s_ip1, s_max])
                 # get average point, set new node coordinate
                 s = 0.5 * (s_im1 + s_ip1)
@@ -4246,15 +4236,11 @@ class PolyMesh2D():
                 n_i_ip1 = 0.5 * ni[1].width * n_i_ip1_hat
                 # get offset distances
                 s_max = 0.4
-                s_im1 = ((a_i_im1[0] * n_i_im1[1]
-                          - a_i_im1[1] * n_i_im1[0])
-                         / (a_i_im1[0] * a_i_k[1]
-                            - a_i_im1[1] * a_i_k[0]))
+                s_im1 = np.linalg.solve(np.vstack([a_i_k, -a_i_im1]).T,
+                                        n_i_im1)[0]
                 s_im1 = np.min([s_im1, s_max])
-                s_ip1 = ((a_i_ip1[0] * n_i_ip1[1]
-                          - a_i_ip1[1] * n_i_ip1[0])
-                         / (a_i_ip1[0] * a_i_k[1]
-                            - a_i_ip1[1] * a_i_k[0]))
+                s_ip1 = np.linalg.solve(np.vstack([a_i_k, -a_i_ip1]).T,
+                                        n_i_ip1)[0]
                 s_ip1 = np.min([s_ip1, s_max])
                 # get average point, set new node coordinate
                 s = 0.5 * (s_im1 + s_ip1)
@@ -4296,8 +4282,7 @@ class PolyMesh2D():
                     n_i_j_hat = -n_i_j_hat
                 n_i_j = 0.5 * ni[0].width * n_i_j_hat
                 s_max = 0.4
-                s = ((a_i_j[0] * n_i_j[1] - a_i_j[1] * n_i_j[0])
-                     / (a_i_j[0] * a_i_k[1] - a_i_j[1] * a_i_k[0]))
+                s = np.linalg.solve(np.vstack([a_i_k, -a_i_j]).T, n_i_j)[0]
                 s = np.min([s, s_max])
                 # set new node coordinate
                 self.nodes[n] = p_i + s * a_i_k
