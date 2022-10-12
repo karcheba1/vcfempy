@@ -4140,58 +4140,47 @@ class PolyMesh2D():
                 s_max = np.inf # initialize maximum shift distance
                 # get angle bisector direction
                 p_im1 = old_nodes[e.nodes[im1]]
-                a_i_im1 = p_im1 - p_i
-                (a_i_im1_hat,
-                 n_i_im1_hat) = _get_unit_tangent_normal(p_i, p_im1)
                 p_ip1 = old_nodes[e.nodes[ip1]]
-                a_i_ip1 = p_ip1 - p_i
-                (a_i_ip1_hat,
-                 n_i_ip1_hat) = _get_unit_tangent_normal(p_i, p_ip1)
-                n_i_ip1_hat = -n_i_ip1_hat # flip to rotate inward
-                v_i = a_i_im1_hat + a_i_ip1_hat
+                v_i = _get_angle_bisector(p_i, p_im1, p_ip1)
                 # check previous node for Case 1, get smax
                 if self.node_cases[e.nodes[im1]] == 1:
                     p_im2 = old_nodes[e.nodes[(i - 2) % e.num_nodes]]
-                    a_im1_im2_hat = _get_unit_tangent_normal(p_im1, p_im2)[0]
-                    v_im1 = a_im1_im2_hat - a_i_im1_hat
-                    s_new = np.linalg.solve(np.vstack([v_i, -v_im1]).T,
-                                            a_i_im1)[0]
-                    s_max = np.min([s_max, 0.5 * s_new])
+                    v_im1 = _get_angle_bisector(p_im1, p_im2, p_i)
+                    s = _get_intersection(p_i, v_i, p_im1, v_im1)[0]
+                    s_max = np.min([s_max, 0.5 * s])
                 # check next node for Case 1, get smax
                 if self.node_cases[e.nodes[ip1]] == 1:
                     p_ip2 = old_nodes[e.nodes[(i + 2) % e.num_nodes]]
-                    a_ip1_ip2_hat = _get_unit_tangent_normal(p_ip1, p_ip2)[0]
-                    v_ip1 = a_ip1_ip2_hat - a_i_ip1_hat
-                    s_new = np.linalg.solve(np.vstack([v_i, -v_ip1]).T,
-                                            a_i_ip1)[0]
-                    s_max = np.min([s_max, 0.5 * s_new])
+                    v_ip1 = _get_angle_bisector(p_ip1, p_i, p_ip2)
+                    s = _get_intersection(p_i, v_i, p_ip1, v_ip1)[0]
+                    s_max = np.min([s_max, 0.5 * s])
                 # get intersection with element boundary, get smax
                 for k in range(e.num_nodes):
                     kp1 = (k + 1) % e.num_nodes
                     p_k = old_nodes[e.nodes[k]]
                     p_kp1 = old_nodes[e.nodes[kp1]]
                     a_k_kp1 = p_kp1 - p_k
-                    a_i_k = p_k - p_i
-                    t_k_kp1 = np.linalg.solve(np.vstack([v_i, -a_k_kp1]).T,
-                                              a_i_k)[1]
-                    if t_k_kp1 > 0.0 and t_k_kp1 < 1.0:
-                        x_k_kp1 = p_k + t_k_kp1 * a_k_kp1
-                        d_k_kp1 = x_k_kp1 - p_i
-                        s_new = np.dot(v_i, d_k_kp1) / np.dot(v_i, v_i)
-                        s_max = np.min([s_max, 0.25 * s_new])
+                    s, t = _get_intersection(p_i, v_i, p_k, a_k_kp1)
+                    if t > 0.0 and t < 1.0:
+                        s_max = np.min([s_max, 0.25 * s])
                         break
-                # set which interface is which
+                # get tangent and normal vectors of adjacent interfaces
+                (a_i_im1, _,
+                 a_i_im1_hat,
+                 n_i_im1_hat) = _get_tangent_normal(p_i, p_im1, v_i)
+                (a_i_ip1, _,
+                 a_i_ip1_hat,
+                 n_i_ip1_hat) = _get_tangent_normal(p_i, p_ip1, v_i)
+                # set interface order
                 if (e.nodes[im1] in ni[1].nodes):
                     ni.reverse()
                 # get first joint element intersection
                 n_i_im1 = 0.5 * ni[0].width * n_i_im1_hat
-                s_im1 = np.linalg.solve(np.vstack([v_i, -a_i_im1]).T,
-                                        n_i_im1)[0]
+                s_im1 = _get_intersection(p_i, v_i, p_i + n_i_im1, a_i_im1)[0]
                 s_im1 = np.min([s_im1, s_max])
                 # get second joint element intersection
                 n_i_ip1 = 0.5 * ni[1].width * n_i_ip1_hat
-                s_ip1 = np.linalg.solve(np.vstack([v_i, -a_i_ip1]).T,
-                                        n_i_ip1)[0]
+                s_ip1 = _get_intersection(p_i, v_i, p_i + n_i_ip1, a_i_ip1)[0]
                 s_ip1 = np.min([s_ip1, s_max])
                 # get average point, set new node coordinate
                 s = 0.5 * (s_im1 + s_ip1)
@@ -9797,12 +9786,34 @@ class IntersectionElement2D():
         return ax
 
 
+def _get_tangent_normal(p0, p1, v_norm_orient=None):
+    tt = p1 - p0
+    tt_len = np.linalg.norm(tt)
+    tt_hat = tt / tt_len
+    nn_hat = np.array([tt_hat[1], -tt_hat[0]])
+    if not v_norm_orient is None:
+        if np.dot(nn_hat, v_norm_orient) < 0:
+            nn_hat = -nn_hat
+    nn = nn_hat * tt_len
+    return tt, nn, tt_hat, nn_hat
+
+
 def _get_unit_tangent_normal(v0, v1):
     tt = v1 - v0
     tt_len = np.linalg.norm(tt)
     tt /= tt_len
     nn = np.array([tt[1], -tt[0]])
     return tt, nn
+
+
+def _get_angle_bisector(p0, pm1, pp1):
+    vm1 = _get_unit_tangent_normal(p0, pm1)[0]
+    vp1 = _get_unit_tangent_normal(p0, pp1)[0]
+    return vm1 + vp1
+
+
+def _get_intersection(p0, v0, p1, v1):
+    return np.linalg.solve(np.vstack([v0, -v1]).T, p1 - p0)
 
 
 def _reflect_point_across_edge(p, v, tt):
