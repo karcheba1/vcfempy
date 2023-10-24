@@ -771,8 +771,11 @@ bulk_modulus=6.9e5)
         >>> print(m.lame_parameter)
         None
         """
-        if self._lam_prm is None and not (self.bulk_modulus is None
-                                          or self.shear_modulus is None):
+        if (
+            self._lam_prm is None
+            and self.bulk_modulus is not None
+            and self.shear_modulus is not None
+        ):
             self._lam_prm = self.bulk_modulus - 2*self.shear_modulus/3
         return self._lam_prm
 
@@ -819,8 +822,11 @@ bulk_modulus=6.9e5)
         >>> print(m.young_modulus)
         None
         """
-        if self._yng_mod is None and not (self.bulk_modulus is None
-                                          or self.shear_modulus is None):
+        if (
+            self._yng_mod is None
+            and self.bulk_modulus is not None
+            and self.shear_modulus is not None
+        ):
             self._yng_mod = (9*self.bulk_modulus*self.shear_modulus
                              / (3*self.bulk_modulus + self.shear_modulus))
         return self._yng_mod
@@ -868,8 +874,11 @@ bulk_modulus=6.9e5)
         >>> print(m.poisson_ratio)
         None
         """
-        if self._pois_rat is None and not (self.bulk_modulus is None
-                                           or self.shear_modulus is None):
+        if (
+            self._pois_rat is None
+            and self.bulk_modulus is not None
+            and self.shear_modulus is not None
+        ):
             self._pois_rat = 0.5*((3*self.bulk_modulus - 2*self.shear_modulus)
                                   / (3*self.bulk_modulus + self.shear_modulus))
         return self._pois_rat

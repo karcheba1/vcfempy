@@ -3308,9 +3308,7 @@ self.nodes is empty
         # get elements to keep
         point_elements = np.array(vor.point_region, dtype=int)
         point_elements = point_elements[in_bnd]
-        elements = []
-        for pe in point_elements:
-            elements.append(vor.regions[pe])
+        elements = [vor.regions[pe] for pe in point_elements]
         # get edges to keep
         element_edges = []
         element_neighbors = []
@@ -3336,7 +3334,7 @@ self.nodes is empty
                 element_edges[k][j] = node_dict[n]
         # determine material type of each element
         m0 = mtl.Material('NULL')
-        element_materials = [m0 for k, _ in enumerate(elements)]
+        element_materials = [m0 for _ in elements]
         element_materials = np.array(element_materials)
         point_collection = shp.MultiPoint(self.points).geoms
         for mr in self.material_regions:
@@ -3631,7 +3629,7 @@ self.nodes is empty
                 mesh_string += f'\n{mr.vertices}'
         if self.num_mesh_edges:
             mesh_string += '\n\nMesh Edges'
-            for e in self.mesh_edges:
+            for _ in self.mesh_edges:
                 mesh_string += '\n{e}'
         if self.num_nodes:
             mesh_string += f'\n\nNodes\n{self.nodes}'
@@ -6096,9 +6094,7 @@ class PolyElement2D():
             x1 = xq0[(k+1) % nq0]
             mid_xq0.append(0.5*(x0+x1))
         mid_xq0 = np.array(mid_xq0)
-        tri_xq0 = []
-        for x in mid_xq0:
-            tri_xq0.append(0.5*(cent + x))
+        tri_xq0 = [0.5*(cent + x) for x in mid_xq0]
         xq = np.vstack([xq0, mid_xq0, tri_xq0, cent])
         nq = len(xq)
         # evaluate basis functions at integration points
@@ -6246,8 +6242,7 @@ class PolyElement2D():
         for k, x0 in enumerate(xq0):
             x1 = xq0[(k+1) % nq0]
             x = np.vstack([x0, x1, cent])
-            for Nj in Ntri:
-                tri_xq0.append(Nj @ x)
+            tri_xq0.extend(Nj @ x for Nj in Ntri)
         xq = np.vstack([xq0, tri_xq0, cent])
         nq = len(xq)
         # evaluate basis functions at integration points
@@ -7064,8 +7059,7 @@ can only be 0 or 2
         0.35
         """
         if self._length is None and self.num_nodes:
-            self._length = shp.LineString(
-                    self.mesh.nodes[self.nodes[0:2]]).length
+            self._length = shp.LineString(self.mesh.nodes[self.nodes[:2]]).length
         return self._length
 
     @property
@@ -7854,6 +7848,5 @@ def _get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
     ref_points = []
     for ddrr in dr:
         rp = rp0 + ddrr * rr
-        ref_points.append(rp)
-        ref_points.append(_reflect_point_across_edge(rp, v, tt))
+        ref_points.extend((rp, _reflect_point_across_edge(rp, v, tt)))
     return np.array(ref_points)
