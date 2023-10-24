@@ -27,8 +27,7 @@ def rectangular_mesh():
 
     # insert boundary vertices
     # here, use a list comprehension to add all vertices in clockwise order
-    rect_mesh.insert_boundary_vertices(0, [k for k
-                                           in range(rect_mesh.num_vertices)])
+    rect_mesh.insert_boundary_vertices(0, list(range(rect_mesh.num_vertices)))
 
     # add material types and regions
     # Note: here we create a MaterialRegion2D object and
@@ -47,9 +46,13 @@ def rectangular_mesh():
     # plot histogram of number of nodes per element
     fig = plt.figure()
     ax = plt.gca()
-    ax.hist(rect_mesh.num_nodes_per_element,
-            bins=[k for k in range(3, 11)],
-            align='left', rwidth=0.95, color='xkcd:gray')
+    ax.hist(
+        rect_mesh.num_nodes_per_element,
+        bins=list(range(3, 11)),
+        align='left',
+        rwidth=0.95,
+        color='xkcd:gray',
+    )
     ax.set_xlabel('# nodes in element', fontsize=12, fontweight='bold')
     ax.set_ylabel('# elements', fontsize=12, fontweight='bold')
     ax.set_title('Rectangular Mesh Histogram', fontsize=14, fontweight='bold')
@@ -152,9 +155,13 @@ def dam_mesh():
     # plot histogram of number of nodes per element
     fig = plt.figure()
     ax = plt.gca()
-    ax.hist(dam_mesh.num_nodes_per_element,
-            bins=[k for k in range(3, 11)],
-            align='left', rwidth=0.95, color='xkcd:gray')
+    ax.hist(
+        dam_mesh.num_nodes_per_element,
+        bins=list(range(3, 11)),
+        align='left',
+        rwidth=0.95,
+        color='xkcd:gray',
+    )
     ax.set_xlabel('# nodes in element', fontsize=12, fontweight='bold')
     ax.set_ylabel('# elements', fontsize=12, fontweight='bold')
     ax.set_title('Dam Mesh Histogram', fontsize=14, fontweight='bold')
@@ -217,8 +224,7 @@ def tunnel_mesh():
         tunnel_mesh.add_vertices(10.*np.array([np.cos(t), np.sin(t)]))
 
     # add boundary vertices in clockwise order
-    tunnel_mesh.insert_boundary_vertices(0, [k for k in
-                                             range(tunnel_mesh.num_vertices)])
+    tunnel_mesh.insert_boundary_vertices(0, list(range(tunnel_mesh.num_vertices)))
 
     # add material types and regions
     rock = mtl.Material('rock', color='xkcd:greenish')
@@ -247,9 +253,13 @@ def tunnel_mesh():
     # plot histogram of number of nodes per element
     fig = plt.figure()
     ax = plt.gca()
-    ax.hist(tunnel_mesh.num_nodes_per_element,
-            bins=[k for k in range(3, 11)],
-            align='left', rwidth=0.95, color='xkcd:gray')
+    ax.hist(
+        tunnel_mesh.num_nodes_per_element,
+        bins=list(range(3, 11)),
+        align='left',
+        rwidth=0.95,
+        color='xkcd:gray',
+    )
     ax.set_xlabel('# nodes in element', fontsize=12, fontweight='bold')
     ax.set_ylabel('# elements', fontsize=12, fontweight='bold')
     ax.set_title('Tunnel Mesh Histogram', fontsize=14, fontweight='bold')
