@@ -1,13 +1,12 @@
-"""A module for materials in the Voronoi Cell Finite Element Method (VCFEM).
+"""A module for materials in the Voronoi Cell Finite Element Method (VCFEM)."""
 
-"""
-
-import distutils.util
 import numpy as np
 import matplotlib.colors as mpl_col
 
+from .meshgen import _strtobool
 
-class Material():
+
+class Material:
     """A class for materials and their properties in the VCFEM.
 
     Parameters
@@ -115,30 +114,25 @@ bulk_modulus=6.9e5)
         # check for color initialization from **kwargs, default=None
         # if color is None, set to random RGB
         # initialize color value
-        color = kwargs.get('color', None)
+        color = kwargs.get("color", None)
         if color is None:
-            color = (np.random.random(),
-                     np.random.random(),
-                     np.random.random())
+            color = (np.random.random(), np.random.random(), np.random.random())
         self.color = color
 
         # check **kwargs for other attribute initializations
         # initialize other Material properties, default=None
         # this will also initialize dependent private attribute caches
-        self.hydraulic_conductivity = kwargs.get('hydraulic_conductivity',
-                                                 None)
-        self.specific_storage = kwargs.get('specific_storage', None)
-        self.thermal_conductivity = kwargs.get('thermal_conductivity',
-                                               None)
-        self.specific_heat = kwargs.get('specific_heat', None)
-        self.electrical_conductivity = kwargs.get('electrical_conductivity',
-                                                  None)
-        self.bulk_modulus = kwargs.get('bulk_modulus', None)
-        self.shear_modulus = kwargs.get('shear_modulus', None)
-        self.saturated_density = kwargs.get('saturated_density', None)
-        self.porosity = kwargs.get('porosity', None)
-        self.has_interfaces = kwargs.get('has_interfaces', False)
-        self.interface_width = kwargs.get('interface_width', 0.)
+        self.hydraulic_conductivity = kwargs.get("hydraulic_conductivity", None)
+        self.specific_storage = kwargs.get("specific_storage", None)
+        self.thermal_conductivity = kwargs.get("thermal_conductivity", None)
+        self.specific_heat = kwargs.get("specific_heat", None)
+        self.electrical_conductivity = kwargs.get("electrical_conductivity", None)
+        self.bulk_modulus = kwargs.get("bulk_modulus", None)
+        self.shear_modulus = kwargs.get("shear_modulus", None)
+        self.saturated_density = kwargs.get("saturated_density", None)
+        self.porosity = kwargs.get("porosity", None)
+        self.has_interfaces = kwargs.get("has_interfaces", False)
+        self.interface_width = kwargs.get("interface_width", 0.0)
 
     @property
     def name(self):
@@ -259,7 +253,7 @@ bulk_modulus=6.9e5)
     @color.setter
     def color(self, color):
         if not mpl_col.is_color_like(color):
-            raise ValueError(f'{color} is not a matplotlib color_like value')
+            raise ValueError(f"{color} is not a matplotlib color_like value")
         self._color = color
 
     @property
@@ -272,7 +266,7 @@ bulk_modulus=6.9e5)
             try:
                 flag = float(flag)
             except ValueError:
-                flag = distutils.util.strtobool(flag)
+                flag = _strtobool(flag)
         self._has_interfaces = bool(flag)
 
     @property
@@ -282,8 +276,8 @@ bulk_modulus=6.9e5)
     @interface_width.setter
     def interface_width(self, val):
         val = float(val)
-        if val < 0.:
-            raise ValueError('interface width must be non-negative')
+        if val < 0.0:
+            raise ValueError("interface width must be non-negative")
         self._interface_width = float(val)
 
     @property
@@ -798,9 +792,10 @@ bulk_modulus=6.9e5)
         >>> print(m.lame_parameter)
         None
         """
-        if self._lam_prm is None and not (self.bulk_modulus is None
-                                          or self.shear_modulus is None):
-            self._lam_prm = self.bulk_modulus - 2*self.shear_modulus/3
+        if self._lam_prm is None and not (
+            self.bulk_modulus is None or self.shear_modulus is None
+        ):
+            self._lam_prm = self.bulk_modulus - 2 * self.shear_modulus / 3
         return self._lam_prm
 
     @property
@@ -846,10 +841,15 @@ bulk_modulus=6.9e5)
         >>> print(m.young_modulus)
         None
         """
-        if self._yng_mod is None and not (self.bulk_modulus is None
-                                          or self.shear_modulus is None):
-            self._yng_mod = (9*self.bulk_modulus*self.shear_modulus
-                             / (3*self.bulk_modulus + self.shear_modulus))
+        if self._yng_mod is None and not (
+            self.bulk_modulus is None or self.shear_modulus is None
+        ):
+            self._yng_mod = (
+                9
+                * self.bulk_modulus
+                * self.shear_modulus
+                / (3 * self.bulk_modulus + self.shear_modulus)
+            )
         return self._yng_mod
 
     @property
@@ -895,10 +895,13 @@ bulk_modulus=6.9e5)
         >>> print(m.poisson_ratio)
         None
         """
-        if self._pois_rat is None and not (self.bulk_modulus is None
-                                           or self.shear_modulus is None):
-            self._pois_rat = 0.5*((3*self.bulk_modulus - 2*self.shear_modulus)
-                                  / (3*self.bulk_modulus + self.shear_modulus))
+        if self._pois_rat is None and not (
+            self.bulk_modulus is None or self.shear_modulus is None
+        ):
+            self._pois_rat = 0.5 * (
+                (3 * self.bulk_modulus - 2 * self.shear_modulus)
+                / (3 * self.bulk_modulus + self.shear_modulus)
+            )
         return self._pois_rat
 
     @property
@@ -1042,8 +1045,9 @@ bulk_modulus=6.9e5)
             por = float(por)
             # check for valid numerical range of porosity
             if por < 0.0 or por >= 1.0:
-                raise ValueError(f'porosity of {por} is not valid, '
-                                 + '0.0 <= porosity < 1.0')
+                raise ValueError(
+                    f"porosity of {por} is not valid, " + "0.0 <= porosity < 1.0"
+                )
             self._por = por
 
     @property
