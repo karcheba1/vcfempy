@@ -15,7 +15,7 @@ numpy.array.html>`_
 
 """
 
-import distutils.util
+# import distutils.util
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mplclr
@@ -25,7 +25,7 @@ import shapely.geometry as shp
 import vcfempy.materials as mtl
 
 
-class PolyMesh2D():
+class PolyMesh2D:
     """A class for 2D polygonal mesh generation.
 
     Parameters
@@ -219,11 +219,17 @@ class PolyMesh2D():
 
     _num_created = 0
 
-    def __init__(self, name=None, vertices=None, boundary_vertices=None,
-                 verbose_printing=False, high_order_quadrature=False):
+    def __init__(
+        self,
+        name=None,
+        vertices=None,
+        boundary_vertices=None,
+        verbose_printing=False,
+        high_order_quadrature=False,
+    ):
         # initialize name
         if name is None:
-            name = f'Unnamed Mesh {PolyMesh2D._num_created}'
+            name = f"Unnamed Mesh {PolyMesh2D._num_created}"
         self.name = name
         PolyMesh2D._num_created += 1
 
@@ -611,12 +617,10 @@ class PolyMesh2D():
         del_verts = np.array(del_verts, dtype=int, ndmin=1)
         if len(del_verts) == 0:
             return
-        del_verts = np.where(del_verts < 0,
-                             del_verts + self.num_vertices,
-                             del_verts)
+        del_verts = np.where(del_verts < 0, del_verts + self.num_vertices, del_verts)
         del_verts = np.unique(del_verts)
         if np.any(del_verts < 0) or np.any(del_verts >= self.num_vertices):
-            raise IndexError('at least one index out of range')
+            raise IndexError("at least one index out of range")
 
         # delete the vertices
         self._vertices = np.delete(self._vertices, del_verts, 0)
@@ -869,9 +873,9 @@ class PolyMesh2D():
         boundary_vertices = np.flip(boundary_vertices.ravel())
         for bv in boundary_vertices:
             if bv in self.boundary_vertices:
-                raise ValueError(f'{bv} is already a boundary vertex')
+                raise ValueError(f"{bv} is already a boundary vertex")
             if bv < 0 or bv >= self.num_vertices:
-                raise ValueError(f'vertex index {bv} out of range')
+                raise ValueError(f"vertex index {bv} out of range")
             self.boundary_vertices.insert(index, int(bv))
         self._generate_boundary_edges()
         self.mesh_valid = False
@@ -1028,10 +1032,13 @@ class PolyMesh2D():
         :m:`pop_boundary_vertex` whenever :m:`boundary_vertices` changes. It
         should not normally be necessary to call this explicitly.
         """
-        self._boundary_edges = [[self.boundary_vertices[k],
-                                 self.boundary_vertices[(k+1)
-                                 % self.num_boundary_vertices]]
-                                for k in range(self.num_boundary_vertices)]
+        self._boundary_edges = [
+            [
+                self.boundary_vertices[k],
+                self.boundary_vertices[(k + 1) % self.num_boundary_vertices],
+            ]
+            for k in range(self.num_boundary_vertices)
+        ]
 
     @property
     def num_material_regions(self):
@@ -1214,12 +1221,11 @@ class PolyMesh2D():
         ValueError: material region does not have self as mesh
         """
         if not isinstance(material_region, MaterialRegion2D):
-            raise TypeError('material region not '
-                            + 'vcfempy.meshgen.MaterialRegion2D')
+            raise TypeError("material region not " + "vcfempy.meshgen.MaterialRegion2D")
         if material_region in self.material_regions:
-            raise ValueError('material region already in list')
+            raise ValueError("material region already in list")
         if material_region.mesh is not self:
-            raise ValueError('material region does not have self as mesh')
+            raise ValueError("material region does not have self as mesh")
         self.material_regions.append(material_region)
         self.mesh_valid = False
 
@@ -1450,11 +1456,11 @@ class PolyMesh2D():
         ValueError: mesh edge does not have self as mesh
         """
         if not isinstance(mesh_edge, MeshEdge2D):
-            raise TypeError('mesh edge not vcfempy.meshgen.MeshEdge2D')
+            raise TypeError("mesh edge not vcfempy.meshgen.MeshEdge2D")
         if mesh_edge in self.mesh_edges:
-            raise ValueError('mesh edge already in list')
+            raise ValueError("mesh edge already in list")
         if mesh_edge.mesh is not self:
-            raise ValueError('mesh edge does not have self as mesh')
+            raise ValueError("mesh edge does not have self as mesh")
         self.mesh_edges.append(mesh_edge)
         self.mesh_valid = False
 
@@ -1519,13 +1525,12 @@ class PolyMesh2D():
         del_points = np.array(del_points, dtype=int, ndmin=1)
         if len(del_points) == 0:
             return
-        del_points = np.where(del_points < 0,
-                              del_points + self.num_seed_points,
-                              del_points)
+        del_points = np.where(
+            del_points < 0, del_points + self.num_seed_points, del_points
+        )
         del_points = np.unique(del_points)
-        if (np.any(del_points < 0)
-                or np.any(del_points >= self.num_seed_points)):
-            raise IndexError('at least one index out of range')
+        if np.any(del_points < 0) or np.any(del_points >= self.num_seed_points):
+            raise IndexError("at least one index out of range")
 
         # delete the points and invalidate the mesh
         self._seed_points = np.delete(self._seed_points, del_points, 0)
@@ -2761,7 +2766,8 @@ self.nodes is empty
             try:
                 flag = float(flag)
             except ValueError:
-                flag = distutils.util.strtobool(flag)
+                # flag = distutils.util.strtobool(flag)
+                flag = _strtobool(flag)
         flag = bool(flag)
 
         # if invalidating mesh,
@@ -2777,20 +2783,27 @@ self.nodes is empty
         # check that mesh properties have been set
         else:
             if not self.num_nodes:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.nodes is empty')
+                raise ValueError(
+                    "trying to set PolyMesh2D.mesh_valid "
+                    + "= True, but self.nodes is empty"
+                )
             if not self.num_elements:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.elements is empty')
+                raise ValueError(
+                    "trying to set PolyMesh2D.mesh_valid "
+                    + "= True, but self.elements is empty"
+                )
             if len(self.points) != self.num_elements:
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but len(self.points) '
-                                 + '!= self.num_elements')
-            if (not self.num_interface_elements
-                    and not self.num_boundary_elements):
-                raise ValueError('trying to set PolyMesh2D.mesh_valid '
-                                 + '= True, but self.interface_elements and '
-                                 + 'self.boundary_elements are both empty')
+                raise ValueError(
+                    "trying to set PolyMesh2D.mesh_valid "
+                    + "= True, but len(self.points) "
+                    + "!= self.num_elements"
+                )
+            if not self.num_interface_elements and not self.num_boundary_elements:
+                raise ValueError(
+                    "trying to set PolyMesh2D.mesh_valid "
+                    + "= True, but self.interface_elements and "
+                    + "self.boundary_elements are both empty"
+                )
             # if here, then all checks for mesh validity succeeded
             # set the mesh valid flag
             self._mesh_valid = True
@@ -3045,7 +3058,8 @@ self.nodes is empty
             try:
                 flag = float(flag)
             except ValueError:
-                flag = distutils.util.strtobool(flag)
+                # flag = distutils.util.strtobool(flag)
+                flag = _strtobool(flag)
         self._high_order_quadrature = bool(flag)
         # assume value changed, reset element quadrature
         for e in self.elements:
@@ -3067,13 +3081,13 @@ self.nodes is empty
     def mesh_rand(self, val):
         val = float(val)
         if val < 0.0 or val >= 1.0:
-            raise ValueError(f'mesh_rand {val} invalid, should be in [0., 1.)')
+            raise ValueError(f"mesh_rand {val} invalid, should be in [0., 1.)")
         self._mesh_rand = val
 
     def _check_edge_scale(self, edge_verts):
         d_scale = self.mesh_scale
         for k, v0 in enumerate(self.vertices[edge_verts[:-1]]):
-            dd = self.vertices[edge_verts[k+1]] - v0
+            dd = self.vertices[edge_verts[k + 1]] - v0
             dd = 0.4 * np.linalg.norm(dd)
             if dd < d_scale:
                 d_scale = dd
@@ -3097,7 +3111,7 @@ self.nodes is empty
         dv_min = -d_scale
         dd_max = +d_scale
         for k, v in enumerate(self.vertices[edge_verts[:-1]]):
-            tt = self.vertices[edge_verts[k+1]] - v
+            tt = self.vertices[edge_verts[k + 1]] - v
             tt_len = np.linalg.norm(tt)
             tt /= tt_len
             dv_max = tt_len + d_scale
@@ -3120,11 +3134,15 @@ self.nodes is empty
             v = self.vertices[edge_verts[0]]
             d_scale = self._check_edge_scale(edge_verts)
             self._delete_points_near_edge(edge_verts, d_scale)
-            self._points = np.vstack([self.points,
-                                      v + 0.5 * d_scale * np.array([-1, -1]),
-                                      v + 0.5 * d_scale * np.array([-1, +1]),
-                                      v + 0.5 * d_scale * np.array([+1, -1]),
-                                      v + 0.5 * d_scale * np.array([+1, +1])])
+            self._points = np.vstack(
+                [
+                    self.points,
+                    v + 0.5 * d_scale * np.array([-1, -1]),
+                    v + 0.5 * d_scale * np.array([-1, +1]),
+                    v + 0.5 * d_scale * np.array([+1, -1]),
+                    v + 0.5 * d_scale * np.array([+1, +1]),
+                ]
+            )
             return
 
         # multiple vertices, create reflections along each segment
@@ -3141,67 +3159,82 @@ self.nodes is empty
         for k, v in enumerate(self.vertices[edge_verts]):
             # first vertex, not closed, insert points before and after
             if not closed and k == 0:
-                vp1 = self.vertices[edge_verts[k+1]]
+                vp1 = self.vertices[edge_verts[k + 1]]
                 tt1, nn1 = _get_unit_tangent_normal(v, vp1)
-                top_points = np.vstack([top_points,
-                                        v + 0.5 * d_scale * (-tt1 - nn1),
-                                        v + 0.5 * d_scale * (+tt1 - nn1)])
-                bot_points = np.vstack([bot_points,
-                                        v + 0.5 * d_scale * (-tt1 + nn1),
-                                        v + 0.5 * d_scale * (+tt1 + nn1)])
+                top_points = np.vstack(
+                    [
+                        top_points,
+                        v + 0.5 * d_scale * (-tt1 - nn1),
+                        v + 0.5 * d_scale * (+tt1 - nn1),
+                    ]
+                )
+                bot_points = np.vstack(
+                    [
+                        bot_points,
+                        v + 0.5 * d_scale * (-tt1 + nn1),
+                        v + 0.5 * d_scale * (+tt1 + nn1),
+                    ]
+                )
             # last vertex, not closed, insert points before and after
             # also reflect points before
             elif not closed and k == num_verts - 1:
-                vm1 = self.vertices[edge_verts[k-1]]
+                vm1 = self.vertices[edge_verts[k - 1]]
                 tt0, nn0 = tt1, nn1
                 # insert points behind
-                top_points = np.vstack([top_points,
-                                        v + 0.5 * d_scale * (-tt0 - nn0)])
-                bot_points = np.vstack([bot_points,
-                                        v + 0.5 * d_scale * (-tt0 + nn0)])
+                top_points = np.vstack([top_points, v + 0.5 * d_scale * (-tt0 - nn0)])
+                bot_points = np.vstack([bot_points, v + 0.5 * d_scale * (-tt0 + nn0)])
                 # reflect points behind
                 new_ref_points = _get_edge_reflection_points(
-                                    bot_points[-2],
-                                    bot_points[-1],
-                                    vm1, tt0, d_scale, self.mesh_rand)
+                    bot_points[-2], bot_points[-1], vm1, tt0, d_scale, self.mesh_rand
+                )
                 ref_points = np.vstack([ref_points, new_ref_points])
                 # insert points ahead
-                top_points = np.vstack([top_points,
-                                        v + 0.5 * d_scale * (+tt0 - nn0)])
-                bot_points = np.vstack([bot_points,
-                                        v + 0.5 * d_scale * (+tt0 + nn0)])
+                top_points = np.vstack([top_points, v + 0.5 * d_scale * (+tt0 - nn0)])
+                bot_points = np.vstack([bot_points, v + 0.5 * d_scale * (+tt0 + nn0)])
             # middle vertex (or first/last vertex of a closed edge)
             else:
-                vm1 = self.vertices[edge_verts[k-1]]
-                vp1 = self.vertices[edge_verts[(k+1) % num_verts]]
+                vm1 = self.vertices[edge_verts[k - 1]]
+                vp1 = self.vertices[edge_verts[(k + 1) % num_verts]]
                 tt0, nn0 = _get_unit_tangent_normal(vm1, v)
                 tt1, nn1 = _get_unit_tangent_normal(v, vp1)
                 tt_cross = np.cross(-tt0, tt1)
                 # straight vertex
-                if np.abs(tt_cross) < 1.e-8:
+                if np.abs(tt_cross) < 1.0e-8:
                     # insert points behind
-                    top_points = np.vstack([top_points,
-                                            v + 0.5 * d_scale * (-tt1 - nn1)])
-                    bot_points = np.vstack([bot_points,
-                                            v + 0.5 * d_scale * (-tt1 + nn1)])
+                    top_points = np.vstack(
+                        [top_points, v + 0.5 * d_scale * (-tt1 - nn1)]
+                    )
+                    bot_points = np.vstack(
+                        [bot_points, v + 0.5 * d_scale * (-tt1 + nn1)]
+                    )
                     # reflect points behind
                     if k > 0:
                         new_ref_points = _get_edge_reflection_points(
-                                            bot_points[-2],
-                                            bot_points[-1],
-                                            vm1, tt0, d_scale, self.mesh_rand)
+                            bot_points[-2],
+                            bot_points[-1],
+                            vm1,
+                            tt0,
+                            d_scale,
+                            self.mesh_rand,
+                        )
                         ref_points = np.vstack([ref_points, new_ref_points])
                     # insert points ahead
-                    top_points = np.vstack([top_points,
-                                            v + 0.5 * d_scale * (+tt1 - nn1)])
-                    bot_points = np.vstack([bot_points,
-                                            v + 0.5 * d_scale * (+tt1 + nn1)])
+                    top_points = np.vstack(
+                        [top_points, v + 0.5 * d_scale * (+tt1 - nn1)]
+                    )
+                    bot_points = np.vstack(
+                        [bot_points, v + 0.5 * d_scale * (+tt1 + nn1)]
+                    )
                     # reflect points ahead
                     if k == num_verts - 1:
                         new_ref_points = _get_edge_reflection_points(
-                                            top_points[-1],
-                                            top_points[0],
-                                            v, tt1, d_scale, self.mesh_rand)
+                            top_points[-1],
+                            top_points[0],
+                            v,
+                            tt1,
+                            d_scale,
+                            self.mesh_rand,
+                        )
                 # non-straight vertex
                 else:
                     # find intersection point on concave side
@@ -3214,62 +3247,73 @@ self.nodes is empty
                         new_point = v + ss * vv
                         bot_points = np.vstack([bot_points, new_point])
                         new_top_points = [
-                                _reflect_point_across_edge(new_point,
-                                                           vm1, tt0),
-                                _reflect_point_across_edge(new_point,
-                                                           v, tt1)]
+                            _reflect_point_across_edge(new_point, vm1, tt0),
+                            _reflect_point_across_edge(new_point, v, tt1),
+                        ]
                         top_points = np.vstack([top_points, new_top_points])
                         # reflect points behind
                         if k > 0:
                             new_ref_points = _get_edge_reflection_points(
-                                    bot_points[-2],
-                                    bot_points[-1],
-                                    vm1, tt0, d_scale, self.mesh_rand)
-                            ref_points = np.vstack([ref_points,
-                                                    new_ref_points])
+                                bot_points[-2],
+                                bot_points[-1],
+                                vm1,
+                                tt0,
+                                d_scale,
+                                self.mesh_rand,
+                            )
+                            ref_points = np.vstack([ref_points, new_ref_points])
                     # convex vertex, insert top_point, reflect x2 bot_points
                     else:
                         new_point = v - ss * vv
                         top_points = np.vstack([top_points, new_point])
                         new_bot_points = [
-                                _reflect_point_across_edge(new_point,
-                                                           vm1, tt0),
-                                _reflect_point_across_edge(new_point,
-                                                           v, tt1)]
+                            _reflect_point_across_edge(new_point, vm1, tt0),
+                            _reflect_point_across_edge(new_point, v, tt1),
+                        ]
                         bot_points = np.vstack([bot_points, new_bot_points])
                         # reflect points behind
                         if k > 0:
                             new_ref_points = _get_edge_reflection_points(
-                                    top_points[-2],
-                                    top_points[-1],
-                                    vm1, tt0, d_scale, self.mesh_rand)
-                            ref_points = np.vstack([ref_points,
-                                                    new_ref_points])
+                                top_points[-2],
+                                top_points[-1],
+                                vm1,
+                                tt0,
+                                d_scale,
+                                self.mesh_rand,
+                            )
+                            ref_points = np.vstack([ref_points, new_ref_points])
                     # reflect points ahead
                     if k == num_verts - 1:
                         new_ref_points = _get_edge_reflection_points(
-                                top_points[-1],
-                                top_points[0],
-                                v, tt1, d_scale, self.mesh_rand)
+                            top_points[-1],
+                            top_points[0],
+                            v,
+                            tt1,
+                            d_scale,
+                            self.mesh_rand,
+                        )
                         ref_points = np.vstack([ref_points, new_ref_points])
         # update global mesh points
-        self._points = np.vstack([self.points,
-                                  top_points, bot_points, ref_points])
+        self._points = np.vstack([self.points, top_points, bot_points, ref_points])
 
     def generate_mesh(self):
-        """ Generate polygonal mesh. """
+        """Generate polygonal mesh."""
         # if seed points provided, initialize points with those
         self._points = np.array(self.seed_points)
         # if no seed points, generate seed points on a regular grid
         if not len(self.points):
-            xmin = (np.min(self.vertices[self.boundary_vertices, 0])
-                    - 2 * self.mesh_scale)
-            xmax = (np.max(self.vertices[self.boundary_vertices, 0])
-                    + 2 * self.mesh_scale)
-            ymin = (np.min(self.vertices[self.boundary_vertices, 1])
-                    - 2 * self.mesh_scale)
-            ymax = (np.max(self.vertices[self.boundary_vertices, 1])
-                    + 2 * self.mesh_scale)
+            xmin = (
+                np.min(self.vertices[self.boundary_vertices, 0]) - 2 * self.mesh_scale
+            )
+            xmax = (
+                np.max(self.vertices[self.boundary_vertices, 0]) + 2 * self.mesh_scale
+            )
+            ymin = (
+                np.min(self.vertices[self.boundary_vertices, 1]) - 2 * self.mesh_scale
+            )
+            ymax = (
+                np.max(self.vertices[self.boundary_vertices, 1]) + 2 * self.mesh_scale
+            )
             # get dimensions and number of points for regular grid
             Lx = xmax - xmin
             Ly = ymax - ymin
@@ -3281,12 +3325,16 @@ self.nodes is empty
             xc, yc = np.meshgrid(xc, yc)
             for k, _ in enumerate(xc):
                 xc[k, :] += (-1 if (k % 2) else +1) * 0.25 * self.mesh_scale
-            self._points = np.vstack([self.points,
-                                      np.vstack([xc.ravel(), yc.ravel()]).T])
+            self._points = np.vstack(
+                [self.points, np.vstack([xc.ravel(), yc.ravel()]).T]
+            )
             # randomly shift seed points
             if self.mesh_rand:
-                rand_shift = (self.mesh_rand * self.mesh_scale
-                              * (2. * np.random.random((xc.size, 2)) - 1.))
+                rand_shift = (
+                    self.mesh_rand
+                    * self.mesh_scale
+                    * (2.0 * np.random.random((xc.size, 2)) - 1.0)
+                )
                 self._points += rand_shift
         # generate points for mesh edges
         for edge in self.mesh_edges:
@@ -3317,10 +3365,12 @@ self.nodes is empty
         for rp, rv in zip(vor.ridge_points, vor.ridge_vertices):
             if in_bnd[rp[0]] or in_bnd[rp[1]]:
                 element_edges.append(rv)
-                element_neighbors.append([point_dict[rp[0]]
-                                          if in_bnd[rp[0]] else -1,
-                                          point_dict[rp[1]]
-                                          if in_bnd[rp[1]] else -1])
+                element_neighbors.append(
+                    [
+                        point_dict[rp[0]] if in_bnd[rp[0]] else -1,
+                        point_dict[rp[1]] if in_bnd[rp[1]] else -1,
+                    ]
+                )
         # get nodes to keep and correct node indices in elements
         nodes_to_keep = []
         for e in elements:
@@ -3335,7 +3385,7 @@ self.nodes is empty
             for j, n in enumerate(ee):
                 element_edges[k][j] = node_dict[n]
         # determine material type of each element
-        m0 = mtl.Material('NULL')
+        m0 = mtl.Material("NULL")
         element_materials = [m0 for k, _ in enumerate(elements)]
         element_materials = np.array(element_materials)
         point_collection = shp.MultiPoint(self.points).geoms
@@ -3353,15 +3403,13 @@ self.nodes is empty
         for ee, en in zip(element_edges, element_neighbors):
             # boundary element
             if en[0] < 0 or en[1] < 0:
-                nn = (self.elements[en[1]] if en[0] < 0
-                      else self.elements[en[0]])
+                nn = self.elements[en[1]] if en[0] < 0 else self.elements[en[0]]
                 self.boundary_elements.append(BoundaryElement2D(self, ee, nn))
             # interface element, assign material type from first neighbor
             else:
                 nn = [self.elements[n] for n in en]
                 m = nn[0].material
-                self.interface_elements.append(
-                        InterfaceElement2D(self, ee, m, nn))
+                self.interface_elements.append(InterfaceElement2D(self, ee, m, nn))
         # set mesh valid, the setter will perform checks for mesh validity
         self.mesh_valid = True
 
@@ -3583,35 +3631,40 @@ self.nodes is empty
             try:
                 flag = float(flag)
             except ValueError:
-                flag = distutils.util.strtobool(flag)
+                # flag = distutils.util.strtobool(flag)
+                flag = _strtobool(flag)
         self._verbose_printing = bool(flag)
 
     def __str__(self):
         # print header indicating basic information
-        mesh_string = (f"{__name__}.{type(self).__name__} '{self.name}'\n"
-                       + 'Number of Vertices = '
-                       + f'{self.num_vertices}\n'
-                       + 'Number of Boundary Vertices = '
-                       + f'{self.num_boundary_vertices}\n'
-                       + 'Number of Material Regions = '
-                       + f'{self.num_material_regions}\n'
-                       + 'Number of Mesh Edges = '
-                       + f'{self.num_mesh_edges}\n'
-                       + f'Verbose Printing = {self.verbose_printing}\n'
-                       + 'High Order Quadrature = '
-                       + f'{self.high_order_quadrature}\n'
-                       + f'Mesh Generated = {self.mesh_valid}')
+        mesh_string = (
+            f"{__name__}.{type(self).__name__} '{self.name}'\n"
+            + "Number of Vertices = "
+            + f"{self.num_vertices}\n"
+            + "Number of Boundary Vertices = "
+            + f"{self.num_boundary_vertices}\n"
+            + "Number of Material Regions = "
+            + f"{self.num_material_regions}\n"
+            + "Number of Mesh Edges = "
+            + f"{self.num_mesh_edges}\n"
+            + f"Verbose Printing = {self.verbose_printing}\n"
+            + "High Order Quadrature = "
+            + f"{self.high_order_quadrature}\n"
+            + f"Mesh Generated = {self.mesh_valid}"
+        )
 
         # if mesh has been generated, print basic mesh information
         if self.mesh_valid:
-            mesh_string += ('\nNumber of Nodes = '
-                            + f'{self.num_nodes}\n'
-                            + 'Number of Elements = '
-                            + f'{self.num_elements}\n'
-                            + 'Number of Interface Elements = '
-                            + f'{self.num_interface_elements}\n'
-                            + 'Number of Boundary Elements = '
-                            + f'{self.num_boundary_elements}')
+            mesh_string += (
+                "\nNumber of Nodes = "
+                + f"{self.num_nodes}\n"
+                + "Number of Elements = "
+                + f"{self.num_elements}\n"
+                + "Number of Interface Elements = "
+                + f"{self.num_interface_elements}\n"
+                + "Number of Boundary Elements = "
+                + f"{self.num_boundary_elements}"
+            )
 
         # check for verbose printing flag, return now if False
         if not self.verbose_printing:
@@ -3620,42 +3673,44 @@ self.nodes is empty
         # otherwise, if verbose printing is True, continue printing
         # detailed mesh information
         if self.num_vertices:
-            mesh_string += f'\n\nVertices\n{self.vertices}'
+            mesh_string += f"\n\nVertices\n{self.vertices}"
         if self.num_boundary_vertices:
-            mesh_string += f'\n\nBoundary Vertices\n{self.boundary_vertices}'
-            mesh_string += f'\n\nBoundary Edges\n{self.boundary_edges}'
+            mesh_string += f"\n\nBoundary Vertices\n{self.boundary_vertices}"
+            mesh_string += f"\n\nBoundary Edges\n{self.boundary_edges}"
         if self.num_material_regions:
             for mr in self.material_regions:
-                mesh_string += f'\n\nMaterial Region: {mr.name}, '
-                mesh_string += f'Material: {mr.material.name}'
-                mesh_string += f'\n{mr.vertices}'
+                mesh_string += f"\n\nMaterial Region: {mr.name}, "
+                mesh_string += f"Material: {mr.material.name}"
+                mesh_string += f"\n{mr.vertices}"
         if self.num_mesh_edges:
-            mesh_string += '\n\nMesh Edges'
+            mesh_string += "\n\nMesh Edges"
             for e in self.mesh_edges:
-                mesh_string += '\n{e}'
+                mesh_string += "\n{e}"
         if self.num_nodes:
-            mesh_string += f'\n\nNodes\n{self.nodes}'
+            mesh_string += f"\n\nNodes\n{self.nodes}"
         if self.num_elements:
-            mesh_string += ('\n\nElement Nodes, Areas, Points, Centroids, '
-                            + 'Materials')
+            mesh_string += "\n\nElement Nodes, Areas, Points, Centroids, " + "Materials"
             for e, p in zip(self.elements, self.points):
-                mesh_string += (f'\n{e.nodes}, {e.area}, {p}, {e.centroid}, '
-                                + f'{e.material.name}')
+                mesh_string += (
+                    f"\n{e.nodes}, {e.area}, {p}, {e.centroid}, " + f"{e.material.name}"
+                )
         if self.num_interface_elements:
-            mesh_string += '\n\nInterface Element Nodes and Neighbors'
+            mesh_string += "\n\nInterface Element Nodes and Neighbors"
             for e in self.interface_elements:
                 en = [self.elements.index(n) for n in e.neighbors]
-                mesh_string += f'\n{e.nodes}, {en}'
+                mesh_string += f"\n{e.nodes}, {en}"
         if self.num_boundary_elements:
-            mesh_string += '\n\nBoundary Element Nodes and Neighbors'
+            mesh_string += "\n\nBoundary Element Nodes and Neighbors"
             for e in self.boundary_elements:
                 en = self.elements.index(e.neighbor)
-                mesh_string += f'\n{e.nodes}, {en}'
+                mesh_string += f"\n{e.nodes}, {en}"
         return mesh_string
 
     def __repr__(self):
-        return (f"<{__name__}.{type(self).__name__} object '{self.name}' at "
-                + f"{hex(id(self))}>")
+        return (
+            f"<{__name__}.{type(self).__name__} object '{self.name}' at "
+            + f"{hex(id(self))}>"
+        )
 
     def plot_boundaries(self, ax=None, **kwargs):
         """Plot the :c:`PolyMesh2D` :a:`boundary_edges` using
@@ -3699,17 +3754,19 @@ self.nodes is empty
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'edgecolor' not in kwargs.keys():
-            kwargs['edgecolor'] = 'black'
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 1.0
-        if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = '-'
-        if 'fill' not in kwargs.keys():
-            kwargs['fill'] = False
-        ax.fill(self.vertices[self.boundary_vertices, 0],
-                self.vertices[self.boundary_vertices, 1],
-                **kwargs)
+        if "edgecolor" not in kwargs.keys():
+            kwargs["edgecolor"] = "black"
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 1.0
+        if "linestyle" not in kwargs.keys():
+            kwargs["linestyle"] = "-"
+        if "fill" not in kwargs.keys():
+            kwargs["fill"] = False
+        ax.fill(
+            self.vertices[self.boundary_vertices, 0],
+            self.vertices[self.boundary_vertices, 1],
+            **kwargs,
+        )
         return ax
 
     def plot_material_regions(self, ax=None):
@@ -3813,16 +3870,16 @@ self.nodes is empty
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 0.0
-        if 'markeredgecolor' not in kwargs.keys():
-            kwargs['markeredgecolor'] = 'black'
-        if 'markerfacecolor' not in kwargs.keys():
-            kwargs['markerfacecolor'] = 'black'
-        if 'marker' not in kwargs.keys():
-            kwargs['marker'] = 's'
-        if 'markersize' not in kwargs.keys():
-            kwargs['markersize'] = 8.0
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 0.0
+        if "markeredgecolor" not in kwargs.keys():
+            kwargs["markeredgecolor"] = "black"
+        if "markerfacecolor" not in kwargs.keys():
+            kwargs["markerfacecolor"] = "black"
+        if "marker" not in kwargs.keys():
+            kwargs["marker"] = "s"
+        if "markersize" not in kwargs.keys():
+            kwargs["markersize"] = 8.0
         ax.plot(self.vertices[:, 0], self.vertices[:, 1], **kwargs)
         return ax
 
@@ -3833,8 +3890,14 @@ self.nodes is empty
             edge.plot(ax)
         return ax
 
-    def plot_mesh(self, ax=None, elements=True, interface_elements=True,
-                  boundary_elements=True, element_quad_points=False):
+    def plot_mesh(
+        self,
+        ax=None,
+        elements=True,
+        interface_elements=True,
+        boundary_elements=True,
+        element_quad_points=False,
+    ):
         if ax is None:
             ax = plt.gca()
         if elements:
@@ -3902,21 +3965,21 @@ self.nodes is empty
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 0.0
-        if 'markeredgecolor' not in kwargs.keys():
-            kwargs['markeredgecolor'] = 'black'
-        if 'markerfacecolor' not in kwargs.keys():
-            kwargs['markerfacecolor'] = 'white'
-        if 'marker' not in kwargs.keys():
-            kwargs['marker'] = 'o'
-        if 'markersize' not in kwargs.keys():
-            kwargs['markersize'] = 4.0
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 0.0
+        if "markeredgecolor" not in kwargs.keys():
+            kwargs["markeredgecolor"] = "black"
+        if "markerfacecolor" not in kwargs.keys():
+            kwargs["markerfacecolor"] = "white"
+        if "marker" not in kwargs.keys():
+            kwargs["marker"] = "o"
+        if "markersize" not in kwargs.keys():
+            kwargs["markersize"] = 4.0
         ax.plot(self.nodes[:, 0], self.nodes[:, 1], **kwargs)
         return ax
 
 
-class MaterialRegion2D():
+class MaterialRegion2D:
     """A class for defining material regions and their attributes for meshes
     generated by a :c:`PolyMesh2D`..
 
@@ -3999,17 +4062,15 @@ class MaterialRegion2D():
 
     _num_created = 0
 
-    def __init__(self, mesh, vertices=None, material=None, name=None,
-                 add_to_mesh=True):
+    def __init__(self, mesh, vertices=None, material=None, name=None, add_to_mesh=True):
         if not isinstance(mesh, PolyMesh2D):
-            raise TypeError('type(mesh) must be vcfempy.meshgen.PolyMesh2D')
+            raise TypeError("type(mesh) must be vcfempy.meshgen.PolyMesh2D")
         self._mesh = mesh
         if add_to_mesh:
             self.mesh.add_material_region(self)
 
         if name is None:
-            name = ('Unnamed Material Region '
-                    + f'{MaterialRegion2D._num_created}')
+            name = "Unnamed Material Region " + f"{MaterialRegion2D._num_created}"
         self.name = name
         MaterialRegion2D._num_created += 1
 
@@ -4261,8 +4322,9 @@ class MaterialRegion2D():
     @material.setter
     def material(self, material):
         if not isinstance(material, (type(None), mtl.Material)):
-            raise TypeError('type(material) not in [NoneType, '
-                            + 'vcfempy.materials.Material]')
+            raise TypeError(
+                "type(material) not in [NoneType, " + "vcfempy.materials.Material]"
+            )
         self._material = material
         self.mesh.mesh_valid = False
 
@@ -4365,9 +4427,9 @@ class MaterialRegion2D():
         vertices = np.flip(vertices.ravel())
         for v in vertices:
             if v in self.vertices:
-                raise ValueError(f'{v} is already a vertex')
+                raise ValueError(f"{v} is already a vertex")
             if v < 0 or v >= self.mesh.num_vertices:
-                raise ValueError(f'vertex index {v} out of range')
+                raise ValueError(f"vertex index {v} out of range")
             self.vertices.insert(index, int(v))
         self.mesh.mesh_valid = False
 
@@ -4502,22 +4564,24 @@ class MaterialRegion2D():
         if self.material is not None:
             color = mplclr.to_rgb(self.material.color)
         else:
-            color = mplclr.to_rgb('black')
-        if 'edgecolor' not in kwargs.keys():
-            kwargs['edgecolor'] = color + (1.0, )
-        if 'facecolor' not in kwargs.keys():
-            kwargs['facecolor'] = color + (0.8, )
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 2.0
-        if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = '-'
-        ax.fill(self.mesh.vertices[self.vertices, 0],
-                self.mesh.vertices[self.vertices, 1],
-                **kwargs)
+            color = mplclr.to_rgb("black")
+        if "edgecolor" not in kwargs.keys():
+            kwargs["edgecolor"] = color + (1.0,)
+        if "facecolor" not in kwargs.keys():
+            kwargs["facecolor"] = color + (0.8,)
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 2.0
+        if "linestyle" not in kwargs.keys():
+            kwargs["linestyle"] = "-"
+        ax.fill(
+            self.mesh.vertices[self.vertices, 0],
+            self.mesh.vertices[self.vertices, 1],
+            **kwargs,
+        )
         return ax
 
 
-class MeshEdge2D():
+class MeshEdge2D:
     """A class for defining edges to be preserved and their attributes for
     meshes generated by a :c:`PolyMesh2D`..
 
@@ -4601,17 +4665,15 @@ class MeshEdge2D():
 
     _num_created = 0
 
-    def __init__(self, mesh, vertices=None, material=None, name=None,
-                 add_to_mesh=True):
+    def __init__(self, mesh, vertices=None, material=None, name=None, add_to_mesh=True):
         if not isinstance(mesh, PolyMesh2D):
-            raise TypeError('type(mesh) must be vcfempy.meshgen.PolyMesh2D')
+            raise TypeError("type(mesh) must be vcfempy.meshgen.PolyMesh2D")
         self._mesh = mesh
         if add_to_mesh:
             self.mesh.add_mesh_edge(self)
 
         if name is None:
-            name = ('Unnamed Mesh Edge '
-                    + f'{MeshEdge2D._num_created}')
+            name = "Unnamed Mesh Edge " + f"{MeshEdge2D._num_created}"
         self.name = name
         MeshEdge2D._num_created += 1
 
@@ -4872,8 +4934,9 @@ class MeshEdge2D():
     @material.setter
     def material(self, material):
         if not isinstance(material, (type(None), mtl.Material)):
-            raise TypeError('type(material) not in [NoneType, '
-                            + 'vcfempy.materials.Material]')
+            raise TypeError(
+                "type(material) not in [NoneType, " + "vcfempy.materials.Material]"
+            )
         self._material = material
         self.mesh.mesh_valid = False
 
@@ -4977,9 +5040,9 @@ class MeshEdge2D():
         vertices = np.flip(vertices.ravel())
         for v in vertices:
             if v in self.vertices:
-                raise ValueError(f'{v} is already a vertex')
+                raise ValueError(f"{v} is already a vertex")
             if v < 0 or v >= self.mesh.num_vertices:
-                raise ValueError(f'vertex index {v} out of range')
+                raise ValueError(f"vertex index {v} out of range")
             self.vertices.insert(index, int(v))
         self.mesh.mesh_valid = False
 
@@ -5122,31 +5185,33 @@ class MeshEdge2D():
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 3.0
-        if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = '--'
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 3.0
+        if "linestyle" not in kwargs.keys():
+            kwargs["linestyle"] = "--"
         if self.material is not None:
-            kwargs['color'] = self.material.color
-        elif 'color' not in kwargs.keys():
-            kwargs['color'] = 'black'
-        if 'marker' not in kwargs.keys():
-            kwargs['marker'] = 's'
-        if 'markersize' not in kwargs.keys():
-            kwargs['markersize'] = 8.0
-        if 'markeredgecolor' not in kwargs.keys():
-            kwargs['markeredgecolor'] = 'black'
+            kwargs["color"] = self.material.color
+        elif "color" not in kwargs.keys():
+            kwargs["color"] = "black"
+        if "marker" not in kwargs.keys():
+            kwargs["marker"] = "s"
+        if "markersize" not in kwargs.keys():
+            kwargs["markersize"] = 8.0
+        if "markeredgecolor" not in kwargs.keys():
+            kwargs["markeredgecolor"] = "black"
         if self.material is not None:
-            kwargs['markerfacecolor'] = self.material.color
-        elif 'markerfacecolor' not in kwargs.keys():
-            kwargs['markerfacecolor'] = 'black'
-        ax.plot(self.mesh.vertices[self.vertices, 0],
-                self.mesh.vertices[self.vertices, 1],
-                **kwargs)
+            kwargs["markerfacecolor"] = self.material.color
+        elif "markerfacecolor" not in kwargs.keys():
+            kwargs["markerfacecolor"] = "black"
+        ax.plot(
+            self.mesh.vertices[self.vertices, 0],
+            self.mesh.vertices[self.vertices, 1],
+            **kwargs,
+        )
         return ax
 
 
-class PolyElement2D():
+class PolyElement2D:
     """A class for polygonal element geometry and quadrature generation. Used
     by :c:`PolyMesh2D` to generate polygonal meshes.
 
@@ -5205,7 +5270,7 @@ class PolyElement2D():
     def __init__(self, mesh, nodes=None, material=None):
         # initialize parent mesh
         if not isinstance(mesh, PolyMesh2D):
-            raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
+            raise TypeError("type(mesh) is not vcfempy.meshgen.PolyMesh2D")
         self._mesh = mesh
 
         # initialize nodes
@@ -5290,8 +5355,9 @@ class PolyElement2D():
     @material.setter
     def material(self, material):
         if not isinstance(material, (type(None), mtl.Material)):
-            raise TypeError('type(material) not in [NoneType, '
-                            + 'vcfempy.materials.Material]')
+            raise TypeError(
+                "type(material) not in [NoneType, " + "vcfempy.materials.Material]"
+            )
         self._material = material
 
     @property
@@ -5450,9 +5516,9 @@ class PolyElement2D():
         nodes = np.flip(nodes.ravel())
         for n in nodes:
             if n in self.nodes:
-                raise ValueError(f'{n} is already a node')
+                raise ValueError(f"{n} is already a node")
             if n < 0 or n >= self.mesh.num_nodes:
-                raise ValueError(f'node index {n} out of range')
+                raise ValueError(f"node index {n} out of range")
             self.nodes.insert(index, int(n))
 
     def remove_nodes(self, remove_nodes):
@@ -5946,7 +6012,7 @@ class PolyElement2D():
         # point is sufficient, ensure that area and centroid are set
         _ = self.centroid
         self._quad_points = np.zeros((1, 2))
-        self._quad_weights = np.array([1.])
+        self._quad_weights = np.array([1.0])
         self._quad_integrals = np.array([self.area])
 
     def _quadcon5(self):
@@ -5960,56 +6026,57 @@ class PolyElement2D():
         #             triangles, International Journal for Numerical
         #             Methods 7(3): 405-408, doi: 10.1002/nme.1620070316
         # here, use the 3-point formula  with degree of precision 2
-        N = np.array([[0.66666_66666_66667,
-                       0.16666_66666_66667,
-                       0.16666_66666_66667],
-                      [0.16666_66666_66667,
-                       0.66666_66666_66667,
-                       0.16666_66666_66667],
-                      [0.16666_66666_66667,
-                       0.16666_66666_66667,
-                       0.66666_66666_66667]])
-        w = np.array([0.33333_33333_33333,
-                      0.33333_33333_33333,
-                      0.33333_33333_33333])
+        N = np.array(
+            [
+                [0.66666_66666_66667, 0.16666_66666_66667, 0.16666_66666_66667],
+                [0.16666_66666_66667, 0.66666_66666_66667, 0.16666_66666_66667],
+                [0.16666_66666_66667, 0.16666_66666_66667, 0.66666_66666_66667],
+            ]
+        )
+        w = np.array([0.33333_33333_33333, 0.33333_33333_33333, 0.33333_33333_33333])
         nphi = 6
         phi = np.zeros(nphi)
         # perform Gaussian integration over triangles
         n = len(vertices)
         for k, v0 in enumerate(vertices):
-            v1 = vertices[(k+1) % n]
+            v1 = vertices[(k + 1) % n]
             x = np.vstack([cent, v0, v1])
             area = shp.Polygon(x).area
             for wj, Nj in zip(w, N):
                 xj = Nj @ x
-                phi += area * wj * np.array([1.,
-                                             xj[0],
-                                             xj[1],
-                                             xj[0]**2,
-                                             xj[0] * xj[1],
-                                             xj[1]**2])
+                phi += (
+                    area
+                    * wj
+                    * np.array(
+                        [1.0, xj[0], xj[1], xj[0] ** 2, xj[0] * xj[1], xj[1] ** 2]
+                    )
+                )
         # initialize polygon integration points
         # this produces a 9-point integration rule for quadrilaterals
         # and an 11-point integration rule for pentagons
         xq0 = []
         for v in vertices:
             d = cent - v
-            xq0.append(v + 0.25*d)
+            xq0.append(v + 0.25 * d)
         xq0 = np.array(xq0)
         mid_xq0 = []
         nq0 = len(xq0)
         for k, x0 in enumerate(xq0):
-            x1 = xq0[(k+1) % nq0]
-            mid_xq0.append((x0+x1+cent)/3)
+            x1 = xq0[(k + 1) % nq0]
+            mid_xq0.append((x0 + x1 + cent) / 3)
         xq = np.vstack([xq0, mid_xq0, cent])
         nq = len(xq)
         # evaluate basis functions at integration points
-        PHI = np.array([np.ones(nq),
-                        xq[:, 0],
-                        xq[:, 1],
-                        xq[:, 0]**2,
-                        xq[:, 0] * xq[:, 1],
-                        xq[:, 1]**2])
+        PHI = np.array(
+            [
+                np.ones(nq),
+                xq[:, 0],
+                xq[:, 1],
+                xq[:, 0] ** 2,
+                xq[:, 0] * xq[:, 1],
+                xq[:, 1] ** 2,
+            ]
+        )
         # solve for the quadrature coefficients and normalize integration
         # point weights, this is a least squares solution
         wq = np.linalg.lstsq(PHI, phi, rcond=None)[0] / self.area
@@ -6033,90 +6100,98 @@ class PolyElement2D():
         #             triangles, International Journal for Numerical
         #             Methods 7(3): 405-408, doi: 10.1002/nme.1620070316
         # here, use the 6-point formula  with degree of precision 4
-        N = np.array([[0.81684_75729_80459,
-                       0.09157_62135_09771,
-                       0.09157_62135_09771],
-                      [0.09157_62135_09771,
-                       0.81684_75729_80459,
-                       0.09157_62135_09771],
-                      [0.09157_62135_09771,
-                       0.09157_62135_09771,
-                       0.81684_75729_80459],
-                      [0.10810_30181_68070,
-                       0.44594_84909_15965,
-                       0.44594_84909_15965],
-                      [0.44594_84909_15965,
-                       0.10810_30181_68070,
-                       0.44594_84909_15965],
-                      [0.44594_84909_15965,
-                       0.44594_84909_15965,
-                       0.10810_30181_68070]])
-        w = np.array([0.10995_17436_55322,
-                      0.10995_17436_55322,
-                      0.10995_17436_55322,
-                      0.22338_15896_78011,
-                      0.22338_15896_78011,
-                      0.22338_15896_78011])
+        N = np.array(
+            [
+                [0.81684_75729_80459, 0.09157_62135_09771, 0.09157_62135_09771],
+                [0.09157_62135_09771, 0.81684_75729_80459, 0.09157_62135_09771],
+                [0.09157_62135_09771, 0.09157_62135_09771, 0.81684_75729_80459],
+                [0.10810_30181_68070, 0.44594_84909_15965, 0.44594_84909_15965],
+                [0.44594_84909_15965, 0.10810_30181_68070, 0.44594_84909_15965],
+                [0.44594_84909_15965, 0.44594_84909_15965, 0.10810_30181_68070],
+            ]
+        )
+        w = np.array(
+            [
+                0.10995_17436_55322,
+                0.10995_17436_55322,
+                0.10995_17436_55322,
+                0.22338_15896_78011,
+                0.22338_15896_78011,
+                0.22338_15896_78011,
+            ]
+        )
         nphi = 15
         phi = np.zeros(nphi)
         # perform Gaussian integration over triangles
         n = len(vertices)
         for k, v0 in enumerate(vertices):
-            v1 = vertices[(k+1) % n]
+            v1 = vertices[(k + 1) % n]
             x = np.vstack([cent, v0, v1])
             area = shp.Polygon(x).area
             for wj, Nj in zip(w, N):
                 xj = Nj @ x
-                phi += area * wj * np.array([1.,
-                                             xj[0],
-                                             xj[1],
-                                             xj[0]**2,
-                                             xj[0] * xj[1],
-                                             xj[1]**2,
-                                             xj[0]**3,
-                                             xj[0]**2 * xj[1],
-                                             xj[0] * xj[1]**2,
-                                             xj[1]**3,
-                                             xj[0]**4,
-                                             xj[0]**3 * xj[1],
-                                             xj[0]**2 * xj[1]**2,
-                                             xj[0] * xj[1]**3,
-                                             xj[1]**4])
+                phi += (
+                    area
+                    * wj
+                    * np.array(
+                        [
+                            1.0,
+                            xj[0],
+                            xj[1],
+                            xj[0] ** 2,
+                            xj[0] * xj[1],
+                            xj[1] ** 2,
+                            xj[0] ** 3,
+                            xj[0] ** 2 * xj[1],
+                            xj[0] * xj[1] ** 2,
+                            xj[1] ** 3,
+                            xj[0] ** 4,
+                            xj[0] ** 3 * xj[1],
+                            xj[0] ** 2 * xj[1] ** 2,
+                            xj[0] * xj[1] ** 3,
+                            xj[1] ** 4,
+                        ]
+                    )
+                )
         # initialize polygon integration points
         # this produces a 19-point integration rule for hexagons
         # and a 22-point integration rule for heptagons
         xq0 = []
         for v in vertices:
             d = cent - v
-            xq0.append(v + 0.25*d)
+            xq0.append(v + 0.25 * d)
         xq0 = np.array(xq0)
         mid_xq0 = []
         nq0 = len(xq0)
         for k, x0 in enumerate(xq0):
-            x1 = xq0[(k+1) % nq0]
-            mid_xq0.append(0.5*(x0+x1))
+            x1 = xq0[(k + 1) % nq0]
+            mid_xq0.append(0.5 * (x0 + x1))
         mid_xq0 = np.array(mid_xq0)
         tri_xq0 = []
         for x in mid_xq0:
-            tri_xq0.append(0.5*(cent + x))
+            tri_xq0.append(0.5 * (cent + x))
         xq = np.vstack([xq0, mid_xq0, tri_xq0, cent])
         nq = len(xq)
         # evaluate basis functions at integration points
-        PHI = np.array([np.ones(nq),
-                        xq[:, 0],
-                        xq[:, 1],
-                        xq[:, 0]**2,
-                        xq[:, 0] * xq[:, 1],
-                        xq[:, 1]**2,
-                        xq[:, 0]**3,
-                        xq[:, 0]**2 * xq[:, 1],
-                        xq[:, 0] * xq[:, 1]**2,
-                        xq[:, 1]**3,
-                        xq[:, 0]**4,
-                        xq[:, 0]**3 * xq[:, 1],
-                        xq[:, 0]**2 * xq[:, 1]**2,
-                        xq[:, 0] * xq[:, 1]**3,
-                        xq[:, 1]**4])
+        PHI = np.array(
+            [
+                np.ones(nq),
+                xq[:, 0],
+                xq[:, 1],
+                xq[:, 0] ** 2,
+                xq[:, 0] * xq[:, 1],
+                xq[:, 1] ** 2,
+                xq[:, 0] ** 3,
+                xq[:, 0] ** 2 * xq[:, 1],
+                xq[:, 0] * xq[:, 1] ** 2,
+                xq[:, 1] ** 3,
+                xq[:, 0] ** 4,
+                xq[:, 0] ** 3 * xq[:, 1],
+                xq[:, 0] ** 2 * xq[:, 1] ** 2,
+                xq[:, 0] * xq[:, 1] ** 3,
+                xq[:, 1] ** 4,
+            ]
+        )
         # solve for the quadrature coefficients and normalize integration
         # point weights, this is a least squares solution
         wq = np.linalg.lstsq(PHI, phi, rcond=None)[0] / self.area
@@ -6143,92 +6218,84 @@ class PolyElement2D():
         #             triangles, International Journal for Numerical
         #             Methods 7(3): 405-408, doi: 10.1002/nme.1620070316
         # here, use the 12-point formula  with degree of precision 6
-        N = np.array([[0.87382_19710_16996,
-                       0.06308_90144_91502,
-                       0.06308_90144_91502],
-                      [0.06308_90144_91502,
-                       0.87382_19710_16996,
-                       0.06308_90144_91502],
-                      [0.06308_90144_91502,
-                       0.06308_90144_91502,
-                       0.87382_19710_16996],
-                      [0.50142_65096_58179,
-                       0.24928_67451_70911,
-                       0.24928_67451_70911],
-                      [0.24928_67451_70911,
-                       0.50142_65096_58179,
-                       0.24928_67451_70911],
-                      [0.24928_67451_70911,
-                       0.24928_67451_70911,
-                       0.50142_65096_58179],
-                      [0.63650_24991_21399,
-                       0.31035_24510_33785,
-                       0.05314_50498_44816],
-                      [0.63650_24991_21399,
-                       0.05314_50498_44816,
-                       0.31035_24510_33785],
-                      [0.31035_24510_33785,
-                       0.63650_24991_21399,
-                       0.05314_50498_44816],
-                      [0.31035_24510_33785,
-                       0.05314_50498_44816,
-                       0.63650_24991_21399],
-                      [0.05314_50498_44816,
-                       0.63650_24991_21399,
-                       0.31035_24510_33785],
-                      [0.05314_50498_44816,
-                       0.31035_24510_33785,
-                       0.63650_24991_21399]])
-        w = np.array([0.05084_49063_70207,
-                      0.05084_49063_70207,
-                      0.05084_49063_70207,
-                      0.11678_62757_26379,
-                      0.11678_62757_26379,
-                      0.11678_62757_26379,
-                      0.08285_10756_18374,
-                      0.08285_10756_18374,
-                      0.08285_10756_18374,
-                      0.08285_10756_18374,
-                      0.08285_10756_18374,
-                      0.08285_10756_18374])
+        N = np.array(
+            [
+                [0.87382_19710_16996, 0.06308_90144_91502, 0.06308_90144_91502],
+                [0.06308_90144_91502, 0.87382_19710_16996, 0.06308_90144_91502],
+                [0.06308_90144_91502, 0.06308_90144_91502, 0.87382_19710_16996],
+                [0.50142_65096_58179, 0.24928_67451_70911, 0.24928_67451_70911],
+                [0.24928_67451_70911, 0.50142_65096_58179, 0.24928_67451_70911],
+                [0.24928_67451_70911, 0.24928_67451_70911, 0.50142_65096_58179],
+                [0.63650_24991_21399, 0.31035_24510_33785, 0.05314_50498_44816],
+                [0.63650_24991_21399, 0.05314_50498_44816, 0.31035_24510_33785],
+                [0.31035_24510_33785, 0.63650_24991_21399, 0.05314_50498_44816],
+                [0.31035_24510_33785, 0.05314_50498_44816, 0.63650_24991_21399],
+                [0.05314_50498_44816, 0.63650_24991_21399, 0.31035_24510_33785],
+                [0.05314_50498_44816, 0.31035_24510_33785, 0.63650_24991_21399],
+            ]
+        )
+        w = np.array(
+            [
+                0.05084_49063_70207,
+                0.05084_49063_70207,
+                0.05084_49063_70207,
+                0.11678_62757_26379,
+                0.11678_62757_26379,
+                0.11678_62757_26379,
+                0.08285_10756_18374,
+                0.08285_10756_18374,
+                0.08285_10756_18374,
+                0.08285_10756_18374,
+                0.08285_10756_18374,
+                0.08285_10756_18374,
+            ]
+        )
         nphi = 28
         phi = np.zeros(nphi)
         # perform Gaussian integration over triangles
         n = len(vertices)
         for k, v0 in enumerate(vertices):
-            v1 = vertices[(k+1) % n]
+            v1 = vertices[(k + 1) % n]
             x = np.vstack([cent, v0, v1])
             area = shp.Polygon(x).area
             for wj, Nj in zip(w, N):
                 xj = Nj @ x
-                phi += area * wj * np.array([1.,
-                                             xj[0],
-                                             xj[1],
-                                             xj[0]**2,
-                                             xj[0] * xj[1],
-                                             xj[1]**2,
-                                             xj[0]**3,
-                                             xj[0]**2 * xj[1],
-                                             xj[0] * xj[1]**2,
-                                             xj[1]**3,
-                                             xj[0]**4,
-                                             xj[0]**3 * xj[1],
-                                             xj[0]**2 * xj[1]**2,
-                                             xj[0] * xj[1]**3,
-                                             xj[1]**4,
-                                             xj[0]**5,
-                                             xj[0]**4 * xj[1],
-                                             xj[0]**3 * xj[1]**2,
-                                             xj[0]**2 * xj[1]**3,
-                                             xj[0] * xj[1]**4,
-                                             xj[1]**5,
-                                             xj[0]**6,
-                                             xj[0]**5 * xj[1],
-                                             xj[0]**4 * xj[1]**2,
-                                             xj[0]**3 * xj[1]**3,
-                                             xj[0]**2 * xj[1]**4,
-                                             xj[0] * xj[1]**5,
-                                             xj[1]**6])
+                phi += (
+                    area
+                    * wj
+                    * np.array(
+                        [
+                            1.0,
+                            xj[0],
+                            xj[1],
+                            xj[0] ** 2,
+                            xj[0] * xj[1],
+                            xj[1] ** 2,
+                            xj[0] ** 3,
+                            xj[0] ** 2 * xj[1],
+                            xj[0] * xj[1] ** 2,
+                            xj[1] ** 3,
+                            xj[0] ** 4,
+                            xj[0] ** 3 * xj[1],
+                            xj[0] ** 2 * xj[1] ** 2,
+                            xj[0] * xj[1] ** 3,
+                            xj[1] ** 4,
+                            xj[0] ** 5,
+                            xj[0] ** 4 * xj[1],
+                            xj[0] ** 3 * xj[1] ** 2,
+                            xj[0] ** 2 * xj[1] ** 3,
+                            xj[0] * xj[1] ** 4,
+                            xj[1] ** 5,
+                            xj[0] ** 6,
+                            xj[0] ** 5 * xj[1],
+                            xj[0] ** 4 * xj[1] ** 2,
+                            xj[0] ** 3 * xj[1] ** 3,
+                            xj[0] ** 2 * xj[1] ** 4,
+                            xj[0] * xj[1] ** 5,
+                            xj[1] ** 6,
+                        ]
+                    )
+                )
         # initialize polygon integration points
         # this produces a 33-point integration rule for octagons,
         # a 37-point integration rule for nonagons, and
@@ -6236,49 +6303,51 @@ class PolyElement2D():
         xq0 = []
         for v in vertices:
             d = cent - v
-            xq0.append(v + 0.15*d)
+            xq0.append(v + 0.15 * d)
         xq0 = np.array(xq0)
-        Ntri = np.array([[0.6, 0.2, 0.2],
-                         [0.2, 0.6, 0.2],
-                         [0.2, 0.2, 0.6]])
+        Ntri = np.array([[0.6, 0.2, 0.2], [0.2, 0.6, 0.2], [0.2, 0.2, 0.6]])
         tri_xq0 = []
         nq0 = len(xq0)
         for k, x0 in enumerate(xq0):
-            x1 = xq0[(k+1) % nq0]
+            x1 = xq0[(k + 1) % nq0]
             x = np.vstack([x0, x1, cent])
             for Nj in Ntri:
                 tri_xq0.append(Nj @ x)
         xq = np.vstack([xq0, tri_xq0, cent])
         nq = len(xq)
         # evaluate basis functions at integration points
-        PHI = np.array([np.ones(nq),
-                        xq[:, 0],
-                        xq[:, 1],
-                        xq[:, 0]**2,
-                        xq[:, 0]*xq[:, 1],
-                        xq[:, 1]**2,
-                        xq[:, 0]**3,
-                        xq[:, 0]**2 * xq[:, 1],
-                        xq[:, 0] * xq[:, 1]**2,
-                        xq[:, 1]**3,
-                        xq[:, 0]**4,
-                        xq[:, 0]**3 * xq[:, 1],
-                        xq[:, 0]**2 * xq[:, 1]**2,
-                        xq[:, 0] * xq[:, 1]**3,
-                        xq[:, 1]**4,
-                        xq[:, 0]**5,
-                        xq[:, 0]**4 * xq[:, 1],
-                        xq[:, 0]**3 * xq[:, 1]**2,
-                        xq[:, 0]**2 * xq[:, 1]**3,
-                        xq[:, 0] * xq[:, 1]**4,
-                        xq[:, 1]**5,
-                        xq[:, 0]**6,
-                        xq[:, 0]**5 * xq[:, 1],
-                        xq[:, 0]**4 * xq[:, 1]**2,
-                        xq[:, 0]**3 * xq[:, 1]**3,
-                        xq[:, 0]**2 * xq[:, 1]**4,
-                        xq[:, 0] * xq[:, 1]**5,
-                        xq[:, 1]**6])
+        PHI = np.array(
+            [
+                np.ones(nq),
+                xq[:, 0],
+                xq[:, 1],
+                xq[:, 0] ** 2,
+                xq[:, 0] * xq[:, 1],
+                xq[:, 1] ** 2,
+                xq[:, 0] ** 3,
+                xq[:, 0] ** 2 * xq[:, 1],
+                xq[:, 0] * xq[:, 1] ** 2,
+                xq[:, 1] ** 3,
+                xq[:, 0] ** 4,
+                xq[:, 0] ** 3 * xq[:, 1],
+                xq[:, 0] ** 2 * xq[:, 1] ** 2,
+                xq[:, 0] * xq[:, 1] ** 3,
+                xq[:, 1] ** 4,
+                xq[:, 0] ** 5,
+                xq[:, 0] ** 4 * xq[:, 1],
+                xq[:, 0] ** 3 * xq[:, 1] ** 2,
+                xq[:, 0] ** 2 * xq[:, 1] ** 3,
+                xq[:, 0] * xq[:, 1] ** 4,
+                xq[:, 1] ** 5,
+                xq[:, 0] ** 6,
+                xq[:, 0] ** 5 * xq[:, 1],
+                xq[:, 0] ** 4 * xq[:, 1] ** 2,
+                xq[:, 0] ** 3 * xq[:, 1] ** 3,
+                xq[:, 0] ** 2 * xq[:, 1] ** 4,
+                xq[:, 0] * xq[:, 1] ** 5,
+                xq[:, 1] ** 6,
+            ]
+        )
         # solve for the quadrature coefficients and normalize integration
         # point weights, this is a least squares solution
         wq = np.linalg.lstsq(PHI, phi, rcond=None)[0] / self.area
@@ -6341,18 +6410,18 @@ class PolyElement2D():
         if self.material is not None:
             color = mplclr.to_rgb(self.material.color)
         else:
-            color = mplclr.to_rgb('black')
-        if 'edgecolor' not in kwargs.keys():
-            kwargs['edgecolor'] = color + (1.0, )
-        if 'facecolor' not in kwargs.keys():
-            kwargs['facecolor'] = color + (0.6, )
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 1.0
-        if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = ':'
-        ax.fill(self.mesh.nodes[self.nodes, 0],
-                self.mesh.nodes[self.nodes, 1],
-                **kwargs)
+            color = mplclr.to_rgb("black")
+        if "edgecolor" not in kwargs.keys():
+            kwargs["edgecolor"] = color + (1.0,)
+        if "facecolor" not in kwargs.keys():
+            kwargs["facecolor"] = color + (0.6,)
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 1.0
+        if "linestyle" not in kwargs.keys():
+            kwargs["linestyle"] = ":"
+        ax.fill(
+            self.mesh.nodes[self.nodes, 0], self.mesh.nodes[self.nodes, 1], **kwargs
+        )
         return ax
 
     def plot_quad_points(self, ax=None, **kwargs):
@@ -6410,28 +6479,30 @@ class PolyElement2D():
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 0.0
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 0.0
         if self.material is not None:
             color = mplclr.to_rgb(self.material.color)
-            kwargs['markeredgecolor'] = color + (1.0, )
-            kwargs['markerfacecolor'] = color + (1.0, )
+            kwargs["markeredgecolor"] = color + (1.0,)
+            kwargs["markerfacecolor"] = color + (1.0,)
         else:
-            if 'markeredgecolor' not in kwargs.keys():
-                kwargs['markeredgecolor'] = 'black'
-            if 'markerfacecolor' not in kwargs.keys():
-                kwargs['markerfacecolor'] = 'black'
-        if 'marker' not in kwargs.keys():
-            kwargs['marker'] = 'P'
-        if 'markersize' not in kwargs.keys():
-            kwargs['markersize'] = 6.0
-        ax.plot(self.quad_points[:, 0] + self.centroid[0],
-                self.quad_points[:, 1] + self.centroid[1],
-                **kwargs)
+            if "markeredgecolor" not in kwargs.keys():
+                kwargs["markeredgecolor"] = "black"
+            if "markerfacecolor" not in kwargs.keys():
+                kwargs["markerfacecolor"] = "black"
+        if "marker" not in kwargs.keys():
+            kwargs["marker"] = "P"
+        if "markersize" not in kwargs.keys():
+            kwargs["markersize"] = 6.0
+        ax.plot(
+            self.quad_points[:, 0] + self.centroid[0],
+            self.quad_points[:, 1] + self.centroid[1],
+            **kwargs,
+        )
         return ax
 
 
-class InterfaceElement2D():
+class InterfaceElement2D:
     """A class for interfaces between neighboring :c:`PolyElement2D` elements
     in a :c:`PolyMesh2D`.
 
@@ -6477,10 +6548,9 @@ class InterfaceElement2D():
     [0.65  0.825]
     """
 
-    def __init__(self, mesh, nodes=None, material=None, neighbors=None,
-                 width=0.0):
+    def __init__(self, mesh, nodes=None, material=None, neighbors=None, width=0.0):
         if not isinstance(mesh, PolyMesh2D):
-            raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
+            raise TypeError("type(mesh) is not vcfempy.meshgen.PolyMesh2D")
         self._mesh = mesh
 
         self._material = None
@@ -6568,8 +6638,9 @@ class InterfaceElement2D():
     @material.setter
     def material(self, material):
         if not isinstance(material, (type(None), mtl.Material)):
-            raise TypeError('type(material) not in [NoneType, '
-                            + 'vcfempy.materials.Material]')
+            raise TypeError(
+                "type(material) not in [NoneType, " + "vcfempy.materials.Material]"
+            )
         self._material = material
 
     @property
@@ -6631,7 +6702,7 @@ not 'NoneType'
     def width(self, val):
         val = float(val)
         if val < 0.0:
-            raise ValueError('width must be >= 0.0')
+            raise ValueError("width must be >= 0.0")
         self._width = val
         self.invalidate_properties()
 
@@ -6809,17 +6880,18 @@ can only be 0, 2, or 4
             return
         new_num_nodes = self.num_nodes + len(nodes)
         if new_num_nodes % 2 or new_num_nodes > 4:
-            raise ValueError('number of nodes in InterfaceElement2D '
-                             + 'can only be 0, 2, or 4')
+            raise ValueError(
+                "number of nodes in InterfaceElement2D " + "can only be 0, 2, or 4"
+            )
         self.invalidate_properties()
         old_nodes = list(self.nodes)
         nodes = np.flip(nodes.ravel())
         try:
             for n in nodes:
                 if n in self.nodes:
-                    raise ValueError(f'{n} is already a node')
+                    raise ValueError(f"{n} is already a node")
                 if n < 0 or n >= self.mesh.num_nodes:
-                    raise ValueError(f'node index {n} out of range')
+                    raise ValueError(f"node index {n} out of range")
                 self.nodes.insert(index, int(n))
         except ValueError:
             self._nodes = old_nodes
@@ -6902,8 +6974,9 @@ can only be 0, 2, or 4
             return
         new_num_nodes = self.num_nodes - len(remove_nodes)
         if new_num_nodes % 2 or new_num_nodes < 0:
-            raise ValueError('number of nodes in InterfaceElement2D '
-                             + 'can only be 0, 2, or 4')
+            raise ValueError(
+                "number of nodes in InterfaceElement2D " + "can only be 0, 2, or 4"
+            )
         self.invalidate_properties()
         remove_nodes = remove_nodes.ravel()
         old_nodes = list(self.nodes)
@@ -7026,16 +7099,19 @@ can only be 0 or 2
             return
         new_num_neighbors = self.num_neighbors + len(neighbors)
         if new_num_neighbors % 2 or new_num_neighbors > 2:
-            raise ValueError('number of neighbors to InterfaceElement2D '
-                             + 'can only be 0 or 2')
+            raise ValueError(
+                "number of neighbors to InterfaceElement2D " + "can only be 0 or 2"
+            )
         old_neighbors = list(self.neighbors)
         try:
             for n in neighbors:
                 if n.mesh is not self.mesh:
-                    raise ValueError(f'{n} does not have the same parent mesh')
+                    raise ValueError(f"{n} does not have the same parent mesh")
                 if n in self.neighbors:
-                    raise ValueError(f'element {self.mesh.elements.index(n)}'
-                                     + ' is already a neighbor')
+                    raise ValueError(
+                        f"element {self.mesh.elements.index(n)}"
+                        + " is already a neighbor"
+                    )
                 self.neighbors.append(n)
         except ValueError:
             self._neighbors = old_neighbors
@@ -7064,8 +7140,7 @@ can only be 0 or 2
         0.35
         """
         if self._length is None and self.num_nodes:
-            self._length = shp.LineString(
-                    self.mesh.nodes[self.nodes[0:2]]).length
+            self._length = shp.LineString(self.mesh.nodes[self.nodes[0:2]]).length
         return self._length
 
     @property
@@ -7239,22 +7314,22 @@ can only be 0 or 2
         if self.material is not None:
             color = mplclr.to_rgb(self.material.color)
         else:
-            color = mplclr.to_rgb('black')
-        if 'facecolor' not in kwargs.keys():
-            kwargs['facecolor'] = color + (0.6, )
-        if 'edgecolor' not in kwargs.keys():
-            kwargs['edgecolor'] = color + (1.0, )
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 2.0
-        if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = '--'
-        ax.fill(self.mesh.nodes[self.nodes, 0],
-                self.mesh.nodes[self.nodes, 1],
-                **kwargs)
+            color = mplclr.to_rgb("black")
+        if "facecolor" not in kwargs.keys():
+            kwargs["facecolor"] = color + (0.6,)
+        if "edgecolor" not in kwargs.keys():
+            kwargs["edgecolor"] = color + (1.0,)
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 2.0
+        if "linestyle" not in kwargs.keys():
+            kwargs["linestyle"] = "--"
+        ax.fill(
+            self.mesh.nodes[self.nodes, 0], self.mesh.nodes[self.nodes, 1], **kwargs
+        )
         return ax
 
 
-class BoundaryElement2D():
+class BoundaryElement2D:
     """A class for interfaces between :c:`PolyElement2D` elements and the
     boundaries in a :c:`PolyMesh2D`.
 
@@ -7274,7 +7349,7 @@ class BoundaryElement2D():
 
     def __init__(self, mesh, nodes=None, neighbor=None):
         if not isinstance(mesh, PolyMesh2D):
-            raise TypeError('type(mesh) is not vcfempy.meshgen.PolyMesh2D')
+            raise TypeError("type(mesh) is not vcfempy.meshgen.PolyMesh2D")
         self._mesh = mesh
 
         self.invalidate_properties()
@@ -7493,17 +7568,18 @@ class BoundaryElement2D():
             return
         new_num_nodes = self.num_nodes + len(nodes)
         if new_num_nodes % 2 or new_num_nodes > 2:
-            raise ValueError('number of nodes in BoundaryElement2D '
-                             + 'can only be 0 or 2')
+            raise ValueError(
+                "number of nodes in BoundaryElement2D " + "can only be 0 or 2"
+            )
         self.invalidate_properties()
         old_nodes = list(self.nodes)
         nodes = np.flip(nodes.ravel())
         try:
             for n in nodes:
                 if n in self.nodes:
-                    raise ValueError(f'{n} is already a node')
+                    raise ValueError(f"{n} is already a node")
                 if n < 0 or n >= self.mesh.num_nodes:
-                    raise ValueError(f'node index {n} out of range')
+                    raise ValueError(f"node index {n} out of range")
                 self.nodes.insert(index, int(n))
         except ValueError:
             self._nodes = old_nodes
@@ -7585,8 +7661,9 @@ class BoundaryElement2D():
             return
         new_num_nodes = self.num_nodes - len(remove_nodes)
         if new_num_nodes % 2 or new_num_nodes < 0:
-            raise ValueError('number of nodes in BoundaryElement2D '
-                             + 'can only be 0 or 2')
+            raise ValueError(
+                "number of nodes in BoundaryElement2D " + "can only be 0 or 2"
+            )
         self.invalidate_properties()
         remove_nodes = remove_nodes.ravel()
         old_nodes = list(self.nodes)
@@ -7663,9 +7740,9 @@ class BoundaryElement2D():
     @neighbor.setter
     def neighbor(self, neighbor):
         if not isinstance(neighbor, PolyElement2D):
-            raise TypeError('neighbor must be a PolyElement2D')
+            raise TypeError("neighbor must be a PolyElement2D")
         if self.mesh is not neighbor.mesh:
-            raise ValueError('neighbor must have same parent mesh')
+            raise ValueError("neighbor must have same parent mesh")
         self._neighbor = neighbor
 
     @property
@@ -7816,15 +7893,15 @@ class BoundaryElement2D():
         """
         if ax is None or not isinstance(ax, plt.Axes):
             ax = plt.gca()
-        if 'linewidth' not in kwargs.keys():
-            kwargs['linewidth'] = 2.0
-        if 'linestyle' not in kwargs.keys():
-            kwargs['linestyle'] = '--'
-        if 'color' not in kwargs.keys():
-            kwargs['color'] = 'black'
-        ax.plot(self.mesh.nodes[self.nodes, 0],
-                self.mesh.nodes[self.nodes, 1],
-                **kwargs)
+        if "linewidth" not in kwargs.keys():
+            kwargs["linewidth"] = 2.0
+        if "linestyle" not in kwargs.keys():
+            kwargs["linestyle"] = "--"
+        if "color" not in kwargs.keys():
+            kwargs["color"] = "black"
+        ax.plot(
+            self.mesh.nodes[self.nodes, 0], self.mesh.nodes[self.nodes, 1], **kwargs
+        )
         return ax
 
 
@@ -7839,7 +7916,7 @@ def _get_unit_tangent_normal(v0, v1):
 def _reflect_point_across_edge(p, v, tt):
     vp = p - v
     pp = v + np.dot(vp, tt) * tt
-    return (2 * pp - p)
+    return 2 * pp - p
 
 
 def _get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
@@ -7849,11 +7926,26 @@ def _get_edge_reflection_points(rp0, rp1, v, tt, d_scale, alpha_rand):
     num_points = int(np.round(rr_len / d_scale)) + 1
     if num_points <= 2:
         return np.empty((0, 2))
-    dr = np.linspace(0., rr_len, num_points)[1:-1]
-    dr += alpha_rand * d_scale * (2. * np.random.random(num_points - 2) - 1.)
+    dr = np.linspace(0.0, rr_len, num_points)[1:-1]
+    dr += alpha_rand * d_scale * (2.0 * np.random.random(num_points - 2) - 1.0)
     ref_points = []
     for ddrr in dr:
         rp = rp0 + ddrr * rr
         ref_points.append(rp)
         ref_points.append(_reflect_point_across_edge(rp, v, tt))
     return np.array(ref_points)
+
+
+def _strtobool(val):
+    """Convert a string representation of truth to true (1) or false (0).
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
+    'val' is anything else.
+    """
+    val = val.lower()
+    if val in ("y", "yes", "t", "true", "on", "1"):
+        return 1
+    elif val in ("n", "no", "f", "false", "off", "0"):
+        return 0
+    else:
+        raise ValueError("invalid truth value %r" % (val,))
